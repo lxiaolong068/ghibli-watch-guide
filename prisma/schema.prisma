@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
 }
 
 datasource db {
@@ -18,56 +17,62 @@ model Movie {
   id          String         @id @default(cuid())
   titleEn     String         // 英文标题
   titleJa     String         // 日文标题
+  titleZh     String?        // 中文标题（可选）
   year        Int            // 发行年份
+  director    String        // 导演
+  duration    Int            // 时长（分钟）
+  synopsis    String        // 简介
+  posterUrl   String?        // 海报URL（可选）
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  availability Availability[]
+  availabilities Availability[]
 }
 
 model Platform {
   id          String         @id @default(cuid())
   name        String         // 平台名称
-  website     String?        // 平台网站
+  website     String         // 平台网站
   type        PlatformType   // 平台类型
+  logo        String?        // 平台logo URL（可选）
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  availability Availability[]
+  availabilities Availability[]
 }
 
 model Region {
   id          String         @id @default(cuid())
-  code        String         @unique // 地区代码 (如 US, JP, CN)
+  code        String         @unique // 地区代码（如：US, JP, CN）
   name        String         // 地区名称
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  availability Availability[]
+  availabilities Availability[]
 }
 
 model Availability {
-  id            String    @id @default(cuid())
-  movie         Movie     @relation(fields: [movieId], references: [id])
+  id            String         @id @default(cuid())
+  movie         Movie         @relation(fields: [movieId], references: [id])
   movieId       String
-  platform      Platform  @relation(fields: [platformId], references: [id])
+  platform      Platform      @relation(fields: [platformId], references: [id])
   platformId    String
-  region        Region    @relation(fields: [regionId], references: [id])
+  region        Region        @relation(fields: [regionId], references: [id])
   regionId      String
-  url           String?   // 观看链接
-  priceInfo     Json?     // 价格信息 (JSON格式，可存储不同类型的价格)
-  notes         String?   // 额外说明
-  isSubscription Boolean  @default(false)
-  isFree        Boolean  @default(false)
-  lastChecked   DateTime  // 最后检查时间
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  url           String?        // 观看链接（可选）
+  priceInfo     Json?          // 价格信息（JSON格式，可选）
+  notes         String?        // 备注（可选）
+  isSubscription Boolean        @default(false) // 是否需要订阅
+  isFree        Boolean        @default(false) // 是否免费
+  lastChecked   DateTime       // 最后检查时间
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@unique([movieId, platformId, regionId])
 }
 
 enum PlatformType {
-  STREAMING
-  RENTAL
-  PURCHASE
-  FREE
-  CINEMA
-  PHYSICAL
+  STREAMING    // 流媒体
+  RENTAL       // 租赁
+  PURCHASE     // 购买
+  FREE         // 免费
+  CINEMA       // 电影院
+  PHYSICAL     // 实体（如DVD）
 }
