@@ -16,7 +16,7 @@
 ## 第一阶段：项目设置与基础架构 (Phase 1: Setup & Foundation)
 
 *   ✅ <font color="green">**技术选型**</font>: 
-    *   **前端框架**: Next.js 15 (RC) - 重点利用其 SEO 优势。
+    *   **前端框架**: Next.js 14 - 重点利用其 SEO 优势。
     *   **UI 库**: Starwind UI - 用于构建美观的界面。
     *   **数据库**: Neon (Serverless Postgres) - 配置信息见 `.env` 文件。
     *   **ORM/数据访问**: Prisma (推荐) 或 Drizzle ORM，用于简化数据库交互。
@@ -37,9 +37,9 @@
     *   主要使用 **TMDB API** 获取基础电影信息（导演、年份、简介、海报图等）。
     *   针对 **观看可用性信息**（流媒体平台、租赁/购买链接、价格、免费渠道如 Kanopy/Hoopla 等），进行 **针对性网络爬取** 或查询特定区域性平台 API/数据源进行补充。
     *   确认补充信息来源的可靠性。
-*   🔴 **TMDB API 集成**: 
-    *   申请 TMDB API 密钥。
-    *   在后端逻辑中实现调用 TMDB API 获取电影详情的功能。
+*   🟡 <font color="orange">**TMDB API 集成**</font>: 
+    *   ✅ <font color="green">**申请 TMDB API 密钥**</font> (已完成，密钥在 `.env`)
+    *   🔴 在后端逻辑中实现调用 TMDB API 获取电影详情的功能。
 *   ✅ <font color="green">**数据库 Schema 设计**</font>: 使用 Prisma Schema 设计数据库模型，主要存储 `Availability` (包含 `regionId`, `platformId`, `movieId`, `url`, `type`, `price`, `lastChecked` 等) 和辅助的 `Region`, `Platform` 信息。`Movie` 表的基础信息将主要来自 TMDB，可选择性缓存关键字段。
 *   ✅ <font color="green">**数据迁移/种子填充**</font>: 编写脚本将收集到的 **观看可用性数据** 和 **地区/平台信息** 填充到 Neon 数据库中 (Prisma Migrate/Seed)。
 *   🔴 **数据访问逻辑**: 实现 Next.js 后端逻辑 (API 路由/Server Actions) 来: 
