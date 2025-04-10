@@ -1,5 +1,7 @@
 # Ghibli Watch Guide (Project Title - Placeholder)
 
+English Version | [中文版本](README.zh.md)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). It aims to provide a guide for watching Studio Ghibli movies.
 
 ## Tech Stack
@@ -69,6 +71,23 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The recommended way to deploy this Next.js application is using the [Vercel Platform](https://vercel.com/).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Follow these steps:
+
+1.  **Push your code** to a Git repository (e.g., GitHub, GitLab, Bitbucket).
+2.  **Import your project** into Vercel:
+    *   Go to your Vercel dashboard and click "Add New... -> Project".
+    *   Connect your Git provider and select the repository for this project.
+    *   Vercel should automatically detect that you are using Next.js and configure the build settings. The default settings are usually sufficient. Ensure the "Framework Preset" is set to "Next.js" and the "Package Manager" is detected as "pnpm".
+3.  **Configure Environment Variables**:
+    *   This is a crucial step. Go to your project settings in Vercel (Settings -> Environment Variables).
+    *   Add the required environment variables based on your `.env.example` or `.env` file. At minimum, you will likely need:
+        *   `DATABASE_URL`: Your Neon (or other provider's) database connection string.
+        *   *(Add any other required API keys or secrets here as you integrate them, e.g., `TMDB_API_KEY`)*
+    *   Ensure you set these variables for the appropriate environments (Production, Preview, Development).
+4.  **Deploy**:
+    *   Click the "Deploy" button. Vercel will build and deploy your application.
+    *   Once deployed, you will get a URL to access your live site.
+
+For more detailed information on deploying Next.js applications to Vercel, refer to the official [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).
