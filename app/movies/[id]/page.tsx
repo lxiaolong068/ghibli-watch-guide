@@ -6,6 +6,9 @@ import type { Prisma } from '@prisma/client'; // Import Prisma namespace
 import { unstable_cache } from 'next/cache'; // 导入缓存函数
 import Script from 'next/script';
 
+// 设置为动态路由，不在构建时静态生成
+export const dynamic = 'force-dynamic';
+
 interface MoviePageProps {
   params: {
     id: string;

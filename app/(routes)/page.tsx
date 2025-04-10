@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { MovieList } from '@/app/components/MovieList';
 import { prisma } from '@/lib/prisma';
 
+// 设置为动态路由，不在构建时静态生成
+export const dynamic = 'force-dynamic';
+
 async function getMovies() {
   try {
     const movies = await prisma.movie.findMany({

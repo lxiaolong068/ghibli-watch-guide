@@ -4,6 +4,9 @@ import { MovieListContainer } from '@/app/components/MovieListContainer'; // Imp
 import { prisma } from '@/lib/prisma'; // Import prisma
 import { unstable_cache } from 'next/cache'; // 导入缓存函数
 
+// 设置为动态路由，不在构建时静态生成
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Studio Ghibli Movie List | Where to Watch Studio Ghibli Movies',
   description: 'Complete list of all Studio Ghibli movies. Find where to watch each film, including Spirited Away, My Neighbor Totoro, Howl\'s Moving Castle, and more.',
