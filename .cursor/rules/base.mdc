@@ -6,4 +6,5 @@ alwaysApply: true
 
 # Your rule content
 
-- use pnpm instead of npm
+- use pnpm instead of npm.
+- main language of the website is English.

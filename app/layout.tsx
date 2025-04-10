@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
+import Breadcrumb from "./components/Breadcrumb";
+import Link from "next/link";
 
-const inter = Inter({ subsets: ["latin"] });
+const notoSansSC = Noto_Sans_SC({ 
+  subsets: ["latin"],
+  weight: ['400', '500', '700'],
+});
 
 export const metadata: Metadata = {
-  title: "吉卜力工作室电影观看指南",
-  description: "为您提供全面、准确的吉卜力工作室电影观看来源信息，包括收费和免费渠道。",
+  title: "Where to Watch Studio Ghibli Movies",
+  description: "Discover how to stream Studio Ghibli films on Netflix, Max (HBO Max), and other platforms. Find updated availability for Spirited Away, My Neighbor Totoro, Princess Mononoke and more. Region-specific guide for US, Europe & worldwide.",
+  openGraph: {
+    title: "Where to Watch Studio Ghibli Movies",
+    description: "Find the perfect platform to watch your favorite Studio Ghibli films. Complete streaming guide with regional availability, pricing, and free options worldwide.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -15,25 +25,44 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh">
-      <body className={inter.className}>
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-gray-900">
-              吉卜力工作室电影观看指南
+    <html lang="en">
+      <body className={notoSansSC.className}>
+        <header className="bg-gradient-to-r from-[#4AB1B3] to-[#76E4C4] shadow-lg">
+          <div className="container mx-auto px-4 py-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-2 tracking-tight">
+              Where to Watch Studio Ghibli Movies
             </h1>
+            <p className="text-white/90 text-center text-lg">
+              Complete streaming guide for all Ghibli films in your region
+            </p>
           </div>
         </header>
-        <main>
-          <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        
+        <nav className="bg-white border-b">
+          <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+            <Breadcrumb />
+            <div className="flex space-x-4">
+              <Link href="/" className="text-gray-700 hover:text-primary-600">Home</Link>
+              <Link href="/movies" className="text-gray-700 hover:text-primary-600">Movies</Link>
+              {/* Add more menu items here if needed */}
+            </div>
+          </div>
+        </nav>
+
+        <main className="min-h-screen bg-gray-50">
+          <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             {children}
           </div>
         </main>
-        <footer className="bg-white">
-          <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-base text-gray-500">
-              &copy; {new Date().getFullYear()} 吉卜力工作室电影观看指南. All rights reserved.
-            </p>
+
+        <footer className="bg-gray-900 text-white py-8">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <p className="text-lg font-medium mb-2">Where to Watch Studio Ghibli Movies</p>
+              <p className="text-gray-400 text-sm">
+                &copy; {new Date().getFullYear()} This website is for reference only and is not affiliated with Studio Ghibli.
+              </p>
+            </div>
           </div>
         </footer>
       </body>

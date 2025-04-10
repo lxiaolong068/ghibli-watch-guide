@@ -49,7 +49,7 @@ export function MovieDetail({ movie, isOpen, onClose }: MovieDetailProps) {
                     className="rounded-md bg-white text-gray-400 hover:text-gray-500"
                     onClick={onClose}
                   >
-                    <span className="sr-only">关闭</span>
+                    <span className="sr-only">Close</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
@@ -58,41 +58,41 @@ export function MovieDetail({ movie, isOpen, onClose }: MovieDetailProps) {
                     <div className="sm:flex-shrink-0">
                       <img
                         src={movie.posterUrl}
-                        alt={movie.titleZh || movie.titleEn}
+                        alt={movie.titleEn}
                         className="h-48 w-auto object-cover sm:h-64"
                       />
                     </div>
                   )}
                   <div className="mt-3 sm:ml-4 sm:mt-0 text-left">
                     <Dialog.Title as="h3" className="text-2xl font-semibold leading-6 text-gray-900">
-                      {movie.titleZh || movie.titleEn}
+                      {movie.titleEn} - Where to Watch
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        {movie.titleEn} ({movie.year})
+                        Released in {movie.year} • {movie.duration} minutes
                       </p>
                       <p className="mt-2 text-sm text-gray-700">{movie.synopsis}</p>
                       <div className="mt-4 space-y-4">
                         <div>
-                          <h4 className="text-sm font-medium text-gray-900">电影信息</h4>
+                          <h4 className="text-sm font-medium text-gray-900">Movie Information</h4>
                           <dl className="mt-2 grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
                             <div>
-                              <dt className="text-sm font-medium text-gray-500">导演</dt>
+                              <dt className="text-sm font-medium text-gray-500">Director</dt>
                               <dd className="mt-1 text-sm text-gray-900">{movie.director}</dd>
                             </div>
                             <div>
-                              <dt className="text-sm font-medium text-gray-500">时长</dt>
-                              <dd className="mt-1 text-sm text-gray-900">{movie.duration} 分钟</dd>
+                              <dt className="text-sm font-medium text-gray-500">Duration</dt>
+                              <dd className="mt-1 text-sm text-gray-900">{movie.duration} minutes</dd>
                             </div>
                             <div>
-                              <dt className="text-sm font-medium text-gray-500">日文标题</dt>
+                              <dt className="text-sm font-medium text-gray-500">Japanese Title</dt>
                               <dd className="mt-1 text-sm text-gray-900">{movie.titleJa}</dd>
                             </div>
                           </dl>
                         </div>
                         {movie.availabilities && movie.availabilities.length > 0 && (
                           <div>
-                            <h4 className="text-sm font-medium text-gray-900">观看渠道</h4>
+                            <h4 className="text-sm font-medium text-gray-900">Where to Watch</h4>
                             <div className="mt-2 space-y-3">
                               {movie.availabilities.map((availability) => (
                                 <div
@@ -109,28 +109,26 @@ export function MovieDetail({ movie, isOpen, onClose }: MovieDetailProps) {
                                       </p>
                                     </div>
                                     <div className="flex items-center space-x-2">
-                                      {availability.isFree && (
-                                        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                                          免费
+                                      {availability.type === 'FREE' && (
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                          Free
                                         </span>
                                       )}
-                                      {availability.isSubscription && (
-                                        <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-                                          订阅
+                                      {availability.type === 'SUBSCRIPTION' && (
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                          Subscription
                                         </span>
                                       )}
                                     </div>
                                   </div>
                                   {availability.url && (
-                                    <a
-                                      href={availability.url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="mt-2 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500"
+                                    <button
+                                      onClick={() => window.open(availability.url, '_blank', 'noopener,noreferrer')}
+                                      className="mt-2 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500 focus:outline-none"
                                     >
-                                      访问链接
+                                      Visit Link
                                       <span className="ml-1">→</span>
-                                    </a>
+                                    </button>
                                   )}
                                 </div>
                               ))}

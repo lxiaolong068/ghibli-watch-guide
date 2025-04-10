@@ -1,24 +1,34 @@
-import { PrismaClient, Movie, Platform, Region } from '../../app/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
 const prisma = new PrismaClient();
 
-// 基础数据
+// Base data
 const regions = [
-  { code: 'US', name: '美国' },
-  { code: 'CA', name: '加拿大' },
-  { code: 'JP', name: '日本' },
-  { code: 'GB', name: '英国' },
-  { code: 'EU', name: '欧洲' },
-  { code: 'AU', name: '澳大利亚' },
-  { code: 'NZ', name: '新西兰' },
+  { code: 'US', name: 'United States' },
+  { code: 'CA', name: 'Canada' },
+  { code: 'JP', name: 'Japan' },
+  { code: 'GB', name: 'United Kingdom' },
+  { code: 'EU', name: 'Europe' },
+  { code: 'AU', name: 'Australia' },
+  { code: 'NZ', name: 'New Zealand' },
 ] as const;
 
 const platforms = [
+  {
+    name: 'Netflix',
+    website: 'https://www.netflix.com',
+    type: 'STREAMING',
+    logo: 'https://example.com/netflix-logo.png',
+  },
+  {
+    name: 'HBO Max',
+    website: 'https://www.hbomax.com',
+    type: 'STREAMING',
+    logo: 'https://example.com/hbomax-logo.png',
+  },
   { name: 'Max', website: 'https://www.max.com', type: 'STREAMING' as const },
-  { name: 'Netflix', website: 'https://www.netflix.com', type: 'STREAMING' as const },
-  { name: 'Amazon Prime Video', website: 'https://www.amazon.com/primevideo', type: 'STREAMING' as const },
   { name: 'Apple TV', website: 'https://tv.apple.com', type: 'STREAMING' as const },
   { name: 'YouTube', website: 'https://www.youtube.com', type: 'STREAMING' as const },
   { name: 'Vudu', website: 'https://www.vudu.com', type: 'STREAMING' as const },
@@ -29,47 +39,75 @@ const movies = [
   {
     titleEn: 'Spirited Away',
     titleJa: '千と千尋の神隠し',
-    titleZh: '千与千寻',
     year: 2001,
     director: 'Hayao Miyazaki',
     duration: 125,
-    synopsis: '千寻和父母一起搬家途中意外进入神灵世界，父母因贪吃变成了猪，为了救出父母，千寻必须在汤屋工作...',
+    synopsis: 'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, where humans are changed into beasts.',
     posterUrl: 'https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg',
   },
   {
     titleEn: 'My Neighbor Totoro',
     titleJa: 'となりのトトロ',
-    titleZh: '龙猫',
     year: 1988,
     director: 'Hayao Miyazaki',
     duration: 86,
-    synopsis: '小月和小梅与父亲搬到乡下，在那里她们遇见了神奇的龙猫...',
+    synopsis: 'Two young girls move to the country with their father to be near their hospitalized mother, and have adventures with the wondrous forest spirits who live nearby.',
     posterUrl: 'https://image.tmdb.org/t/p/w500/rtGDOeG9LzoerkDGZF9dnVeLppL.jpg',
   },
   {
     titleEn: 'Grave of the Fireflies',
     titleJa: '火垂るの墓',
-    titleZh: '萤火虫之墓',
     year: 1988,
     director: 'Isao Takahata',
     duration: 89,
-    synopsis: '二战末期，清太和妹妹节子在战火中失去父母，相依为命...',
+    synopsis: 'A devastating story of two siblings struggling to survive in Japan during World War II.',
     posterUrl: 'https://image.tmdb.org/t/p/w500/wcNkHDbyc290hcWk7KXbBZUuXpq.jpg',
   },
 ] as const;
 
-async function main() {
-  console.log('开始数据填充...');
+// 填充可用性数据
+const availabilityData = [
+  {
+    movieId: '1',
+    platformId: '1',
+    regionId: '1',
+    type: 'SUBSCRIPTION',
+    url: 'https://www.netflix.com/title/60023642',
+    lastChecked: new Date(),
+    priceInfo: { subscription: '$9.99/month' },
+  },
+  {
+    movieId: '2',
+    platformId: '2',
+    regionId: '1',
+    type: 'SUBSCRIPTION',
+    url: 'https://www.max.com/movies/grave-of-the-fireflies',
+    lastChecked: new Date(),
+    priceInfo: { subscription: '$15.49/month' },
+  },
+  {
+    movieId: '1',
+    platformId: '1',
+    regionId: '5',
+    type: 'SUBSCRIPTION',
+    url: 'https://www.netflix.com/title/60023642',
+    lastChecked: new Date(),
+    priceInfo: { subscription: '€4.99/month' },
+  },
+];
 
-  // 清理现有数据
+async function main() {
+  console.log('Starting data seeding...');
+
+  // Clear existing data
   await prisma.availability.deleteMany();
   await prisma.movie.deleteMany();
   await prisma.platform.deleteMany();
   await prisma.region.deleteMany();
 
-  console.log('已清理现有数据');
+  console.log('Cleared existing data');
 
-  // 填充地区数据
+  // Seed regions
   const createdRegions = await Promise.all(
     regions.map((region) =>
       prisma.region.create({
@@ -78,9 +116,9 @@ async function main() {
     )
   );
 
-  console.log('已创建地区数据');
+  console.log('Created regions');
 
-  // 填充平台数据
+  // Seed platforms
   const createdPlatforms = await Promise.all(
     platforms.map((platform) =>
       prisma.platform.create({
@@ -89,9 +127,9 @@ async function main() {
     )
   );
 
-  console.log('已创建平台数据');
+  console.log('Created platforms');
 
-  // 填充电影数据
+  // Seed movies
   const createdMovies = await Promise.all(
     movies.map((movie) =>
       prisma.movie.create({
@@ -100,56 +138,51 @@ async function main() {
     )
   );
 
-  console.log('已创建电影数据');
+  console.log('Created movies');
 
-  // 填充可用性数据
-  const availabilityData = [
-    // 美国地区的数据
+  // Seed availabilities
+  const availabilities = [
     {
-      movieId: createdMovies.find((m: Movie) => m.titleEn === 'Spirited Away')!.id,
-      platformId: createdPlatforms.find((p: Platform) => p.name === 'Max')!.id,
-      regionId: createdRegions.find((r: Region) => r.code === 'US')!.id,
-      isSubscription: true,
-      isFree: false,
+      movieId: createdMovies[0].id,
+      platformId: createdPlatforms[0].id,
+      regionId: createdRegions[0].id,
+      type: 'SUBSCRIPTION',
       lastChecked: new Date(),
       priceInfo: { subscription: '$9.99/month' },
     },
     {
-      movieId: createdMovies.find((m: Movie) => m.titleEn === 'Grave of the Fireflies')!.id,
-      platformId: createdPlatforms.find((p: Platform) => p.name === 'Netflix')!.id,
-      regionId: createdRegions.find((r: Region) => r.code === 'US')!.id,
-      isSubscription: true,
-      isFree: false,
+      movieId: createdMovies[2].id,
+      platformId: createdPlatforms[0].id,
+      regionId: createdRegions[0].id,
+      type: 'SUBSCRIPTION',
       lastChecked: new Date(),
       priceInfo: { subscription: '$15.49/month' },
     },
-    // 欧洲地区的数据
     {
-      movieId: createdMovies.find((m: Movie) => m.titleEn === 'Spirited Away')!.id,
-      platformId: createdPlatforms.find((p: Platform) => p.name === 'Netflix')!.id,
-      regionId: createdRegions.find((r: Region) => r.code === 'EU')!.id,
-      isSubscription: true,
-      isFree: false,
+      movieId: createdMovies[0].id,
+      platformId: createdPlatforms[0].id,
+      regionId: createdRegions[4].id,
+      type: 'SUBSCRIPTION',
       lastChecked: new Date(),
       priceInfo: { subscription: '€4.99/month' },
     },
   ];
 
   await Promise.all(
-    availabilityData.map((data) =>
+    availabilities.map((data) =>
       prisma.availability.create({
         data,
       })
     )
   );
 
-  console.log('已创建可用性数据');
-  console.log('数据填充完成！');
+  console.log('Created availabilities');
+  console.log('Data seeding completed!');
 }
 
 main()
   .catch((e) => {
-    console.error('数据填充出错：', e);
+    console.error('Error during data seeding:', e);
     process.exit(1);
   })
   .finally(async () => {

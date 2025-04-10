@@ -1,9 +1,11 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
-import type { Movie, Region, Platform, Availability } from '@/app/types';
+// import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';  // 导入现有 prisma 实例
+// Remove import from @/app/types as Prisma Client provides types
+// import type { Movie, Region, Platform, Availability } from '@/app/types'; 
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();  // 删除这行，避免创建新实例
 
 export async function getMovieById(id: string) {
   try {

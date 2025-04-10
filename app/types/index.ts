@@ -1,8 +1,7 @@
-export interface Movie {
+export type Movie = {
   id: string;
   titleEn: string;
   titleJa: string;
-  titleZh?: string;
   year: number;
   director: string;
   duration: number;
@@ -10,8 +9,7 @@ export interface Movie {
   posterUrl?: string;
   createdAt: Date;
   updatedAt: Date;
-  availabilities?: Availability[];
-}
+};
 
 export interface Platform {
   id: string;
@@ -33,7 +31,7 @@ export interface Region {
   availabilities?: Availability[];
 }
 
-export interface Availability {
+export type Availability = {
   id: string;
   movieId: string;
   platformId: string;
@@ -41,15 +39,19 @@ export interface Availability {
   url?: string;
   priceInfo?: any;
   notes?: string;
-  isSubscription: boolean;
-  isFree: boolean;
+  type: 'FREE' | 'SUBSCRIPTION' | 'RENTAL' | 'PURCHASE';
   lastChecked: Date;
   createdAt: Date;
   updatedAt: Date;
-  movie?: Movie;
-  platform?: Platform;
-  region?: Region;
-}
+  platform: {
+    name: string;
+    logo?: string;
+  };
+  region: {
+    code: string;
+    name: string;
+  };
+};
 
 export enum PlatformType {
   STREAMING = 'STREAMING',

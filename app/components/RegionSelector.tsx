@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import type { Region } from '@/app/generated/prisma';
+import React, { useState } from 'react';
+import { Region } from '@prisma/client';
 
 interface RegionSelectorProps {
   regions: Region[];
@@ -25,7 +25,7 @@ export function RegionSelector({ regions, onRegionSelect }: RegionSelectorProps)
     <section className="bg-white shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-medium text-gray-900">选择您的地区</h2>
+          <h2 className="text-lg font-medium text-gray-900">Select Your Region</h2>
           {selectedRegion && (
             <button
               onClick={() => {

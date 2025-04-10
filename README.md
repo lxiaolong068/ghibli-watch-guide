@@ -1,17 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ghibli Watch Guide (Project Title - Placeholder)
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). It aims to provide a guide for watching Studio Ghibli movies.
+
+## Tech Stack
+
+*   **Framework:** [Next.js](https://nextjs.org/) (App Router)
+*   **Language:** [TypeScript](https://www.typescriptlang.org/)
+*   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+*   **Database ORM:** [Prisma](https://www.prisma.io/)
+*   **Package Manager:** [pnpm](https://pnpm.io/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+*   Node.js (Version recommended by Next.js)
+*   pnpm (Install via `npm install -g pnpm`)
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone <your-repository-url>
+    cd ghibli-watch-guide
+    ```
+2.  Install dependencies:
+    ```bash
+    pnpm install
+    ```
+3.  Set up environment variables:
+    *   Copy `.env.example` to `.env`:
+        ```bash
+        cp .env.example .env
+        ```
+    *   Fill in the required values in the `.env` file (e.g., database connection string, API keys).
+4.  Set up the database (if using Prisma):
+    *   Run database migrations:
+        ```bash
+        pnpm prisma migrate dev
+        ```
+    *   (Optional) Seed the database:
+        ```bash
+        pnpm run db:seed
+        ```
+
+### Running the Development Server
+
+Run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
