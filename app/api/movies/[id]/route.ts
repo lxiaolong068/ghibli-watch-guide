@@ -3,12 +3,12 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const movie = await prisma.movie.findUnique({
       where: {
-        id: params.id,
+        id: context.params.id,
       },
       include: {
         availabilities: {
