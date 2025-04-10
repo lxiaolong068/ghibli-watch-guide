@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+// import Image from 'next/image'; // Removed unused import
 import { MovieList } from '@/app/components/MovieList';
 import { prisma } from '@/lib/prisma';
 
@@ -8,6 +8,9 @@ async function getMovies() {
     const movies = await prisma.movie.findMany({
       orderBy: {
         year: 'desc',
+      },
+      include: {
+        availabilities: true, 
       },
     });
     return movies;
