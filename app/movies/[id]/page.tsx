@@ -321,7 +321,7 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="font-medium text-gray-900">Director:</span>{' '}
-                  {movie.credits?.crew?.find(person => person.job === 'Director')?.name || 'N/A'}
+                  {movie.credits?.crew?.find((person: { job?: string; name?: string }) => person.job === 'Director')?.name || 'N/A'}
                 </div>
                 <div>
                   <span className="font-medium text-gray-900">Release Date:</span>{' '}
@@ -353,56 +353,59 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         />
       </div>
 
-      {/* Movie Availability Information */}
+      {/* Movie Availability Information from our DB (Currently Paused/Empty) */}
+      {/* This section correctly shows 'No viewing info...' if our DB lacks data for the region */}
       <AvailabilitySection 
         movieId={id}
         selectedRegionCode={regionCode}
       />
 
-      {/* Watch Information from TMDB */}
+      {/* Watch Information from TMDB - FILTERED by selected region */}
       <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8">
         <h2 className="text-xl font-bold text-gray-900 mb-6">Watch Information from TMDB</h2>
 
-        {Object.keys(watchProviders).length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2">
-            {Object.entries(watchProviders).map(([countryCode, countryData]) => {
-              // Skip if no useful data
-              if (!countryData || (!countryData.flatrate && !countryData.buy && !countryData.rent)) {
-                return null;
-              }
+        {(() => {
+          // Determine the actual region code to use (URL param or default)
+          const currentRegionCode = regionCode || defaultRegion;
+          const providersForSelectedRegion = watchProviders[currentRegionCode];
+          const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(currentRegionCode) || currentRegionCode;
 
-              // Standardize country display
-              const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode) || countryCode;
-              
-              return (
-                <div key={countryCode} className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-medium text-lg mb-4">{countryName}</h3>
-                  
-                  {countryData.link && (
-                    <div className="mb-2">
-                      <a
-                        href={countryData.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 text-sm"
-                      >
-                        View full information on TMDB →
-                      </a>
-                    </div>
-                  )}
-                  
-                  <ProviderList title="Subscription Streaming" providers={countryData.flatrate} countryLink={countryData.link} />
-                  <ProviderList title="Buy" providers={countryData.buy} countryLink={countryData.link} />
-                  <ProviderList title="Rent" providers={countryData.rent} countryLink={countryData.link} />
+          if (providersForSelectedRegion && (providersForSelectedRegion.flatrate || providersForSelectedRegion.buy || providersForSelectedRegion.rent)) {
+            return (
+              <div>
+                {/* Optionally display the region name if needed */}
+                {/* <h3 className="font-medium text-lg mb-4">{countryName}</h3> */}
+                
+                {providersForSelectedRegion.link && (
+                  <div className="mb-4"> {/* Increased spacing */}
+                    <a
+                      href={providersForSelectedRegion.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 text-sm"
+                    >
+                      View full information on TMDB for {countryName} →
+                    </a>
+                  </div>
+                )}
+                
+                {/* Wrap ProviderLists in a container for better structure if needed, e.g., grid */}
+                <div className="space-y-4"> 
+                  <ProviderList title="Subscription Streaming" providers={providersForSelectedRegion.flatrate} countryLink={providersForSelectedRegion.link} />
+                  <ProviderList title="Buy" providers={providersForSelectedRegion.buy} countryLink={providersForSelectedRegion.link} />
+                  <ProviderList title="Rent" providers={providersForSelectedRegion.rent} countryLink={providersForSelectedRegion.link} />
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center py-6 text-gray-500">
-            No watching information available on TMDB.
-          </div>
-        )}
+              </div>
+            );
+          } else {
+            // Display message if no TMDB data for the selected region
+            return (
+              <div className="text-center py-6 text-gray-500">
+                No viewing information found for {countryName} on TMDB.
+              </div>
+            );
+          }
+        })()}
       </div>
 
       {/* Special Note for Grave of the Fireflies */}

@@ -64,9 +64,24 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
   }
 }
 
-// 定义电影详情的接口类型 (根据需要添加更多字段)
+// Define crew member type for Credits
+interface CrewMember {
+  job?: string;
+  name?: string;
+  id: number;
+  // Add other relevant crew properties if needed
+}
+
+// Define movie credits type
+interface Credits {
+  crew?: CrewMember[];
+  // cast?: CastMember[]; // Can add cast later if needed
+}
+
+// Define movie details interface type (add more fields as needed)
 export interface MovieDetails {
   id: number;
+  imdb_id: string | null; // Added
   title: string;
   original_title: string;
   overview: string | null;
@@ -74,9 +89,11 @@ export interface MovieDetails {
   backdrop_path: string | null;
   release_date: string; // YYYY-MM-DD format
   runtime: number | null; // in minutes
+  vote_average?: number; // Added (optional as it might not always be present)
   genres: { id: number; name: string }[];
   production_companies: { id: number; logo_path: string | null; name: string; origin_country: string }[];
-  // 可以根据 TMDB API 文档添加更多字段: https://developer.themoviedb.org/reference/movie-details
+  credits?: Credits; // Added
+  // Can add more fields based on TMDB API documentation: https://developer.themoviedb.org/reference/movie-details
 }
 
 /**
