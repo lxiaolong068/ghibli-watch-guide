@@ -30,6 +30,19 @@ export const getAllMovies = cache(async (page: number = 1, pageSize: number = 12
     // Use Promise.all to fetch movies and count concurrently
     const [movies, totalMovies] = await prisma.$transaction([
       prisma.movie.findMany({
+        select: {
+          id: true,
+          tmdbId: true,
+          titleEn: true,
+          titleJa: true,
+          year: true,
+          director: true,
+          duration: true,
+          synopsis: true,
+          posterUrl: true,
+          backdropUrl: true,
+          voteAverage: true,
+        },
         orderBy: {
           year: 'desc', // Keep the consistent order
         },
@@ -56,6 +69,19 @@ export const getAllMovies = cache(async (page: number = 1, pageSize: number = 12
 export const getLatestMovies = cache(async (count: number) => {
   try {
     const movies = await prisma.movie.findMany({
+      select: {
+        id: true,
+        tmdbId: true,
+        titleEn: true,
+        titleJa: true,
+        year: true,
+        director: true,
+        duration: true,
+        synopsis: true,
+        posterUrl: true,
+        backdropUrl: true,
+        voteAverage: true,
+      },
       orderBy: {
         year: 'desc',
       },

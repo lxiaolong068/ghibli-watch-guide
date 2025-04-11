@@ -48,14 +48,16 @@ export function MovieList({ movies }: MovieListProps) {
                     {movie.year}
                   </p>
                   <p className="mt-2 text-sm text-gray-500 line-clamp-3">
-                    {movie.synopsis}
+                    {movie.synopsis || 'Synopsis not available.'}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                      {movie.director}
+                      {movie.voteAverage && movie.voteAverage > 0 
+                        ? movie.voteAverage.toFixed(1) 
+                        : 'N/A'}
                     </span>
                     <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-                      {movie.duration} min
+                      {movie.duration ? `${movie.duration} min` : 'N/A'}
                     </span>
                   </div>
                 </div>

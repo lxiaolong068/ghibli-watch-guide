@@ -20,10 +20,12 @@ model Movie {
   titleJa     String         // Japanese title
   titleZh     String?        // Chinese title (optional)
   year        Int            // Release year
-  director    String         // Director
-  duration    Int            // Duration (minutes)
-  synopsis    String         // Synopsis
+  director    String?        // Director (optional)
+  duration    Int?           // Duration (minutes, optional)
+  synopsis    String?        // Synopsis (optional)
   posterUrl   String?        // Poster URL (optional)
+  backdropUrl String?        // Backdrop URL (optional)
+  voteAverage Float?         // TMDB vote average (optional)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 }

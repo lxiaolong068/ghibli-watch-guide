@@ -10,14 +10,6 @@ export async function GET() {
       orderBy: {
         year: 'desc',
       },
-      include: {
-        availabilities: {
-          include: {
-            platform: true,
-            region: true,
-          },
-        },
-      },
     });
 
     return NextResponse.json(movies);

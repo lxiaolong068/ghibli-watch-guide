@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -70,7 +71,16 @@ interface DiscoverMovieResponse {
   total_results: number;
 }
 
-// Fetches full details for a specific movie
+// Fetches full details for a specific movie, including credits
+interface CrewMember {
+  job: string;
+  name: string;
+}
+
+interface Credits {
+  crew: CrewMember[];
+}
+
 interface MovieDetails {
   id: number;
   title: string;
@@ -82,20 +92,21 @@ interface MovieDetails {
   runtime: number | null;
   genres: { id: number; name: string }[];
   production_companies: { id: number; logo_path: string | null; name: string; origin_country: string }[];
-  // Add other fields if needed
+  vote_average: number; // Add vote average
+  credits: Credits; // Add credits structure
 }
 
 async function getFullMovieDetails(movieId: number): Promise<MovieDetails | null> {
   try {
-    console.log(`Fetching full details for movie ID: ${movieId}`);
-    const details = await fetchTmdbApi<MovieDetails>(`/movie/${movieId}`);
+    console.log(`Fetching full details and credits for movie ID: ${movieId}`);
+    // Use append_to_response to fetch credits along with details
+    const details = await fetchTmdbApi<MovieDetails>(`/movie/${movieId}`, { append_to_response: 'credits' });
     return details;
   } catch (error) {
     console.error(`Failed to fetch full details for movie ID ${movieId}:`, error);
     return null; // Return null if fetching fails for a single movie
   }
 }
-
 
 async function seedMovies() {
   console.log('Starting movie seeding process...');
@@ -139,7 +150,7 @@ async function seedMovies() {
   let failedCount = 0;
 
   for (const movie of allMovies) {
-      // Fetch full details to get runtime and potentially director (though director is tricky)
+      // Fetch full details including credits
       const details = await getFullMovieDetails(movie.id);
 
       if (!details) {
@@ -151,37 +162,51 @@ async function seedMovies() {
       }
 
       const year = details.release_date ? parseInt(details.release_date.substring(0, 4), 10) : 0;
-      // Director info isn't directly in /discover or /movie/{id}. Requires /movie/{id}/credits endpoint.
-      // For now, setting a placeholder or leaving it empty.
-      const directorPlaceholder = 'N/A'; // Or fetch credits if crucial
+      
+      // Find the director from the credits crew
+      const director = details.credits?.crew?.find(member => member.job === 'Director')?.name ?? null;
+      if (!director) {
+          console.warn(`Director not found for movie ID ${details.id} (${details.title})`);
+      }
+
+      // Construct full URLs
+      const posterUrl = details.poster_path ? `https://image.tmdb.org/t/p/w500${details.poster_path}` : null;
+      const backdropUrl = details.backdrop_path ? `https://image.tmdb.org/t/p/w1280${details.backdrop_path}` : null;
 
       try {
+          // Build update data conditionally, omitting nulls
+          const updateData: Prisma.MovieUpdateInput = {
+            titleEn: details.title,
+            titleJa: details.original_title,
+            year: year,
+            ...(director !== null && { director: director }),
+            ...(details.runtime !== null && { duration: details.runtime }),
+            ...(details.overview !== null && { synopsis: details.overview }),
+            ...(posterUrl !== null && { posterUrl: posterUrl }),
+            ...(backdropUrl !== null && { backdropUrl: backdropUrl }),
+            ...(details.vote_average !== null && { voteAverage: details.vote_average }),
+          };
+
+          // Create data includes nulls explicitly, but use undefined for optional fields if null
+          const createData: Prisma.MovieCreateInput = {
+            tmdbId: details.id,
+            titleEn: details.title,
+            titleJa: details.original_title,
+            year: year,
+            director: director ?? undefined,
+            duration: details.runtime ?? undefined,
+            synopsis: details.overview ?? undefined,
+            posterUrl: posterUrl ?? undefined,
+            backdropUrl: backdropUrl ?? undefined,
+            voteAverage: details.vote_average ?? undefined,
+          };
+
           await prisma.movie.upsert({
               where: { tmdbId: details.id },
-              update: {
-                  titleEn: details.title, // Assuming TMDB title is English
-                  titleJa: details.original_title, // Assuming original is Japanese for Ghibli
-                  // titleZh: null, // Set Chinese title if available/needed
-                  year: year,
-                  director: directorPlaceholder, // Update if director info is fetched
-                  duration: details.runtime ?? 0,
-                  synopsis: details.overview ?? '',
-                  posterUrl: details.poster_path ? `https://image.tmdb.org/t/p/w500${details.poster_path}` : null,
-                  // No need to update createdAt
-              },
-              create: {
-                  tmdbId: details.id,
-                  titleEn: details.title,
-                  titleJa: details.original_title,
-                  // titleZh: null,
-                  year: year,
-                  director: directorPlaceholder,
-                  duration: details.runtime ?? 0,
-                  synopsis: details.overview ?? '',
-                  posterUrl: details.poster_path ? `https://image.tmdb.org/t/p/w500${details.poster_path}` : null,
-              },
+              update: updateData,
+              create: createData,
           });
-          console.log(`Upserted: ${details.title} (ID: ${details.id})`);
+          console.log(`Upserted: ${details.title} (ID: ${details.id}), Director: ${director || 'N/A'}, Rating: ${createData.voteAverage ?? 'N/A'}`);
           upsertedCount++;
       } catch (dbError) {
           console.error(`Failed to upsert movie ID ${details.id} (${details.title}):`, dbError);
