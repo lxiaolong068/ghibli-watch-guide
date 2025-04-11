@@ -10,7 +10,8 @@
     "test": "vitest",
     "db:seed": "ts-node -O '{\"module\":\"CommonJS\"}' prisma/scripts/seed.ts",
     "db:push": "prisma db push",
-    "db:seed:movies": "tsx scripts/seed-movies.ts"
+    "db:seed:movies": "tsx scripts/seed-movies.ts",
+    "db:seed:regions-platforms": "tsx prisma/scripts/seed-regions-platforms.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.1",

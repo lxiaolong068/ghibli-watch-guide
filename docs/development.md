@@ -37,7 +37,7 @@
     *   主要使用 **TMDB API** 获取基础电影信息（导演、年份、简介、海报图等）。
     *   针对 **观看可用性信息**（流媒体平台、租赁/购买链接、价格、免费渠道如 Kanopy/Hoopla 等），进行 **针对性网络爬取** 或查询特定区域性平台 API/数据源进行补充。
     *   确认补充信息来源的可靠性。
-*   🟡 <font color="orange">**TMDB API 集成**</font>: 
+*   ✅ <font color="green">**TMDB API 集成**</font>: 
     *   ✅ <font color="green">**申请 TMDB API 密钥**</font> (已完成，密钥在 `.env`)
     *   ✅ <font color="green">**在后端逻辑中实现调用 TMDB API 获取电影详情的功能。**</font> (已创建 `lib/tmdb.ts` 和 `/api/movies/[id]` 路由)
 *   ✅ <font color="green">**数据库 Schema 设计**</font>: 使用 Prisma Schema 设计数据库模型，主要存储 `Availability` (包含 `regionId`, `platformId`, `movieId`, `url`, `type`, `price`, `lastChecked` 等) 和辅助的 `Region`, `Platform` 信息。`Movie` 表的基础信息将主要来自 TMDB，可选择性缓存关键字段。 (注意: `Availability` 模型及相关数据目前已移除)
@@ -45,7 +45,8 @@
 *   🟡 <font color="orange">**数据访问逻辑**</font>: 实现 Next.js 后端逻辑 (API 路由/Server Actions) 来: 
     *   ✅ <font color="green">**(1) 调用 TMDB API 获取基础电影数据 (已实现 `/api/movies/[id]` API 路由)**</font>
     *   ✅ <font color="green">**(2) 查询本地数据库获取Movie List (已实现 `getAllMovies`, `getLatestMovies` 并支持分页)**</font>
-    *   🔴 (3) 整合 API 数据和数据库数据后返回给前端 (针对电影详情页)。
+    *   ✅ <font color="green">**(3) API路由Bug修复: 移除 `app/api/movies/route.ts` 中对不存在的 `availabilities` 关联的引用**</font>
+    *   🔴 (4) 整合 API 数据和数据库数据后返回给前端 (针对电影详情页)。
 *   🔴 **数据更新流程**: 规划如何保持信息时效性。**初步计划**: 
     *   (1) 基础电影信息依赖 TMDB API 的更新 (可在前端或后端做缓存)。
     *   (2) 定期（手动检查或未来考虑自动化脚本）检查并更新数据库中的观看可用性信息 (`Availability` 表记录)。在 `Availability` 表中加入 `lastChecked` 字段跟踪更新时间。(注：`Availability` 相关逻辑暂缓)
@@ -58,16 +59,18 @@
 *   ✅ <font color="green">**UI 基础**</font>: 使用 Starwind UI 组件搭建网站整体布局、导航和基本样式。
 *   ✅ <font color="green">**首页 (`/`)**</font>: 实现首页布局，并展示最新的 9 部电影。
 *   ✅ <font color="green">**Movie List页 (`/movies`)**</font>: 实现Movie List展示和分页功能。
-*   🔴 **地区选择器 (已移除)**: 由于移除了 `Availability` 数据，地区选择功能已暂时移除。
+*   🟡 <font color="orange">**地区选择器 (重新规划)**</font>: 
+    * 🔴 设计并实现地区切换组件，让用户可选择查看不同地区的观看信息。
+    * 🔴 实现地区偏好的持久化（使用浏览器localStorage或cookies）。
 *   🟡 <font color="orange">**信息展示组件**</font>: 开发用于显示不同观看方式信息的 React 组件:
-    *   🔴 **按地区展示**: (暂缓，依赖 `Availability` 数据和地区选择器)。
+    *   🔴 **按地区展示**: 实现地区过滤功能，支持选择特定地区查看电影观看选项。
     *   ✅ <font color="green">**按电影展示 (列表页)**</font>: `/movies` 页面已实现。
-    *   🔴 **观看信息展示**: (暂缓，依赖 `Availability` 数据)。
-    *   🔴 **价格信息展示**: (暂缓，依赖 `Availability` 数据)。
+    *   🔴 **观看信息展示**: 设计并实现观看渠道信息展示组件。
+    *   🔴 **价格信息展示**: 设计并实现价格信息的清晰展示方式。
 *   ✅ <font color="green">**电影详情页面 (`/movies/[id]`)**</font>:
     *   ✅ <font color="green">**基本信息**</font>: 展示电影详细信息，包括导演、年份、时长等 (已使用 TMDB API 数据展示)。
-    *   🔴 **观看选项**: (暂缓，依赖 `Availability` 数据)。
-    *   🔴 **价格比较**: (暂缓，依赖 `Availability` 数据)。
+    *   🔴 **观看选项**: 在电影详情页实现观看选项展示，按地区分组显示。
+    *   🔴 **价格比较**: 实现不同平台的价格比较功能。
 *   🟡 <font color="orange">**加载状态优化**</font>:
     *   🟡 <font color="orange">**骨架屏**</font>: 为电影卡片添加加载状态。
     *   🟡 <font color="orange">**过渡动画**</font>: 添加平滑的状态转换动画。
@@ -123,3 +126,40 @@
     *   🔴 **数据更新流程**: 建立定期数据更新机制 (特别注意 `Availability` 数据)。
     *   🔴 **备份策略**: 制定数据备份计划。
     *   🔴 **更新日志**: 记录所有重要更新和变更。
+
+---
+
+## 新增阶段：观看可用性功能恢复 (Phase 6: Availability Feature Restoration)
+
+*   🔴 **Availability数据模型恢复**: 
+    * 🔴 更新Prisma Schema，重新添加`Availability`、`Region`和`Platform`模型及其关联关系。
+    * 🔴 确保与`Movie`模型的正确关联 (一对多关系)。
+    * 🔴 执行数据库迁移以应用新的schema。
+*   🔴 **Region与Platform数据填充**:
+    * 🔴 编写种子脚本填充主要地区数据(美国、日本、中国、欧洲主要国家等)。
+    * 🔴 编写种子脚本填充主要平台数据(Netflix、Disney+、HBO Max、哔哩哔哩、优酷等)。
+*   🔴 **Availability数据收集与填充**:
+    * 🔴 设计数据收集方法(手动收集/爬虫/API)。
+    * 🔴 实现数据处理和导入逻辑。 
+    * 🔴 添加`lastChecked`字段记录数据最后更新时间。
+*   🔴 **API路由更新**:
+    * 🔴 更新`/api/movies/route.ts`以正确包含`availabilities`关联数据。
+    * 🔴 开发新的API端点`/api/availability`用于按地区查询电影可用性。
+    * 🔴 实现`/api/regions`和`/api/platforms`获取支持的地区和平台列表。
+*   🔴 **Server Actions开发**:
+    * 🔴 编写`getMovieAvailability`查询特定电影的观看选项。
+    * 🔴 开发`getAvailabilityByRegion`支持按地区筛选。
+    * 🔴 添加缓存机制优化性能。
+*   🔴 **前端组件实现**:
+    * 🔴 地区选择器组件。
+    * 🔴 可用性信息卡片组件。
+    * 🔴 价格比较组件。
+    * 🔴 将这些组件集成到电影详情页。
+*   🔴 **错误处理与优化**:
+    * 🔴 添加数据加载边界值处理。
+    * 🔴 优化数据库查询以提高性能。
+    * 🔴 实现失败重试和回退策略。
+*   🔴 **数据管理面板** (可选):
+    * 🔴 开发简单的管理界面，便于管理员更新观看可用性信息。
+    * 🔴 添加批量导入/导出功能。
+    * �� 实现用户身份验证以保护管理界面。

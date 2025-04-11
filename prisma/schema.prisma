@@ -28,6 +28,8 @@ model Movie {
   voteAverage Float?         // TMDB vote average (optional)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+  // 关联电影可用性信息
+  availabilities Availability[]
 }
 
 model Platform {
@@ -38,6 +40,8 @@ model Platform {
   logo        String?        // Platform logo URL (optional)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+  // 平台与可用性的关联
+  availabilities Availability[]
 }
 
 model Region {
@@ -46,6 +50,35 @@ model Region {
   name        String         // Region name
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+  // 地区与可用性的关联
+  availabilities Availability[]
+}
+
+// 新增Availability模型用于存储电影在不同地区和平台的可用性信息
+model Availability {
+  id          String         @id @default(cuid())
+  url         String?        // 观看链接
+  price       Float?         // 价格(如适用)
+  currency    String?        // 货币单位(USD, CNY, JPY等)
+  type        AvailabilityType // 可用性类型(流媒体、租赁等)
+  lastChecked DateTime       // 最后检查时间
+  isAvailable Boolean        @default(true) // 当前是否可用
+  notes       String?        // 额外说明(如限时优惠等)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  // 关联关系
+  movie       Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  movieId     String
+  platform    Platform       @relation(fields: [platformId], references: [id], onDelete: Cascade)
+  platformId  String
+  region      Region         @relation(fields: [regionId], references: [id], onDelete: Cascade)
+  regionId    String
+
+  // 复合索引以加快查询速度
+  @@index([movieId, regionId])
+  @@index([platformId, regionId])
+  @@unique([movieId, platformId, regionId, type])
 }
 
 enum PlatformType {
@@ -55,4 +88,15 @@ enum PlatformType {
   FREE         // 免费
   CINEMA       // 电影院
   PHYSICAL     // 实体（如DVD）
+}
+
+// 新增枚举以表示可用性类型
+enum AvailabilityType {
+  SUBSCRIPTION // 订阅服务
+  RENT         // 租赁
+  BUY          // 购买
+  FREE         // 免费
+  CINEMA       // 电影院放映
+  LIBRARY      // 图书馆借阅
+  DVD          // DVD/蓝光光盘
 }
