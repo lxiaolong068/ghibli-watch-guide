@@ -3,12 +3,12 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { HomeIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 
-// 路径映射配置
+// Path mapping configuration
 const pathMap: { [key: string]: string } = {
   'movies': 'Movies',
   'about': 'About',
   'contact': 'Contact',
-  // 可以根据需要添加更多映射
+  // Add more mappings as needed
 };
 
 export default function Breadcrumb() {

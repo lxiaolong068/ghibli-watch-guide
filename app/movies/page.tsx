@@ -3,7 +3,7 @@ import { getAllMovies } from '@/app/actions/movies';
 import { MovieListContainer } from '@/app/components/MovieListContainer';
 // import type { Region } from '@prisma/client'; // No longer needed here
 
-// 移除强制动态生成的设置，允许页面缓存
+// Remove force-dynamic setting to allow page caching
 // export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {

@@ -1,51 +1,52 @@
 import { getMovieAvailability, getAllRegions } from '@/app/actions/availability';
 // 注意: 当Prisma模型生成后，才能直接从@prisma/client导入
-// 临时使用字符串枚举替代
+// Note: We'll be able to import directly from @prisma/client after Prisma models are generated
+// Using string enums as temporary replacements
 
-// 观看可用性类型枚举
+// Availability type enum
 enum AvailabilityType {
-  SUBSCRIPTION = 'SUBSCRIPTION', // 订阅服务
-  RENT = 'RENT',         // 租赁
-  BUY = 'BUY',          // 购买
-  FREE = 'FREE',         // 免费
-  CINEMA = 'CINEMA',       // 电影院放映
-  LIBRARY = 'LIBRARY',      // 图书馆借阅
-  DVD = 'DVD'           // DVD/蓝光光盘
+  SUBSCRIPTION = 'SUBSCRIPTION', // Subscription service
+  RENT = 'RENT',         // Rent
+  BUY = 'BUY',          // Buy
+  FREE = 'FREE',         // Free
+  CINEMA = 'CINEMA',       // Cinema
+  LIBRARY = 'LIBRARY',      // Library
+  DVD = 'DVD'           // DVD/Blu-ray
 }
 
-// 平台类型枚举
+// Platform type enum
 enum PlatformType {
-  STREAMING = 'STREAMING',    // 流媒体
-  RENTAL = 'RENTAL',       // 租赁
-  PURCHASE = 'PURCHASE',     // 购买
-  FREE = 'FREE',         // 免费
-  CINEMA = 'CINEMA',       // 电影院
-  PHYSICAL = 'PHYSICAL'     // 实体（如DVD）
+  STREAMING = 'STREAMING',    // Streaming
+  RENTAL = 'RENTAL',       // Rental
+  PURCHASE = 'PURCHASE',     // Purchase
+  FREE = 'FREE',         // Free
+  CINEMA = 'CINEMA',       // Cinema
+  PHYSICAL = 'PHYSICAL'     // Physical (e.g., DVD)
 }
 
-// 将枚举值转换为可读文本
+// Convert enum values to readable text
 const availabilityTypeLabels: Record<string, string> = {
-  [AvailabilityType.SUBSCRIPTION]: '订阅服务',
-  [AvailabilityType.RENT]: '租赁',
-  [AvailabilityType.BUY]: '购买',
-  [AvailabilityType.FREE]: '免费',
-  [AvailabilityType.CINEMA]: '影院上映',
-  [AvailabilityType.LIBRARY]: '图书馆借阅',
-  [AvailabilityType.DVD]: 'DVD/蓝光',
+  [AvailabilityType.SUBSCRIPTION]: 'Subscription',
+  [AvailabilityType.RENT]: 'Rent',
+  [AvailabilityType.BUY]: 'Buy',
+  [AvailabilityType.FREE]: 'Free',
+  [AvailabilityType.CINEMA]: 'Cinema',
+  [AvailabilityType.LIBRARY]: 'Library',
+  [AvailabilityType.DVD]: 'DVD/Blu-ray',
 };
 
 const platformTypeLabels: Record<string, string> = {
-  [PlatformType.STREAMING]: '流媒体',
-  [PlatformType.RENTAL]: '租赁',
-  [PlatformType.PURCHASE]: '购买',
-  [PlatformType.FREE]: '免费',
-  [PlatformType.CINEMA]: '电影院',
-  [PlatformType.PHYSICAL]: '实体媒体',
+  [PlatformType.STREAMING]: 'Streaming',
+  [PlatformType.RENTAL]: 'Rental',
+  [PlatformType.PURCHASE]: 'Purchase',
+  [PlatformType.FREE]: 'Free',
+  [PlatformType.CINEMA]: 'Cinema',
+  [PlatformType.PHYSICAL]: 'Physical Media',
 };
 
-// 获取可读的时间展示格式
+// Get readable date format
 function formatDate(date: Date): string {
-  return new Date(date).toLocaleDateString('zh-CN', {
+  return new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -58,25 +59,25 @@ interface AvailabilitySectionProps {
 }
 
 export async function AvailabilitySection({ movieId, selectedRegionCode }: AvailabilitySectionProps) {
-  // 获取地区列表和电影可用性信息
+  // Get region list and movie availability information
   const regions = await getAllRegions();
   const { availabilities, lastUpdated } = await getMovieAvailability(movieId, selectedRegionCode);
 
-  // 如果没有可用性数据，显示提示信息
+  // If no availability data, show a message
   if (availabilities.length === 0) {
     return (
       <div className="mt-6 bg-white shadow sm:rounded-lg p-6">
-        <h2 className="text-lg font-semibold mb-4">观看渠道</h2>
+        <h2 className="text-lg font-semibold mb-4">Watch Options</h2>
         <div className="text-gray-500 text-center py-6">
           {selectedRegionCode 
-            ? `没有找到在所选地区的观看信息。` 
-            : `暂无观看渠道信息，请稍后再查看。`}
+            ? `No viewing information found for the selected region.` 
+            : `No viewing information available at this time. Please check back later.`}
         </div>
       </div>
     );
   }
 
-  // 按地区分组显示
+  // Group by region for display
   const groupedByRegion = availabilities.reduce((acc: Record<string, typeof availabilities>, item) => {
     const regionId = item.region.id;
     if (!acc[regionId]) {
@@ -88,18 +89,18 @@ export async function AvailabilitySection({ movieId, selectedRegionCode }: Avail
 
   return (
     <div className="mt-6 bg-white shadow sm:rounded-lg p-6">
-      <h2 className="text-lg font-semibold mb-4">观看渠道</h2>
+      <h2 className="text-lg font-semibold mb-4">Watch Options</h2>
       
-      {/* 最后更新时间 */}
+      {/* Last updated time */}
       {lastUpdated && (
         <p className="text-sm text-gray-500 mb-4">
-          最后更新时间: {formatDate(lastUpdated)}
+          Last updated: {formatDate(lastUpdated)}
         </p>
       )}
       
-      {/* 地区选择器将在另一个组件中实现 */}
+      {/* Region selector will be implemented in another component */}
       
-      {/* 可用性信息展示 */}
+      {/* Availability information display */}
       <div className="space-y-6">
         {Object.entries(groupedByRegion).map(([regionId, items]) => {
           const region = items[0].region;
@@ -115,7 +116,7 @@ export async function AvailabilitySection({ movieId, selectedRegionCode }: Avail
                     className="flex justify-between items-center p-3 hover:bg-gray-50 rounded border border-gray-100"
                   >
                     <div className="flex items-center space-x-3">
-                      {/* 平台Logo */}
+                      {/* Platform Logo */}
                       {item.platform.logo && (
                         <div className="flex-shrink-0 h-8 w-8">
                           <img
@@ -139,7 +140,7 @@ export async function AvailabilitySection({ movieId, selectedRegionCode }: Avail
                       </div>
                     </div>
                     
-                    {/* 观看链接按钮 */}
+                    {/* Watch link button */}
                     {item.url && (
                       <a 
                         href={item.url} 
@@ -147,7 +148,7 @@ export async function AvailabilitySection({ movieId, selectedRegionCode }: Avail
                         rel="noopener noreferrer"
                         className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                       >
-                        前往观看
+                        Watch Now
                       </a>
                     )}
                   </div>

@@ -9,19 +9,19 @@ const prisma = new PrismaClient();
 
 // 主要地区数据
 const regions = [
-  { code: 'US', name: '美国' },
-  { code: 'JP', name: '日本' },
-  { code: 'CN', name: '中国大陆' },
-  { code: 'HK', name: '中国香港' },
-  { code: 'TW', name: '中国台湾' },
-  { code: 'GB', name: '英国' },
-  { code: 'FR', name: '法国' },
-  { code: 'DE', name: '德国' },
-  { code: 'CA', name: '加拿大' },
-  { code: 'AU', name: '澳大利亚' },
-  { code: 'KR', name: '韩国' },
-  { code: 'SG', name: '新加坡' },
-  { code: 'MY', name: '马来西亚' },
+  { code: 'US', name: 'United States' },
+  { code: 'JP', name: 'Japan' },
+  { code: 'CN', name: 'China Mainland' },
+  { code: 'HK', name: 'Hong Kong' },
+  { code: 'TW', name: 'Taiwan' },
+  { code: 'GB', name: 'United Kingdom' },
+  { code: 'FR', name: 'France' },
+  { code: 'DE', name: 'Germany' },
+  { code: 'CA', name: 'Canada' },
+  { code: 'AU', name: 'Australia' },
+  { code: 'KR', name: 'South Korea' },
+  { code: 'SG', name: 'Singapore' },
+  { code: 'MY', name: 'Malaysia' },
 ];
 
 // 主要平台数据

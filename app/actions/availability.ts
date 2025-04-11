@@ -3,8 +3,8 @@
 import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
 
-// 临时定义可用性类型，以解决TypeScript错误
-// 一旦Prisma代码生成完成，就可以直接从@prisma/client导入这些类型
+// Temporary type definitions for availability to resolve TypeScript errors
+// Once Prisma code generation is complete, we can import these types directly from @prisma/client
 interface Platform {
   id: string;
   name: string;
@@ -35,32 +35,32 @@ interface Availability {
   region: Region;
 }
 
-// 缓存函数，获取特定电影在特定地区的观看可用性信息
+// Cached function to get watch availability information for a specific movie in a specific region
 export const getMovieAvailability = cache(async (movieId: string, regionCode?: string) => {
   try {
-    // 检查Availability表是否存在
+    // Check if Availability table exists
     try {
       await prisma.$queryRaw`SELECT 1 FROM "Availability" LIMIT 1`;
     } catch (e) {
-      // 表不存在，返回空数组
-      console.log('Availability表尚未创建，返回空数据');
+      // Table doesn't exist, return empty array
+      console.log('Availability table has not been created yet, returning empty data');
       return { availabilities: [], lastUpdated: null };
     }
     
-    // 构建基础查询条件
+    // Build base query conditions
     const where: any = {
       movieId: movieId
     };
     
-    // 如果指定了地区，添加地区过滤
+    // If region is specified, add region filter
     if (regionCode) {
       where.region = {
         code: regionCode
       };
     }
     
-    // 查询可用性数据
-    // 使用any类型绕过TypeScript检查，因为在运行时Prisma客户端会动态生成这些模型
+    // Query availability data
+    // Using any type to bypass TypeScript checks since Prisma client will generate these models at runtime
     const availabilities = await (prisma as any).availability.findMany({
       where,
       include: {
@@ -73,7 +73,7 @@ export const getMovieAvailability = cache(async (movieId: string, regionCode?: s
       ]
     }) as Availability[];
     
-    // 获取最后更新时间
+    // Get last updated time
     const lastUpdated = availabilities.length > 0 
       ? availabilities.reduce((latest: Date, current: Availability) => 
           current.lastChecked > latest ? current.lastChecked : latest, 
@@ -85,55 +85,55 @@ export const getMovieAvailability = cache(async (movieId: string, regionCode?: s
       lastUpdated
     };
   } catch (error) {
-    console.error('获取电影观看可用性信息失败:', error);
+    console.error('Failed to get movie availability information:', error);
     return { availabilities: [], lastUpdated: null };
   }
 });
 
-// 获取所有支持的地区列表
+// Get all supported regions
 export const getAllRegions = cache(async () => {
   try {
-    // 检查Region表是否存在
+    // Check if Region table exists
     try {
       await prisma.$queryRaw`SELECT 1 FROM "Region" LIMIT 1`;
     } catch (e) {
-      // 表不存在，返回空数组
-      console.log('Region表尚未创建，返回空数据');
+      // Table doesn't exist, return empty array
+      console.log('Region table has not been created yet, returning empty data');
       return [];
     }
     
-    // 使用any类型绕过TypeScript检查
+    // Using any type to bypass TypeScript checks
     const regions = await (prisma as any).region.findMany({
       orderBy: { name: 'asc' }
     }) as Region[];
     
     return regions;
   } catch (error) {
-    console.error('获取地区列表失败:', error);
+    console.error('Failed to get region list:', error);
     return [];
   }
 });
 
-// 获取所有支持的平台列表
+// Get all supported platforms
 export const getAllPlatforms = cache(async () => {
   try {
-    // 检查Platform表是否存在
+    // Check if Platform table exists
     try {
       await prisma.$queryRaw`SELECT 1 FROM "Platform" LIMIT 1`;
     } catch (e) {
-      // 表不存在，返回空数组
-      console.log('Platform表尚未创建，返回空数据');
+      // Table doesn't exist, return empty array
+      console.log('Platform table has not been created yet, returning empty data');
       return [];
     }
     
-    // 使用any类型绕过TypeScript检查
+    // Using any type to bypass TypeScript checks
     const platforms = await (prisma as any).platform.findMany({
       orderBy: { name: 'asc' }
     }) as Platform[];
     
     return platforms;
   } catch (error) {
-    console.error('获取平台列表失败:', error);
+    console.error('Failed to get platform list:', error);
     return [];
   }
 }); 

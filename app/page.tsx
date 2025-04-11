@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { getLatestMovies } from '@/app/actions/movies';
 import { MovieList } from '@/app/components/MovieList';
 
-// 移除强制动态生成的设置，允许页面缓存
+// Remove force-dynamic setting to allow page caching
 // export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {

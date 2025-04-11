@@ -2,22 +2,22 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Script from 'next/script';
-import { cache } from 'react'; // 导入React的cache函数
+import { cache } from 'react'; // Import React's cache function
 import type { MovieDetails, WatchProviderResults, MovieWatchProvidersResponse } from '@/lib/tmdb'; // Import types from tmdb
 import { PrismaClient, Prisma } from '@prisma/client'; // Import Prisma
 import { getMovieDetails, getMovieWatchProviders } from '@/lib/tmdb'; // Import TMDB fetch functions
-import { getAllRegions } from '@/app/actions/availability'; // 导入地区获取函数
-import { AvailabilitySection } from '@/app/components/movies/AvailabilitySection'; // 导入可用性信息组件
-import { RegionSelector } from '@/app/components/movies/RegionSelector'; // 导入地区选择器组件
+import { getAllRegions } from '@/app/actions/availability'; // Import region retrieval function
+import { AvailabilitySection } from '@/app/components/movies/AvailabilitySection'; // Import availability information component
+import { RegionSelector } from '@/app/components/movies/RegionSelector'; // Import region selector component
 
-// 单例模式处理Prisma客户端
+// Singleton pattern for Prisma client
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 const prisma = globalForPrisma.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 // Define Prisma types for reuse
 const movieArgs = Prisma.validator<Prisma.MovieFindUniqueArgs>()({
-  where: { id: '' }, // 添加必需的where字段（实际值在运行时会被替换）
+  where: { id: '' }, // Required where field (actual value will be replaced at runtime)
   select: { 
     tmdbId: true, 
     titleEn: true, 
@@ -31,7 +31,7 @@ interface MoviePageData {
   providers: WatchProviderResults;
 }
 
-// 设置为动态路由，不在构建时静态生成
+// Set as dynamic route, not statically generated at build time
 export const dynamic = 'force-dynamic';
 
 interface MoviePageProps {
@@ -39,12 +39,12 @@ interface MoviePageProps {
     id: string; // Database CUID
   };
   searchParams: {
-    region?: string; // 地区代码查询参数
+    region?: string; // Region code query parameter
   };
 }
 
 // Helper function to fetch all necessary data directly
-// 使用React.cache包装数据获取函数，确保同一请求只执行一次
+// Use React.cache to wrap data fetching function, ensuring it's only executed once per request
 const getMoviePageData = cache(async (movieCuid: string): Promise<MoviePageData | null> => {
   console.log(`[CACHED] Fetching movie data for CUID: ${movieCuid}`);
   
@@ -91,7 +91,7 @@ const getMoviePageData = cache(async (movieCuid: string): Promise<MoviePageData 
   }
 });
 
-// 动态生成页面的元数据
+// Dynamic page metadata generation
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
   const { id } = params; // Database CUID
   const pageData = await getMoviePageData(id);
@@ -115,7 +115,7 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
   };
 }
 
-// 骨架屏组件 - 用于显示加载状态
+// Skeleton component - Used to display loading state
 const MovieSkeleton = () => (
   <div className="max-w-5xl mx-auto animate-pulse">
     <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
@@ -218,9 +218,9 @@ const ProviderList = ({ title, providers, countryLink }: { title: string; provid
 
 export default async function MoviePage({ params, searchParams }: MoviePageProps) {
   const { id } = params;
-  const regionCode = searchParams.region; // 获取地区代码
+  const regionCode = searchParams.region; // Get region code
   
-  // 获取电影数据和地区列表
+  // Get movie data and region list
   const [pageData, regions] = await Promise.all([
     getMoviePageData(id),
     getAllRegions()
@@ -242,13 +242,13 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
   const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null;
   const backdropUrl = movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : null;
 
-  // 选择默认地区
+  // Select default region
   const countryCodes = Object.keys(watchProviders);
-  const defaultRegion = countryCodes.length > 0 ? countryCodes[0] : 'US'; // TMDB默认使用US地区
+  const defaultRegion = countryCodes.length > 0 ? countryCodes[0] : 'US'; // TMDB uses US region by default
   
   return (
     <div className="max-w-5xl mx-auto pb-12">
-      {/* 电影详情卡片 */}
+      {/* Movie Detail Card */}
       <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
         <div className="relative">
           {backdropUrl && (
@@ -345,7 +345,7 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         </div>
       </div>
 
-      {/* 地区选择器 */}
+      {/* Region Selector */}
       <div className="mb-4">
         <RegionSelector 
           regions={regions} 
@@ -353,15 +353,15 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         />
       </div>
 
-      {/* 电影观看可用性信息 */}
+      {/* Movie Availability Information */}
       <AvailabilitySection 
         movieId={id}
         selectedRegionCode={regionCode}
       />
 
-      {/* TMDB提供的观看信息 */}
+      {/* Watch Information from TMDB */}
       <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">TMDB提供的观看信息</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Watch Information from TMDB</h2>
 
         {Object.keys(watchProviders).length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2">
@@ -372,7 +372,7 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
               }
 
               // Standardize country display
-              const countryName = new Intl.DisplayNames(['zh-CN'], { type: 'region' }).of(countryCode) || countryCode;
+              const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode) || countryCode;
               
               return (
                 <div key={countryCode} className="border border-gray-200 rounded-lg p-4">
@@ -386,26 +386,26 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:text-blue-800 text-sm"
                       >
-                        在TMDB上查看完整信息 →
+                        View full information on TMDB →
                       </a>
                     </div>
                   )}
                   
-                  <ProviderList title="订阅流媒体" providers={countryData.flatrate} countryLink={countryData.link} />
-                  <ProviderList title="购买" providers={countryData.buy} countryLink={countryData.link} />
-                  <ProviderList title="租赁" providers={countryData.rent} countryLink={countryData.link} />
+                  <ProviderList title="Subscription Streaming" providers={countryData.flatrate} countryLink={countryData.link} />
+                  <ProviderList title="Buy" providers={countryData.buy} countryLink={countryData.link} />
+                  <ProviderList title="Rent" providers={countryData.rent} countryLink={countryData.link} />
                 </div>
               );
             })}
           </div>
         ) : (
           <div className="text-center py-6 text-gray-500">
-            TMDB暂无观看信息。
+            No watching information available on TMDB.
           </div>
         )}
       </div>
 
-      {/* 萤火虫之墓特殊提示 */}
+      {/* Special Note for Grave of the Fireflies */}
       {(movie.title === 'Grave of the Fireflies' || movie.original_title === '火垂るの墓') && (
         <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mb-8">
           <div className="flex">
@@ -416,16 +416,16 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
             </div>
             <div className="ml-3">
               <p className="text-sm text-amber-700">
-                <strong>特别说明：</strong> 《萤火虫之墓》的发行权归东宝株式会社所有，而非吉卜力工作室。这可能导致该片在某些地区与其他吉卜力电影的播放平台不同。
+                <strong>Special Note:</strong> "Grave of the Fireflies" is distributed by Toho Co., Ltd., not Studio Ghibli. This may result in different streaming availability compared to other Ghibli films in some regions.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* 数据来源声明 */}
+      {/* Data Source Attribution */}
       <div className="mt-8 text-sm text-gray-500 text-center">
-        <p>电影信息来自 TMDB（The Movie Database）</p>
+        <p>Movie information provided by TMDB (The Movie Database)</p>
         <div className="mt-2">
           <a 
             href={`https://www.themoviedb.org/movie/${movie.id}`}

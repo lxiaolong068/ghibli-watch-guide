@@ -19,12 +19,12 @@ export function RegionSelector({ regions, defaultRegionCode }: RegionSelectorPro
   const pathname = usePathname();
   const searchParams = useSearchParams();
   
-  // 默认使用查询参数中的地区代码，或者传入的默认地区代码
+  // Use region code from query params, or the default code provided
   const currentRegionCode = searchParams.get('region') || defaultRegionCode;
   
-  // 从本地存储中获取保存的地区偏好
+  // Get saved region preference from local storage
   useEffect(() => {
-    // 如果没有指定地区，尝试从localStorage中获取
+    // If no region is specified, try to get from localStorage
     if (!currentRegionCode) {
       const savedRegion = localStorage.getItem('preferredRegion');
       if (savedRegion && regions.some(r => r.code === savedRegion)) {
@@ -33,25 +33,25 @@ export function RegionSelector({ regions, defaultRegionCode }: RegionSelectorPro
     }
   }, []);
   
-  // 处理地区选择变化
+  // Handle region selection change
   const handleRegionChange = (regionCode: string) => {
-    // 保存到localStorage
+    // Save to localStorage
     localStorage.setItem('preferredRegion', regionCode);
     
-    // 更新URL查询参数
+    // Update URL query parameters
     const params = new URLSearchParams(searchParams);
     params.set('region', regionCode);
     router.replace(`${pathname}?${params.toString()}`);
   };
   
   if (regions.length === 0) {
-    return null; // 如果没有地区数据，不显示选择器
+    return null; // If no region data, don't show the selector
   }
   
   return (
     <div className="mb-6">
       <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-2">
-        选择地区
+        Select Region
       </label>
       <select
         id="region"
@@ -60,7 +60,7 @@ export function RegionSelector({ regions, defaultRegionCode }: RegionSelectorPro
         value={currentRegionCode || ''}
         onChange={(e) => handleRegionChange(e.target.value)}
       >
-        <option value="">全球</option>
+        <option value="">Global</option>
         {regions.map((region) => (
           <option key={region.id} value={region.code}>
             {region.name}

@@ -28,7 +28,7 @@ model Movie {
   voteAverage Float?         // TMDB vote average (optional)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  // 关联电影可用性信息
+  // Movie availability associations
   availabilities Availability[]
 }
 
@@ -40,7 +40,7 @@ model Platform {
   logo        String?        // Platform logo URL (optional)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  // 平台与可用性的关联
+  // Platform to availability association
   availabilities Availability[]
 }
 
@@ -50,24 +50,24 @@ model Region {
   name        String         // Region name
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  // 地区与可用性的关联
+  // Region to availability association
   availabilities Availability[]
 }
 
-// 新增Availability模型用于存储电影在不同地区和平台的可用性信息
+// Availability model for storing movie availability information across regions and platforms
 model Availability {
   id          String         @id @default(cuid())
-  url         String?        // 观看链接
-  price       Float?         // 价格(如适用)
-  currency    String?        // 货币单位(USD, CNY, JPY等)
-  type        AvailabilityType // 可用性类型(流媒体、租赁等)
-  lastChecked DateTime       // 最后检查时间
-  isAvailable Boolean        @default(true) // 当前是否可用
-  notes       String?        // 额外说明(如限时优惠等)
+  url         String?        // Watch link
+  price       Float?         // Price (if applicable)
+  currency    String?        // Currency (USD, CNY, JPY, etc.)
+  type        AvailabilityType // Availability type (streaming, rental, etc.)
+  lastChecked DateTime       // Last checked time
+  isAvailable Boolean        @default(true) // Currently available
+  notes       String?        // Additional notes (e.g., limited time offer)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
-  // 关联关系
+  // Relationships
   movie       Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
   movieId     String
   platform    Platform       @relation(fields: [platformId], references: [id], onDelete: Cascade)
@@ -75,28 +75,28 @@ model Availability {
   region      Region         @relation(fields: [regionId], references: [id], onDelete: Cascade)
   regionId    String
 
-  // 复合索引以加快查询速度
+  // Composite indexes to speed up queries
   @@index([movieId, regionId])
   @@index([platformId, regionId])
   @@unique([movieId, platformId, regionId, type])
 }
 
 enum PlatformType {
-  STREAMING    // 流媒体
-  RENTAL       // 租赁
-  PURCHASE     // 购买
-  FREE         // 免费
-  CINEMA       // 电影院
-  PHYSICAL     // 实体（如DVD）
+  STREAMING    // Streaming service
+  RENTAL       // Rental
+  PURCHASE     // Purchase
+  FREE         // Free
+  CINEMA       // Cinema
+  PHYSICAL     // Physical (e.g., DVD)
 }
 
-// 新增枚举以表示可用性类型
+// Enum to represent availability type
 enum AvailabilityType {
-  SUBSCRIPTION // 订阅服务
-  RENT         // 租赁
-  BUY          // 购买
-  FREE         // 免费
-  CINEMA       // 电影院放映
-  LIBRARY      // 图书馆借阅
-  DVD          // DVD/蓝光光盘
+  SUBSCRIPTION // Subscription service
+  RENT         // Rental
+  BUY          // Purchase
+  FREE         // Free
+  CINEMA       // Cinema screening
+  LIBRARY      // Library borrowing
+  DVD          // DVD/Blu-ray
 }
