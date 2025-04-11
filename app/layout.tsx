@@ -11,7 +11,7 @@ const notoSansSC = Noto_Sans_SC({
 
 export const metadata: Metadata = {
   title: "Where to Watch Studio Ghibli Movies",
-  description: "Discover how to stream Studio Ghibli films on Netflix, Max (HBO Max), and other platforms. Find updated availability for Spirited Away, My Neighbor Totoro, Princess Mononoke and more. Region-specific guide for US, Europe & worldwide.",
+  description: "Find where to stream Studio Ghibli films worldwide. Updated guide for Netflix, Max, and other platforms. Covers Spirited Away, Totoro, and the complete Ghibli collection.",
   openGraph: {
     title: "Where to Watch Studio Ghibli Movies",
     description: "Find the perfect platform to watch your favorite Studio Ghibli films. Complete streaming guide with regional availability, pricing, and free options worldwide.",
