@@ -17,7 +17,7 @@ export function MovieList({ movies }: MovieListProps) {
       <div className="px-4 py-5 sm:p-6">
         <h2 className="text-lg font-medium text-gray-900">电影列表</h2>
         <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {movies.map((movie) => (
+          {movies.map((movie, index) => (
             <div
               key={movie.id}
               className="relative flex flex-col overflow-hidden rounded-lg border border-gray-200 transition-all duration-200 ease-in-out hover:border-primary-300 hover:shadow-md"
@@ -25,7 +25,7 @@ export function MovieList({ movies }: MovieListProps) {
               <Link 
                 href={`/movies/${movie.id}`} 
                 className="block"
-                prefetch={true}
+                prefetch={false}
               >
                 {movie.posterUrl && (
                   <div className="aspect-h-3 aspect-w-2 relative overflow-hidden">
@@ -35,7 +35,8 @@ export function MovieList({ movies }: MovieListProps) {
                       className="object-cover object-center transition-transform duration-200 ease-in-out group-hover:scale-105"
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      priority={true}
+                      priority={index < 3}
+                      loading={index < 3 ? "eager" : "lazy"}
                     />
                   </div>
                 )}

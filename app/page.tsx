@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { getLatestMovies } from '@/app/actions/movies';
 import { MovieList } from '@/app/components/MovieList';
 
-// 设置为动态路由，不在构建时静态生成
-export const dynamic = 'force-dynamic';
+// 移除强制动态生成的设置，允许页面缓存
+// export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   // Fetch the latest 9 movies

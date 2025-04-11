@@ -3,8 +3,8 @@ import { getAllMovies } from '@/app/actions/movies';
 import { MovieListContainer } from '@/app/components/MovieListContainer';
 // import type { Region } from '@prisma/client'; // No longer needed here
 
-// 设置为动态路由，不在构建时静态生成
-export const dynamic = 'force-dynamic';
+// 移除强制动态生成的设置，允许页面缓存
+// export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Studio Ghibli Movie List | Where to Watch Studio Ghibli Movies',
