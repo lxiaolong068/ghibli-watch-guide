@@ -365,45 +365,86 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         <h2 className="text-xl font-bold text-gray-900 mb-6">Watch Information from TMDB</h2>
 
         {(() => {
-          // Determine the actual region code to use (URL param or default)
-          const currentRegionCode = regionCode || defaultRegion;
-          const providersForSelectedRegion = watchProviders[currentRegionCode];
-          const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(currentRegionCode) || currentRegionCode;
-
-          if (providersForSelectedRegion && (providersForSelectedRegion.flatrate || providersForSelectedRegion.buy || providersForSelectedRegion.rent)) {
+          // 处理"全球"选项（regionCode为空字符串）
+          if (regionCode === '') {
+            // 显示所有地区的观看选项
             return (
-              <div>
-                {/* Optionally display the region name if needed */}
-                {/* <h3 className="font-medium text-lg mb-4">{countryName}</h3> */}
-                
-                {providersForSelectedRegion.link && (
-                  <div className="mb-4"> {/* Increased spacing */}
-                    <a
-                      href={providersForSelectedRegion.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 text-sm"
-                    >
-                      View full information on TMDB for {countryName} →
-                    </a>
-                  </div>
-                )}
-                
-                {/* Wrap ProviderLists in a container for better structure if needed, e.g., grid */}
-                <div className="space-y-4"> 
-                  <ProviderList title="Subscription Streaming" providers={providersForSelectedRegion.flatrate} countryLink={providersForSelectedRegion.link} />
-                  <ProviderList title="Buy" providers={providersForSelectedRegion.buy} countryLink={providersForSelectedRegion.link} />
-                  <ProviderList title="Rent" providers={providersForSelectedRegion.rent} countryLink={providersForSelectedRegion.link} />
-                </div>
+              <div className="grid gap-6 md:grid-cols-2">
+                {Object.entries(watchProviders).map(([countryCode, countryData]) => {
+                  // 跳过没有有用数据的地区
+                  if (!countryData || (!countryData.flatrate && !countryData.buy && !countryData.rent)) {
+                    return null;
+                  }
+
+                  // 标准化国家显示
+                  const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode) || countryCode;
+                  
+                  return (
+                    <div key={countryCode} className="border border-gray-200 rounded-lg p-4">
+                      <h3 className="font-medium text-lg mb-4">{countryName}</h3>
+                      
+                      {countryData.link && (
+                        <div className="mb-2">
+                          <a
+                            href={countryData.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 text-sm"
+                          >
+                            View full information on TMDB →
+                          </a>
+                        </div>
+                      )}
+                      
+                      <ProviderList title="Subscription Streaming" providers={countryData.flatrate} countryLink={countryData.link} />
+                      <ProviderList title="Buy" providers={countryData.buy} countryLink={countryData.link} />
+                      <ProviderList title="Rent" providers={countryData.rent} countryLink={countryData.link} />
+                    </div>
+                  );
+                })}
               </div>
             );
           } else {
-            // Display message if no TMDB data for the selected region
-            return (
-              <div className="text-center py-6 text-gray-500">
-                No viewing information found for {countryName} on TMDB.
-              </div>
-            );
+            // 单个地区的筛选逻辑保持不变
+            const currentRegionCode = regionCode || defaultRegion;
+            const providersForSelectedRegion = watchProviders[currentRegionCode];
+            const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(currentRegionCode) || currentRegionCode;
+
+            if (providersForSelectedRegion && (providersForSelectedRegion.flatrate || providersForSelectedRegion.buy || providersForSelectedRegion.rent)) {
+              return (
+                <div>
+                  {/* Optionally display the region name if needed */}
+                  {/* <h3 className="font-medium text-lg mb-4">{countryName}</h3> */}
+                  
+                  {providersForSelectedRegion.link && (
+                    <div className="mb-4"> {/* Increased spacing */}
+                      <a
+                        href={providersForSelectedRegion.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 text-sm"
+                      >
+                        View full information on TMDB for {countryName} →
+                      </a>
+                    </div>
+                  )}
+                  
+                  {/* Wrap ProviderLists in a container for better structure if needed, e.g., grid */}
+                  <div className="space-y-4"> 
+                    <ProviderList title="Subscription Streaming" providers={providersForSelectedRegion.flatrate} countryLink={providersForSelectedRegion.link} />
+                    <ProviderList title="Buy" providers={providersForSelectedRegion.buy} countryLink={providersForSelectedRegion.link} />
+                    <ProviderList title="Rent" providers={providersForSelectedRegion.rent} countryLink={providersForSelectedRegion.link} />
+                  </div>
+                </div>
+              );
+            } else {
+              // 显示当前地区没有数据的提示
+              return (
+                <div className="text-center py-6 text-gray-500">
+                  No viewing information found for {countryName} on TMDB.
+                </div>
+              );
+            }
           }
         })()}
       </div>
