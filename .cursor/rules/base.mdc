@@ -8,3 +8,4 @@ alwaysApply: true
 
 - use pnpm instead of npm.
 - main language of the website is English.
+- After completing a new feature or modifying an existing one, please use Vitest to perform testing.

@@ -28,16 +28,16 @@ const nextConfig = {
       ],
     },
   },
-  // 添加重定向配置
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/home',
-        permanent: true,
-      },
-    ];
-  },
+  // 删除重定向配置
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/home',
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
 };
 
 module.exports = nextConfig; 

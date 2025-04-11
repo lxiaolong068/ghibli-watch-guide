@@ -15,6 +15,7 @@ datasource db {
 
 model Movie {
   id          String         @id @default(cuid())
+  tmdbId      Int            @unique // Add unique TMDB ID
   titleEn     String         // English title
   titleJa     String         // Japanese title
   titleZh     String?        // Chinese title (optional)
@@ -25,7 +26,6 @@ model Movie {
   posterUrl   String?        // Poster URL (optional)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  availabilities Availability[]
 }
 
 model Platform {
@@ -36,7 +36,6 @@ model Platform {
   logo        String?        // Platform logo URL (optional)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  availabilities Availability[]
 }
 
 model Region {
@@ -45,26 +44,6 @@ model Region {
   name        String         // Region name
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  availabilities Availability[]
-}
-
-model Availability {
-  id            String         @id @default(cuid())
-  movie         Movie         @relation(fields: [movieId], references: [id])
-  movieId       String
-  platform      Platform      @relation(fields: [platformId], references: [id])
-  platformId    String
-  region        Region        @relation(fields: [regionId], references: [id])
-  regionId      String
-  url           String?        // Watch URL (optional)
-  priceInfo     Json?          // Price information (JSON format, optional)
-  notes         String?        // Notes (optional)
-  type          String         // FREE, SUBSCRIPTION, RENTAL, or PURCHASE
-  lastChecked   DateTime       // Last checked time
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  @@unique([movieId, platformId, regionId])
 }
 
 enum PlatformType {

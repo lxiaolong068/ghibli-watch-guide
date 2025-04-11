@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { getAllMovies } from '@/app/actions/movies';
-import { MovieListContainer } from '@/app/components/MovieListContainer'; // Import MovieListContainer
-import { prisma } from '@/lib/prisma'; // Import prisma
-import { unstable_cache } from 'next/cache'; // 导入缓存函数
+import { MovieListContainer } from '@/app/components/MovieListContainer';
+// import type { Region } from '@prisma/client'; // No longer needed here
 
 // 设置为动态路由，不在构建时静态生成
 export const dynamic = 'force-dynamic';
@@ -17,32 +16,19 @@ export const metadata: Metadata = {
   },
 };
 
-// 使用缓存包装 getRegions 函数
-const getCachedRegions = unstable_cache(
-  async () => {
-    return prisma.region.findMany({
-      orderBy: {
-        code: 'asc',
-      },
-    });
-  },
-  ['regions-cache'],
-  { revalidate: 3600 } // 缓存1小时
-);
+interface MoviesPageProps {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
 
-// 使用缓存包装 getAllMovies 函数
-const getCachedMovies = unstable_cache(
-  async () => getAllMovies(),
-  ['movies-cache'],
-  { revalidate: 3600 } // 缓存1小时
-);
+const PAGE_SIZE = 12; // Define page size constant
 
-export default async function MoviesPage() {
-  // 使用缓存的函数获取数据
-  const [movies, regions] = await Promise.all([
-    getCachedMovies(),
-    getCachedRegions()
-  ]);
+export default async function MoviesPage({ searchParams }: MoviesPageProps) {
+  // Get current page from search params, default to 1
+  const page = searchParams?.['page'] ?? '1';
+  const currentPage = parseInt(Array.isArray(page) ? page[0] : page, 10);
+
+  // Fetch paginated movies and total count
+  const { movies, totalMovies } = await getAllMovies(currentPage, PAGE_SIZE);
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -55,8 +41,13 @@ export default async function MoviesPage() {
         </p>
       </div>
       
-      {/* Render the list of movies using MovieListContainer */}
-      <MovieListContainer initialMovies={movies} initialRegions={regions} />
+      {/* Pass paginated data and controls props to MovieListContainer */}
+      <MovieListContainer 
+        initialMovies={movies} 
+        totalMovies={totalMovies} 
+        currentPage={currentPage} 
+        pageSize={PAGE_SIZE}
+      />
       
     </main>
   );

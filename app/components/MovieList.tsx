@@ -2,10 +2,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Prisma } from '@prisma/client';
 
-// 使用Prisma类型
-type Movie = Prisma.MovieGetPayload<{
-  include: { availabilities: true }
-}>;
+// Use Prisma type - remove the include for availabilities
+type Movie = Prisma.MovieGetPayload<{}>;
+// Or simply use the model type if no includes are needed:
+// import type { Movie } from '@prisma/client';
 
 interface MovieListProps {
   movies: Movie[];
