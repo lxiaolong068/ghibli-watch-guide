@@ -15,7 +15,7 @@ export function MovieList({ movies }: MovieListProps) {
   return (
     <section className="bg-white shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
-        <h2 className="text-lg font-medium text-gray-900">电影列表</h2>
+        <h2 className="text-lg font-medium text-gray-900">Movie List</h2>
         <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {movies.map((movie, index) => (
             <div

@@ -44,7 +44,7 @@
 *   ✅ <font color="green">**数据迁移/种子填充**</font>: 编写脚本将 **电影信息 (Movie)** 填充到 Neon 数据库中 (Prisma Migrate/Seed)。(注意: `Availability` 相关种子填充已移除)
 *   🟡 <font color="orange">**数据访问逻辑**</font>: 实现 Next.js 后端逻辑 (API 路由/Server Actions) 来: 
     *   ✅ <font color="green">**(1) 调用 TMDB API 获取基础电影数据 (已实现 `/api/movies/[id]` API 路由)**</font>
-    *   ✅ <font color="green">**(2) 查询本地数据库获取电影列表 (已实现 `getAllMovies`, `getLatestMovies` 并支持分页)**</font>
+    *   ✅ <font color="green">**(2) 查询本地数据库获取Movie List (已实现 `getAllMovies`, `getLatestMovies` 并支持分页)**</font>
     *   🔴 (3) 整合 API 数据和数据库数据后返回给前端 (针对电影详情页)。
 *   🔴 **数据更新流程**: 规划如何保持信息时效性。**初步计划**: 
     *   (1) 基础电影信息依赖 TMDB API 的更新 (可在前端或后端做缓存)。
@@ -57,7 +57,7 @@
 
 *   ✅ <font color="green">**UI 基础**</font>: 使用 Starwind UI 组件搭建网站整体布局、导航和基本样式。
 *   ✅ <font color="green">**首页 (`/`)**</font>: 实现首页布局，并展示最新的 9 部电影。
-*   ✅ <font color="green">**电影列表页 (`/movies`)**</font>: 实现电影列表展示和分页功能。
+*   ✅ <font color="green">**Movie List页 (`/movies`)**</font>: 实现Movie List展示和分页功能。
 *   🔴 **地区选择器 (已移除)**: 由于移除了 `Availability` 数据，地区选择功能已暂时移除。
 *   🟡 <font color="orange">**信息展示组件**</font>: 开发用于显示不同观看方式信息的 React 组件:
     *   🔴 **按地区展示**: (暂缓，依赖 `Availability` 数据和地区选择器)。
@@ -100,7 +100,7 @@
     *   🟡 <font color="orange">**功能测试**</font>: 
         *   ✅ <font color="green">**API 路由/Server Actions (部分)**</font>: `/api/movies/[id]`, `getAllMovies`, `getLatestMovies` 测试。
         *   🔴 数据库查询 (更全面的测试)。
-        *   ✅ <font color="green">**电影列表分页**</font>
+        *   ✅ <font color="green">**Movie List分页**</font>
         *   🔴 信息过滤 (暂无)。
         *   🔴 外部链接有效性 (暂无)。
     *   🟡 <font color="orange">**组件测试**</font>: 确保所有组件按预期工作。

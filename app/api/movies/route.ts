@@ -22,9 +22,9 @@ export async function GET() {
 
     return NextResponse.json(movies);
   } catch (error) {
-    console.error('获取电影列表失败：', error);
+    console.error('获取Movie List失败：', error);
     return NextResponse.json(
-      { error: '获取电影列表失败' },
+      { error: '获取Movie List失败' },
       { status: 500 }
     );
   }
