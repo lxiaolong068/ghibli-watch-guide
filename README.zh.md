@@ -60,6 +60,36 @@ pnpm dev
 
 本项目使用 [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) 自动优化和加载 [Geist](https://vercel.com/font)，这是 Vercel 的一个新字体系列。
 
+## 自动化任务和定时作业
+
+本项目包含通过 Vercel 定时作业运行的自动化脚本，用于保持内容的最新状态：
+
+### 电影数据收集
+
+- **目的**：从 TMDB API 获取电影数据并用最新的吉卜力工作室电影信息更新数据库
+- **实现**：位于 `/app/api/cron/seed-movies/route.ts`
+- **计划**：通过 Vercel 定时作业每日运行
+- **认证**：通过 `CRON_SECRET` 环境变量进行保护
+- **手动触发**：您可以在本地使用以下命令手动触发此脚本：
+  ```bash
+  curl -H "Authorization: Bearer YOUR_CRON_SECRET" http://localhost:3000/api/cron/seed-movies
+  ```
+
+### 站点地图生成
+
+- **目的**：自动生成 sitemap.xml 文件以进行搜索引擎优化
+- **实现**：位于 `/app/api/cron/generate-sitemap/route.ts`
+- **计划**：通过 Vercel 定时作业每日运行
+- **输出**：创建/更新 `/public/sitemap.xml`
+- **手动触发**：您可以在本地使用以下命令手动触发此脚本：
+  ```bash
+  curl http://localhost:3000/api/cron/generate-sitemap
+  ```
+
+### 在 Vercel 上设置定时作业
+
+部署到 Vercel 时，定时作业在 `vercel.json` 文件中配置。确保在 Vercel 项目设置中设置 `CRON_SECRET` 环境变量。
+
 ## 了解更多
 
 要了解更多关于 Next.js 的信息，请查看以下资源：
@@ -84,7 +114,9 @@ pnpm dev
     *   这是关键一步。进入 Vercel 的项目设置 (Settings -> Environment Variables)。
     *   根据你的 `.env.example` 或 `.env` 文件添加所需的环境变量。至少，你可能需要：
         *   `DATABASE_URL`: 你的 Neon (或其他提供商) 数据库连接字符串。
-        *   *(在此处添加你集成的任何其他必需的 API 密钥或秘密信息，例如 `TMDB_API_KEY`)*
+        *   `TMDB_API_KEY`: The Movie Database 的 API 密钥。
+        *   `DOMAIN`: 你的网站域名（例如 https://www.whereghibli.cc）。
+        *   `CRON_SECRET`: 用于定时作业认证的安全随机字符串。
     *   确保为适当的环境 (生产、预览、开发) 设置这些变量。
 4.  **部署**:
     *   点击 "Deploy" 按钮。Vercel 将构建并部署你的应用程序。

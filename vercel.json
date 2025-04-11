@@ -7,5 +7,15 @@
   "env": {
     "POSTGRES_PRISMA_URL": "DATABASE_URL",
     "POSTGRES_URL_NON_POOLING": "DATABASE_URL_UNPOOLED"
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/generate-sitemap",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/seed-movies",
+      "schedule": "0 0 * * 1"
+    }
+  ]
 } 

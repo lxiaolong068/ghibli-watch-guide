@@ -60,6 +60,36 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Automated Tasks and Cron Jobs
+
+This project includes automated scripts that run as Vercel Cron Jobs to keep the content up-to-date:
+
+### Movie Data Collection
+
+- **Purpose**: Fetches movie data from TMDB API and updates the database with the latest Studio Ghibli film information.
+- **Implementation**: Located at `/app/api/cron/seed-movies/route.ts`
+- **Schedule**: Runs daily through Vercel Cron Jobs
+- **Authentication**: Protected by a `CRON_SECRET` environment variable
+- **Manual Trigger**: You can manually trigger this script locally with:
+  ```bash
+  curl -H "Authorization: Bearer YOUR_CRON_SECRET" http://localhost:3000/api/cron/seed-movies
+  ```
+
+### Sitemap Generation
+
+- **Purpose**: Automatically generates a sitemap.xml file for search engine optimization
+- **Implementation**: Located at `/app/api/cron/generate-sitemap/route.ts`
+- **Schedule**: Runs daily through Vercel Cron Jobs
+- **Output**: Creates/updates `/public/sitemap.xml`
+- **Manual Trigger**: You can manually trigger this script locally with:
+  ```bash
+  curl http://localhost:3000/api/cron/generate-sitemap
+  ```
+
+### Setting Up Cron Jobs on Vercel
+
+When deploying to Vercel, the Cron Jobs are configured in the `vercel.json` file. Make sure to set the `CRON_SECRET` environment variable in your Vercel project settings.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -84,7 +114,9 @@ Follow these steps:
     *   This is a crucial step. Go to your project settings in Vercel (Settings -> Environment Variables).
     *   Add the required environment variables based on your `.env.example` or `.env` file. At minimum, you will likely need:
         *   `DATABASE_URL`: Your Neon (or other provider's) database connection string.
-        *   *(Add any other required API keys or secrets here as you integrate them, e.g., `TMDB_API_KEY`)*
+        *   `TMDB_API_KEY`: API key for The Movie Database.
+        *   `DOMAIN`: Your site's domain (e.g., https://www.whereghibli.cc).
+        *   `CRON_SECRET`: A secure random string for Cron Job authentication.
     *   Ensure you set these variables for the appropriate environments (Production, Preview, Development).
 4.  **Deploy**:
     *   Click the "Deploy" button. Vercel will build and deploy your application.

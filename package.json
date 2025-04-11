@@ -11,7 +11,8 @@
     "db:seed": "ts-node -O '{\"module\":\"CommonJS\"}' prisma/scripts/seed.ts",
     "db:push": "prisma db push",
     "db:seed:movies": "tsx scripts/seed-movies.ts",
-    "db:seed:regions-platforms": "tsx prisma/scripts/seed-regions-platforms.ts"
+    "db:seed:regions-platforms": "tsx prisma/scripts/seed-regions-platforms.ts",
+    "sitemap:generate": "tsx scripts/generate-sitemap.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.1",
@@ -29,6 +30,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
+    "@types/glob": "^8.1.0",
     "@types/node": "^20.17.30",
     "@types/react": "^18.3.20",
     "@types/react-dom": "^18.3.6",
@@ -37,6 +39,7 @@
     "dotenv": "^16.5.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.3.0",
+    "glob": "^11.0.1",
     "jsdom": "^26.0.0",
     "postcss": "^8.5.3",
     "prisma": "^6.6.0",
