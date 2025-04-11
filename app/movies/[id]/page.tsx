@@ -7,7 +7,6 @@ import type { MovieDetails, WatchProviderResults, MovieWatchProvidersResponse } 
 import { PrismaClient, Prisma } from '@prisma/client'; // Import Prisma
 import { getMovieDetails, getMovieWatchProviders } from '@/lib/tmdb'; // Import TMDB fetch functions
 import { getAllRegions } from '@/app/actions/availability'; // Import region retrieval function
-import { AvailabilitySection } from '@/app/components/movies/AvailabilitySection'; // Import availability information component
 import { RegionSelector } from '@/app/components/movies/RegionSelector'; // Import region selector component
 
 // Singleton pattern for Prisma client
@@ -242,9 +241,31 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
   const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null;
   const backdropUrl = movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : null;
 
-  // Select default region
+  // Select default region - Improved logic to prioritize major markets
   const countryCodes = Object.keys(watchProviders);
-  const defaultRegion = countryCodes.length > 0 ? countryCodes[0] : 'US'; // TMDB uses US region by default
+  // Prioritized regions - adjust as needed
+  const priorityRegions = ['US', 'GB', 'CA', 'AU', 'JP', 'KR', 'FR', 'DE', 'IT', 'ES'];
+  
+  // Find the first available priority region
+  let defaultRegion = 'US'; // Fallback
+  for (const region of priorityRegions) {
+    if (countryCodes.includes(region) && watchProviders[region] && 
+        (watchProviders[region].flatrate || watchProviders[region].buy || watchProviders[region].rent)) {
+      defaultRegion = region;
+      break;
+    }
+  }
+  
+  // If no priority region has data, use first available region with data
+  if (!watchProviders[defaultRegion] && countryCodes.length > 0) {
+    for (const region of countryCodes) {
+      if (watchProviders[region] && 
+          (watchProviders[region].flatrate || watchProviders[region].buy || watchProviders[region].rent)) {
+        defaultRegion = region;
+        break;
+      }
+    }
+  }
   
   return (
     <div className="max-w-5xl mx-auto pb-12">
@@ -353,16 +374,9 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         />
       </div>
 
-      {/* Movie Availability Information from our DB (Currently Paused/Empty) */}
-      {/* This section correctly shows 'No viewing info...' if our DB lacks data for the region */}
-      <AvailabilitySection 
-        movieId={id}
-        selectedRegionCode={regionCode}
-      />
-
       {/* Watch Information from TMDB - FILTERED by selected region */}
       <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Watch Information from TMDB</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Where to Watch</h2>
 
         {(() => {
           // 处理"全球"选项（regionCode为空字符串）

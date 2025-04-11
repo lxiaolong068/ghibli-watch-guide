@@ -24,19 +24,32 @@ export function RegionSelector({ regions, defaultRegionCode }: RegionSelectorPro
   
   // Get saved region preference from local storage
   useEffect(() => {
-    // If no region is specified, try to get from localStorage
-    if (!currentRegionCode) {
-      const savedRegion = localStorage.getItem('preferredRegion');
-      if (savedRegion && regions.some(r => r.code === savedRegion)) {
-        handleRegionChange(savedRegion);
+    // If no region is specified in URL, try to get from localStorage
+    if (!searchParams.get('region')) {
+      try {
+        const savedRegion = localStorage.getItem('preferredRegion');
+        // Only use saved region if it exists in our available regions
+        if (savedRegion && regions.some(r => r.code === savedRegion)) {
+          // If saved region is different from default, update URL
+          if (savedRegion !== defaultRegionCode) {
+            handleRegionChange(savedRegion);
+          }
+        }
+      } catch (error) {
+        // Handle potential localStorage errors (e.g., in private browsing)
+        console.error('Error accessing localStorage:', error);
       }
     }
-  }, []);
+  }, [searchParams, defaultRegionCode, regions, router, pathname]);
   
   // Handle region selection change
   const handleRegionChange = (regionCode: string) => {
-    // Save to localStorage
-    localStorage.setItem('preferredRegion', regionCode);
+    try {
+      // Save to localStorage
+      localStorage.setItem('preferredRegion', regionCode);
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
     
     // Update URL query parameters
     const params = new URLSearchParams(searchParams);
