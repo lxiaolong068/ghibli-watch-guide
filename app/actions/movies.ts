@@ -1,13 +1,12 @@
 'use server';
 
 import { cache } from 'react';
-// import { PrismaClient } from '@prisma/client';
-import { prisma } from '@/lib/prisma';  // 导入现有 prisma 实例
-import { Prisma } from '@prisma/client';
+import { prisma } from '@/lib/prisma';  
+
 // Remove import from @/app/types as Prisma Client provides types
 // import type { Movie, Region, Platform, Availability } from '@/app/types'; 
 
-// const prisma = new PrismaClient();  // 删除这行，避免创建新实例
+// const prisma = new PrismaClient();  
 
 export const getMovieById = cache(async (id: string) => {
   try {

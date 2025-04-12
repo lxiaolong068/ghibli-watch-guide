@@ -22,7 +22,7 @@ export async function GET(request: Request) {
     let movies;
     try {
       // 使用try-catch而不是$transaction，更简单地处理类型问题
-      const queryOptions: any = { ...baseQuery };
+      const queryOptions: Prisma.MovieFindManyArgs = { ...baseQuery };
       
       // 检查是否需要包含可用性数据
       if (includeAvailability) {
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
           // 尝试访问一个可用性记录，如果成功，说明模型已存在
           await prisma.$queryRaw`SELECT 1 FROM "Availability" LIMIT 1`;
           
-          const availabilityFilter: any = {};
+          const availabilityFilter: Prisma.AvailabilityWhereInput = {};
           
           // 添加地区过滤
           if (regionCode) {
@@ -47,7 +47,8 @@ export async function GET(request: Request) {
               where: availabilityFilter
             }
           };
-        } catch (e) {
+        } catch (_e: unknown) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           // 可用性表不存在，忽略错误并继续不包含availabilities
           console.log('Availability表尚未创建，跳过关联查询');
         }

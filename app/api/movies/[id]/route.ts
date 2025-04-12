@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMovieDetails, getMovieWatchProviders } from '@/lib/tmdb';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { prisma } from '@/lib/prisma'; // Import the shared prisma instance
+import { Prisma } from '@prisma/client';
 
 // 将此路由标记为动态路由，防止在构建时静态生成
 export const dynamic = 'force-dynamic';
 
-const prisma = new PrismaClient();
-
 // Define the arguments for the findUnique query using Prisma.validator
 // This helps derive the correct payload type including selected fields.
 const movieArgs = Prisma.validator<Prisma.MovieFindUniqueArgs>()({
+  where: { id: '' }, // Add dummy where for validator type check
   select: { 
     tmdbId: true, 
     titleEn: true, 
@@ -66,7 +66,7 @@ export async function GET(
     };
 
     return NextResponse.json(combinedData);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`API route error processing request for CUID ${movieCuid}:`, error);
     let statusCode = 500;
     let errorMessage = 'Internal Server Error';
@@ -98,6 +98,7 @@ export async function GET(
 
     return NextResponse.json({ error: errorMessage }, { status: statusCode });
   } finally {
-    await prisma.$disconnect();
+    // Don't disconnect the shared instance here, handle it globally or let Prisma manage
+    // await prisma.$disconnect(); 
   }
 } 

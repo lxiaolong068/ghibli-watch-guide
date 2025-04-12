@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 interface Region {
@@ -22,28 +22,8 @@ export function RegionSelector({ regions, defaultRegionCode }: RegionSelectorPro
   // Use region code from query params, or the default code provided
   const currentRegionCode = searchParams.get('region') || defaultRegionCode;
   
-  // Get saved region preference from local storage
-  useEffect(() => {
-    // If no region is specified in URL, try to get from localStorage
-    if (!searchParams.get('region')) {
-      try {
-        const savedRegion = localStorage.getItem('preferredRegion');
-        // Only use saved region if it exists in our available regions
-        if (savedRegion && regions.some(r => r.code === savedRegion)) {
-          // If saved region is different from default, update URL
-          if (savedRegion !== defaultRegionCode) {
-            handleRegionChange(savedRegion);
-          }
-        }
-      } catch (error) {
-        // Handle potential localStorage errors (e.g., in private browsing)
-        console.error('Error accessing localStorage:', error);
-      }
-    }
-  }, [searchParams, defaultRegionCode, regions, router, pathname]);
-  
   // Handle region selection change
-  const handleRegionChange = (regionCode: string) => {
+  const handleRegionChange = useCallback((regionCode: string) => {
     try {
       // Save to localStorage
       localStorage.setItem('preferredRegion', regionCode);
@@ -55,7 +35,23 @@ export function RegionSelector({ regions, defaultRegionCode }: RegionSelectorPro
     const params = new URLSearchParams(searchParams);
     params.set('region', regionCode);
     router.replace(`${pathname}?${params.toString()}`);
-  };
+  }, [pathname, router, searchParams]);
+  
+  // Get saved region preference from local storage
+  useEffect(() => {
+    // If no region is specified in URL, try to get from localStorage
+    if (!searchParams.get('region')) {
+      try {
+        const savedRegionCode = localStorage.getItem('preferredRegion');
+        // Check if savedRegionCode is not null/undefined and exists in the regions list
+        if (savedRegionCode && regions.some(r => r.code === savedRegionCode)) {
+          handleRegionChange(savedRegionCode);
+        }
+      } catch (error) {
+        console.error('Error reading localStorage:', error);
+      }
+    }
+  }, [searchParams, regions, handleRegionChange, pathname, router]);
   
   if (regions.length === 0) {
     return null; // If no region data, don't show the selector
@@ -82,4 +78,4 @@ export function RegionSelector({ regions, defaultRegionCode }: RegionSelectorPro
       </select>
     </div>
   );
-} 
+}

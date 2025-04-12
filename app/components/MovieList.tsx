@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import type { Prisma } from '@prisma/client';
+import type { Movie } from '@prisma/client';
 
 // Use Prisma type - remove the include for availabilities
-type Movie = Prisma.MovieGetPayload<{}>;
+// type Movie = Prisma.MovieGetPayload<{}>;
 // Or simply use the model type if no includes are needed:
 // import type { Movie } from '@prisma/client';
 

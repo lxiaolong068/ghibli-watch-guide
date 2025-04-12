@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Script from 'next/script';
 import { cache } from 'react'; // Import React's cache function
-import type { MovieDetails, WatchProviderResults, MovieWatchProvidersResponse } from '@/lib/tmdb'; // Import types from tmdb
+import type { MovieDetails, WatchProviderResults, WatchProviderItem } from '@/lib/tmdb'; // Import types from tmdb
 import { PrismaClient, Prisma } from '@prisma/client'; // Import Prisma
 import { getMovieDetails, getMovieWatchProviders } from '@/lib/tmdb'; // Import TMDB fetch functions
 import { getAllRegions } from '@/app/actions/availability'; // Import region retrieval function
@@ -114,69 +114,8 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
   };
 }
 
-// Skeleton component - Used to display loading state
-const MovieSkeleton = () => (
-  <div className="max-w-5xl mx-auto animate-pulse">
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-      <div className="md:flex">
-        <div className="md:w-1/3 lg:w-1/4">
-          <div className="bg-gray-300 h-64 md:h-96"></div>
-        </div>
-        <div className="md:w-2/3 lg:w-3/4 p-6 md:p-8">
-          <div className="h-8 bg-gray-300 rounded w-3/4 mb-4"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/4 mb-6"></div>
-          <div className="flex gap-2 mb-6">
-            <div className="h-6 bg-gray-300 rounded-full w-16"></div>
-            <div className="h-6 bg-gray-300 rounded-full w-16"></div>
-          </div>
-          <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-          <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-          <div className="h-4 bg-gray-300 rounded w-5/6 mb-6"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <div className="h-4 bg-gray-300 rounded w-1/3 mb-2"></div>
-              <div className="h-4 bg-gray-300 rounded w-2/3"></div>
-            </div>
-            <div>
-              <div className="h-4 bg-gray-300 rounded w-1/3 mb-2"></div>
-              <div className="h-4 bg-gray-300 rounded w-2/3"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
-      <div className="h-6 bg-gray-300 rounded w-1/3 mb-6"></div>
-      <div className="grid gap-6 md:grid-cols-2">
-        <div>
-          <div className="h-5 bg-gray-300 rounded w-1/2 mb-4"></div>
-          <div className="space-y-2">
-            <div className="flex items-center">
-              <div className="h-10 w-10 bg-gray-300 rounded-md mr-3"></div>
-              <div className="h-4 bg-gray-300 rounded w-24"></div>
-            </div>
-            <div className="flex items-center">
-              <div className="h-10 w-10 bg-gray-300 rounded-md mr-3"></div>
-              <div className="h-4 bg-gray-300 rounded w-32"></div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="h-5 bg-gray-300 rounded w-1/2 mb-4"></div>
-          <div className="space-y-2">
-            <div className="flex items-center">
-              <div className="h-10 w-10 bg-gray-300 rounded-md mr-3"></div>
-              <div className="h-4 bg-gray-300 rounded w-28"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
 // Helper component to render a list of providers for a specific type (flatrate, buy, rent)
-const ProviderList = ({ title, providers, countryLink }: { title: string; providers: any[] | undefined; countryLink?: string }) => {
+const ProviderList = ({ title, providers, countryLink }: { title: string; providers: WatchProviderItem[] | undefined; countryLink?: string }) => {
   if (!providers || providers.length === 0) {
     return null;
   }
@@ -474,7 +413,7 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
             </div>
             <div className="ml-3">
               <p className="text-sm text-amber-700">
-                <strong>Special Note:</strong> "Grave of the Fireflies" is distributed by Toho Co., Ltd., not Studio Ghibli. This may result in different streaming availability compared to other Ghibli films in some regions.
+                <strong>Special Note:</strong> &quot;Grave of the Fireflies&quot; is distributed by Toho Co., Ltd., not Studio Ghibli. This may result in different streaming availability compared to other Ghibli films in some regions.
               </p>
             </div>
           </div>
@@ -491,12 +430,11 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
             rel="noopener noreferrer"
             className="inline-block"
           >
-            <img
+            <Image
               src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
               alt="TMDB Logo"
               width={120}
               height={17}
-              style={{ height: '17px', width: 'auto' }}
             />
           </a>
         </div>

@@ -18,7 +18,8 @@ export {
 	SelectSeparator,
 };
 
-export default {
+// Assign to a variable first
+const SelectComponents = {
 	Root: Select,
 	Trigger: SelectTrigger,
 	Value: SelectValue,
@@ -27,4 +28,7 @@ export default {
 	Label: SelectLabel,
 	Item: SelectItem,
 	Separator: SelectSeparator,
-};
+}
+
+// Export the variable
+export default SelectComponents;

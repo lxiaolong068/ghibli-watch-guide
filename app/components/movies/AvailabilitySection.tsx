@@ -1,31 +1,9 @@
-import { getMovieAvailability, getAllRegions } from '@/app/actions/availability';
-// 注意: 当Prisma模型生成后，才能直接从@prisma/client导入
-// Note: We'll be able to import directly from @prisma/client after Prisma models are generated
-// Using string enums as temporary replacements
-
-// Availability type enum
-enum AvailabilityType {
-  SUBSCRIPTION = 'SUBSCRIPTION', // Subscription service
-  RENT = 'RENT',         // Rent
-  BUY = 'BUY',          // Buy
-  FREE = 'FREE',         // Free
-  CINEMA = 'CINEMA',       // Cinema
-  LIBRARY = 'LIBRARY',      // Library
-  DVD = 'DVD'           // DVD/Blu-ray
-}
-
-// Platform type enum
-enum PlatformType {
-  STREAMING = 'STREAMING',    // Streaming
-  RENTAL = 'RENTAL',       // Rental
-  PURCHASE = 'PURCHASE',     // Purchase
-  FREE = 'FREE',         // Free
-  CINEMA = 'CINEMA',       // Cinema
-  PHYSICAL = 'PHYSICAL'     // Physical (e.g., DVD)
-}
+import { getMovieAvailability } from '@/app/actions/availability';
+import Image from 'next/image'; // Import Image component
+import { AvailabilityType, Prisma } from '@prisma/client'; // Import Prisma types
 
 // Convert enum values to readable text
-const availabilityTypeLabels: Record<string, string> = {
+const availabilityTypeLabels: Record<AvailabilityType, string> = {
   [AvailabilityType.SUBSCRIPTION]: 'Subscription',
   [AvailabilityType.RENT]: 'Rent',
   [AvailabilityType.BUY]: 'Buy',
@@ -33,15 +11,6 @@ const availabilityTypeLabels: Record<string, string> = {
   [AvailabilityType.CINEMA]: 'Cinema',
   [AvailabilityType.LIBRARY]: 'Library',
   [AvailabilityType.DVD]: 'DVD/Blu-ray',
-};
-
-const platformTypeLabels: Record<string, string> = {
-  [PlatformType.STREAMING]: 'Streaming',
-  [PlatformType.RENTAL]: 'Rental',
-  [PlatformType.PURCHASE]: 'Purchase',
-  [PlatformType.FREE]: 'Free',
-  [PlatformType.CINEMA]: 'Cinema',
-  [PlatformType.PHYSICAL]: 'Physical Media',
 };
 
 // Get readable date format
@@ -60,7 +29,6 @@ interface AvailabilitySectionProps {
 
 export async function AvailabilitySection({ movieId, selectedRegionCode }: AvailabilitySectionProps) {
   // Get region list and movie availability information
-  const regions = await getAllRegions();
   const { availabilities, lastUpdated } = await getMovieAvailability(movieId, selectedRegionCode);
 
   // If no availability data, show a message
@@ -77,8 +45,13 @@ export async function AvailabilitySection({ movieId, selectedRegionCode }: Avail
     );
   }
 
+  // Define the type for an Availability item with included relations
+  type AvailabilityWithRelations = Prisma.AvailabilityGetPayload<{
+    include: { platform: true, region: true }
+  }>;
+
   // Group by region for display
-  const groupedByRegion = availabilities.reduce((acc: Record<string, typeof availabilities>, item) => {
+  const groupedByRegion = availabilities.reduce((acc: Record<string, AvailabilityWithRelations[]>, item) => {
     const regionId = item.region.id;
     if (!acc[regionId]) {
       acc[regionId] = [];
@@ -118,10 +91,12 @@ export async function AvailabilitySection({ movieId, selectedRegionCode }: Avail
                     <div className="flex items-center space-x-3">
                       {/* Platform Logo */}
                       {item.platform.logo && (
-                        <div className="flex-shrink-0 h-8 w-8">
-                          <img
+                        <div className="flex-shrink-0 h-8 w-8 relative">
+                          <Image
                             src={item.platform.logo}
                             alt={item.platform.name}
+                            width={32}
+                            height={32}
                             className="h-8 w-auto object-contain"
                           />
                         </div>

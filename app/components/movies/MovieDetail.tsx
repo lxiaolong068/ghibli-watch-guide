@@ -3,11 +3,13 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import type { Movie, Availability, Region } from '@/app/types';
+import type { Movie, Availability, Region, Platform } from '@prisma/client';
+import Image from 'next/image';
 
 interface MovieDetailProps {
   movie: Movie & {
     availabilities?: (Availability & {
+      platform: Platform;
       region: Region;
     })[];
   };
@@ -55,15 +57,18 @@ export function MovieDetail({ movie, isOpen, onClose }: MovieDetailProps) {
                 </div>
                 <div className="sm:flex sm:items-start">
                   {movie.posterUrl && (
-                    <div className="sm:flex-shrink-0">
-                      <img
+                    <div className="mx-auto flex h-48 w-auto items-center justify-center sm:mx-0 sm:h-64 sm:w-auto relative">
+                      <Image
                         src={movie.posterUrl}
                         alt={movie.titleEn}
+                        width={171}
+                        height={256}
                         className="h-48 w-auto object-cover sm:h-64"
+                        priority
                       />
                     </div>
                   )}
-                  <div className="mt-3 sm:ml-4 sm:mt-0 text-left">
+                  <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                     <Dialog.Title as="h3" className="text-2xl font-semibold leading-6 text-gray-900">
                       {movie.titleEn} - Where to Watch
                     </Dialog.Title>
@@ -121,9 +126,9 @@ export function MovieDetail({ movie, isOpen, onClose }: MovieDetailProps) {
                                       )}
                                     </div>
                                   </div>
-                                  {availability.url && (
+                                  {availability.url !== null && (
                                     <button
-                                      onClick={() => window.open(availability.url, '_blank', 'noopener,noreferrer')}
+                                      onClick={() => window.open(availability.url!, '_blank', 'noopener,noreferrer')}
                                       className="mt-2 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500 focus:outline-none"
                                     >
                                       Visit Link
@@ -146,4 +151,4 @@ export function MovieDetail({ movie, isOpen, onClose }: MovieDetailProps) {
       </Dialog>
     </Transition.Root>
   );
-} 
+}

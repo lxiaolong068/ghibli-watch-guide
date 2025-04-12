@@ -28,7 +28,7 @@ const fetchMovieDatabaseIds = async (): Promise<string[]> => {
 };
 
 // 主函数，现在是 API 路由处理器
-export async function GET(request: Request) {
+export async function GET() {
   console.log('[Cron Sitemap] Starting sitemap generation...');
 
   if (!SITE_URL) {
@@ -88,14 +88,15 @@ ${allUrls.map(url => `
 
     return NextResponse.json({ message: 'Sitemap generated successfully' });
 
-  } catch (error: any) {
-    console.error('[Cron Sitemap] Error generating sitemap:', error);
+  } catch (error: unknown) { 
+    console.error('[Cron Sitemap] Error generating sitemap:', error instanceof Error ? error.message : error);
     // 确保即使出错也尝试断开连接
     await prisma.$disconnect().catch(disconnectError => {
         console.error('[Cron Sitemap] Error disconnecting Prisma after failure:', disconnectError);
     });
     console.log('[Cron Sitemap] Prisma connection closed after error.');
-    return NextResponse.json({ error: `Failed to generate sitemap: ${error.message || 'Unknown error'}` }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'; 
+    return NextResponse.json({ error: `Failed to generate sitemap: ${errorMessage}` }, { status: 500 });
   }
 }
 

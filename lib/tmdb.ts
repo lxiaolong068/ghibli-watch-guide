@@ -48,7 +48,8 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
       try {
         // 尝试解析 TMDB 的错误响应体
         errorData = await response.json() as TmdbErrorResponse;
-      } catch (parseError) {
+      } catch (_error) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         // 如果无法解析 JSON，则抛出通用错误
         throw new Error(`TMDB API request failed with status ${response.status}: ${response.statusText}`);
       }
@@ -119,14 +120,14 @@ export async function getMovieDetails(movieId: number): Promise<MovieDetails> {
 // --- Watch Provider Interfaces ---
 // Based on https://developer.themoviedb.org/reference/movie-watch-providers
 
-interface WatchProviderItem {
+export interface WatchProviderItem {
   logo_path: string | null;
   provider_id: number;
   provider_name: string;
   display_priority: number;
 }
 
-interface WatchProviderCountryResult {
+export interface WatchProviderCountryResult {
   link?: string;
   flatrate?: WatchProviderItem[];
   rent?: WatchProviderItem[];

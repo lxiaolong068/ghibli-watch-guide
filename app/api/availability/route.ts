@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 // 将此路由标记为动态路由，防止在构建时静态生成
 export const dynamic = 'force-dynamic';
@@ -11,7 +12,7 @@ export async function GET(request: Request) {
 
   try {
     // 构建查询条件
-    const where: any = {};
+    const where: Prisma.AvailabilityWhereInput = {};
     
     if (movieId) {
       where.movieId = movieId;
@@ -29,7 +30,6 @@ export async function GET(request: Request) {
     const availabilities = await prisma.$transaction(async (tx) => {
       if ('availability' in tx) {
         // 当模型生成后，将可以正常工作
-        // @ts-ignore - 忽略类型检查，因为在执行migration前，Prisma客户端类型中可能没有availability模型
         return tx.availability.findMany({
           where,
           include: {

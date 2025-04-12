@@ -34,18 +34,19 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
   try {
     const response = await fetch(url.toString());
     if (!response.ok) {
-      let errorData: TmdbErrorResponse | null = null;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      let _errorData: TmdbErrorResponse | null = null;
       try {
-        errorData = await response.json() as TmdbErrorResponse;
-      } catch (parseError) {
-        throw new Error(`[Cron Seed] TMDB API request failed with status ${response.status}: ${response.statusText}`);
+        _errorData = await response.json() as TmdbErrorResponse;
+      } catch (_error) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       }
-      throw new Error(`[Cron Seed] TMDB API Error (${errorData?.status_code || response.status}): ${errorData?.status_message || response.statusText}`);
+      throw new Error(`[Cron Seed] TMDB API request failed with status ${response.status}: ${response.statusText}`);
     }
     return await response.json() as T;
-  } catch (error) {
-    console.error("[Cron Seed] Error fetching TMDB API:", error);
-    throw error;
+  } catch (_error) {
+    console.error("[Cron Seed] Error fetching TMDB API:", _error);
+    throw _error;
   }
 }
 
@@ -60,8 +61,8 @@ async function getFullMovieDetails(movieId: number): Promise<MovieDetails | null
     console.log(`[Cron Seed] Fetching full details for movie ID: ${movieId}`);
     const details = await fetchTmdbApi<MovieDetails>(`/movie/${movieId}`, { append_to_response: 'credits' });
     return details;
-  } catch (error) {
-    console.error(`[Cron Seed] Failed to fetch full details for movie ID ${movieId}:`, error);
+  } catch (_error) {
+    console.error(`[Cron Seed] Failed to fetch full details for movie ID ${movieId}:`, _error);
     return null;
   }
 }
@@ -172,14 +173,15 @@ export async function GET(request: Request) {
     console.log('[Cron Seed] Prisma connection closed.');
     return NextResponse.json({ message: `Movie seeding complete. Upserted: ${upsertedCount}, Failed: ${failedCount}` });
 
-  } catch (error: any) {
-    console.error('[Cron Seed] Error during movie seeding process:', error);
+  } catch (_error: unknown) { 
+    console.error('[Cron Seed] Error during movie seeding process:', _error instanceof Error ? _error.message : _error);
     // 确保即使出错也尝试断开连接
     await prisma.$disconnect().catch(disconnectError => {
         console.error('[Cron Seed] Error disconnecting Prisma after failure:', disconnectError);
     });
     console.log('[Cron Seed] Prisma connection closed after error.');
-    return NextResponse.json({ error: `Failed to seed movies: ${error.message || 'Unknown error'}` }, { status: 500 });
+    const errorMessage = _error instanceof Error ? _error.message : 'Unknown error'; 
+    return NextResponse.json({ error: `Failed to seed movies: ${errorMessage}` }, { status: 500 });
   }
 }
 

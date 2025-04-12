@@ -1,13 +1,14 @@
-import Tabs from "./Tabs.astro";
-import TabsContent from "./TabsContent.astro";
-import TabsList from "./TabsList.astro";
-import TabsTrigger from "./TabsTrigger.astro";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@starwind/react";
 
 export { Tabs, TabsContent, TabsList, TabsTrigger };
 
-export default {
-	Root: Tabs,
-	Content: TabsContent,
-	List: TabsList,
-	Trigger: TabsTrigger,
+// Assign to a variable first
+const TabsComponents = {
+  Root: Tabs,
+  List: TabsList,
+  Trigger: TabsTrigger,
+  Content: TabsContent,
 };
+
+// Export the variable
+export default TabsComponents;

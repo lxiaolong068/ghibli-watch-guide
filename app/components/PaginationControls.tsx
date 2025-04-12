@@ -7,14 +7,12 @@ interface PaginationControlsProps {
   totalItems: number;
   currentPage: number;
   pageSize: number;
-  basePath: string;
 }
 
 export function PaginationControls({ 
   totalItems, 
   currentPage, 
-  pageSize, 
-  basePath 
+  pageSize 
 }: PaginationControlsProps) {
   const totalPages = Math.ceil(totalItems / pageSize);
   const searchParams = useSearchParams();
