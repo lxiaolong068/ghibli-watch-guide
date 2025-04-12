@@ -35,12 +35,25 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
     url.searchParams.append(key, String(value));
   });
 
+  // 创建缓存键以便在开发中日志记录
+  const cacheKey = endpoint.replace(/\//g, '_') + '_' + Object.values(params).join('_');
+  
   try {
-    // Add Next.js caching options
+    // 优化 Next.js 缓存选项 - 添加标签以便于缓存失效
     const fetchOptions: RequestInit = {
-      next: revalidateSeconds === false ? { revalidate: false } : { revalidate: revalidateSeconds },
+      next: revalidateSeconds === false 
+        ? { revalidate: false } 
+        : { 
+            revalidate: revalidateSeconds,
+            tags: [`tmdb-${endpoint.split('/')[1] || 'api'}`] // 添加基于端点的标签
+          },
     };
-    console.log(`Fetching TMDB: ${url.toString()} with options:`, fetchOptions); // Log fetch options
+    
+    // 只在开发环境记录详细日志
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[TMDB] Fetching: ${cacheKey} (revalidate: ${revalidateSeconds === false ? 'disabled' : revalidateSeconds}s)`);
+    }
+    
     const response = await fetch(url.toString(), fetchOptions);
 
     if (!response.ok) {
@@ -49,19 +62,17 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
         // 尝试解析 TMDB 的错误响应体
         errorData = await response.json() as TmdbErrorResponse;
       } catch (_error) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        // 如果无法解析 JSON，则抛出通用错误
         throw new Error(`TMDB API request failed with status ${response.status}: ${response.statusText}`);
       }
-      // 如果解析成功，抛出包含 TMDB 错误信息的错误
       throw new Error(`TMDB API Error (${errorData?.status_code}): ${errorData?.status_message || response.statusText}`);
     }
 
-    return await response.json() as T;
+    const data = await response.json() as T;
+    return data;
   } catch (error) {
-    console.error("Error fetching TMDB API:", error);
-    // 可以根据需要进一步处理或重新抛出错误
-    throw error; // 重新抛出错误，以便调用者知道发生了问题
+    console.error(`[TMDB] Error fetching ${endpoint}:`, error instanceof Error ? error.message : error);
+    // 添加更多关于重试策略的信息
+    throw error;
   }
 }
 

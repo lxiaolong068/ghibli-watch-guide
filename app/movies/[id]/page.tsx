@@ -30,8 +30,8 @@ interface MoviePageData {
   providers: WatchProviderResults;
 }
 
-// Set as dynamic route, not statically generated at build time
-export const dynamic = 'force-dynamic';
+// 允许静态生成和缓存，但使用按需重新验证
+export const revalidate = 3600; // 1小时重新验证
 
 interface MoviePageProps {
   params: {
@@ -45,38 +45,40 @@ interface MoviePageProps {
 // Helper function to fetch all necessary data directly
 // Use React.cache to wrap data fetching function, ensuring it's only executed once per request
 const getMoviePageData = cache(async (movieCuid: string): Promise<MoviePageData | null> => {
-  console.log(`[CACHED] Fetching movie data for CUID: ${movieCuid}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`[MoviePage] 获取电影数据，CUID: ${movieCuid}`);
+  }
   
   let movieFromDb: MovieWithTmdbId | null = null;
   try {
-    // 1. Fetch movie from DB using CUID to get the tmdbId
+    // 1. 从数据库获取电影信息以获取tmdbId
     movieFromDb = await prisma.movie.findUnique({
       where: { id: movieCuid },
       select: movieArgs.select, 
     });
 
     if (!movieFromDb) {
-      console.log(`MoviePage: Movie with CUID ${movieCuid} not found in database.`);
-      return null; // Indicate not found
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`[MoviePage] 未在数据库中找到CUID ${movieCuid}的电影`);  
+      }
+      return null; // 表示未找到
     }
 
     if (typeof movieFromDb.tmdbId !== 'number') {
-      console.error(`MoviePage: Missing or invalid tmdbId for movie CUID ${movieCuid} (${movieFromDb.titleEn}).`);
+      console.error(`[MoviePage] 电影CUID ${movieCuid} (${movieFromDb.titleEn})的tmdbId缺失或无效`);  
       return null; 
     }
 
-    const tmdbId = movieFromDb.tmdbId; 
-
-    console.log(`MoviePage: Fetching TMDB data for CUID ${movieCuid}, TMDB ID: ${tmdbId}`);
-
-    // 2. Fetch data from TMDB using the tmdbId (will use cache from lib/tmdb)
-    // Use Promise.all instead of allSettled for better performance - we'll handle errors in catch block
+    const tmdbId = movieFromDb.tmdbId;
+    
+    // 2. 使用tmdbId从TMDB获取数据（将使用lib/tmdb中的缓存）
+    // 并行获取所有数据以提高性能
     const [movieDetails, watchProvidersResponse] = await Promise.all([
       getMovieDetails(tmdbId),
       getMovieWatchProviders(tmdbId)
     ]);
 
-    // Prepare the result with successful API calls
+    // 准备包含所有成功API调用的结果
     const pageData: MoviePageData = {
       details: movieDetails,
       providers: watchProvidersResponse.results || {},
@@ -440,9 +442,39 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         </div>
       </div>
       
-      {/* TMDB Attribution Script */}
+      {/* TMDB Attribution Script - 优化为使用支持被动事件监听器的加载处理 */}
       <Script id="tmdb-attribution" strategy="afterInteractive">
-        {`document.querySelectorAll("img").forEach(img => img.onload = () => { window.dispatchEvent(new Event('resize')); });`}
+        {`
+        // 使用Intersection Observer API延迟加载非首屏图片
+        if ('IntersectionObserver' in window) {
+          const imgObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                  img.src = img.dataset.src;
+                  img.removeAttribute('data-src');
+                }
+                observer.unobserve(img);
+              }
+            });
+          });
+
+          // 观察带有data-src属性的图片
+          document.querySelectorAll('img[data-src]').forEach(img => {
+            imgObserver.observe(img);
+          });
+        }
+
+        // 修复TMDB图片加载触发resize事件
+        document.querySelectorAll("img").forEach(img => {
+          if (img.complete) {
+            window.dispatchEvent(new Event('resize'));
+          } else {
+            img.addEventListener('load', () => window.dispatchEvent(new Event('resize')), { passive: true });
+          }
+        });
+        `}
       </Script>
     </div>
   );
