@@ -3,6 +3,7 @@ import { Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
 import Breadcrumb from "./components/Breadcrumb";
 import Link from "next/link";
+import Script from 'next/script';
 
 const notoSansSC = Noto_Sans_SC({ 
   subsets: ["latin"],
@@ -65,6 +66,17 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+
+        {/* Microsoft Clarity Script */}
+        <Script id="microsoft-clarity" strategy="afterInteractive">
+          {`
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "r2udk1p02u");
+          `}
+        </Script>
       </body>
     </html>
   );
