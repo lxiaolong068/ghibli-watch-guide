@@ -30,8 +30,8 @@ interface MoviePageData {
   providers: WatchProviderResults;
 }
 
-// 允许静态生成和缓存，但使用按需重新验证
-export const revalidate = 3600; // 1小时重新验证
+// 使用较长的重新验证时间，因为电影详情不经常变化
+export const revalidate = 43200; // 12小时重新验证
 
 interface MoviePageProps {
   params: {
@@ -42,28 +42,32 @@ interface MoviePageProps {
   };
 }
 
-// Helper function to fetch all necessary data directly
-// Use React.cache to wrap data fetching function, ensuring it's only executed once per request
+/**
+ * 获取电影页面数据的缓存函数
+ * 使用React.cache确保在一次请求中只执行一次数据获取
+ */
 const getMoviePageData = cache(async (movieCuid: string): Promise<MoviePageData | null> => {
+  // 仅在开发环境输出详细日志
   if (process.env.NODE_ENV !== 'production') {
     console.log(`[MoviePage] 获取电影数据，CUID: ${movieCuid}`);
   }
   
-  let movieFromDb: MovieWithTmdbId | null = null;
   try {
-    // 1. 从数据库获取电影信息以获取tmdbId
-    movieFromDb = await prisma.movie.findUnique({
+    // 1. 从数据库获取电影的TMDB ID
+    const movieFromDb = await prisma.movie.findUnique({
       where: { id: movieCuid },
       select: movieArgs.select, 
     });
 
+    // 如果数据库中不存在该电影，返回null
     if (!movieFromDb) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(`[MoviePage] 未在数据库中找到CUID ${movieCuid}的电影`);  
       }
-      return null; // 表示未找到
+      return null;
     }
 
+    // 验证TMDB ID是否有效
     if (typeof movieFromDb.tmdbId !== 'number') {
       console.error(`[MoviePage] 电影CUID ${movieCuid} (${movieFromDb.titleEn})的tmdbId缺失或无效`);  
       return null; 
@@ -71,24 +75,24 @@ const getMoviePageData = cache(async (movieCuid: string): Promise<MoviePageData 
 
     const tmdbId = movieFromDb.tmdbId;
     
-    // 2. 使用tmdbId从TMDB获取数据（将使用lib/tmdb中的缓存）
-    // 并行获取所有数据以提高性能
+    // 2. 并行获取电影详情和观看提供商信息，使用不同的缓存策略
+    // 电影详情缓存时间更长，观看提供商信息缓存时间更短
     const [movieDetails, watchProvidersResponse] = await Promise.all([
-      getMovieDetails(tmdbId),
-      getMovieWatchProviders(tmdbId)
+      getMovieDetails(tmdbId, { cache: 86400 }), // 电影详情缓存一天
+      getMovieWatchProviders(tmdbId, { cache: 3600 }) // 提供商信息缓存一小时
     ]);
 
-    // 准备包含所有成功API调用的结果
-    const pageData: MoviePageData = {
+    // 构建页面数据对象
+    return {
       details: movieDetails,
       providers: watchProvidersResponse.results || {},
     };
 
-    return pageData;
-
   } catch (error) {
-    console.error(`Error in getMoviePageData for CUID ${movieCuid}:`, error);
-    return null; // Return null on error
+    // 记录错误，但不在生产环境中输出完整错误对象
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`[MoviePage] Error fetching data for CUID ${movieCuid}: ${errorMessage}`);
+    return null; // 错误时返回null
   }
 });
 
@@ -442,37 +446,72 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         </div>
       </div>
       
-      {/* TMDB Attribution Script - 优化为使用支持被动事件监听器的加载处理 */}
+      {/* 优化的TMDB Attribution Script - 使用现代Web API和性能最佳实践 */}
       <Script id="tmdb-attribution" strategy="afterInteractive">
         {`
-        // 使用Intersection Observer API延迟加载非首屏图片
+        // 使用requestIdleCallback在浏览器空闲时执行非关键任务
+        const runWhenIdle = (callback) => {
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(callback, { timeout: 2000 });
+          } else {
+            // 回退到setTimeout
+            setTimeout(callback, 200);
+          }
+        };
+        
+        // 使用Intersection Observer API实现更高效的图片懒加载
         if ('IntersectionObserver' in window) {
+          const imageObserverOptions = {
+            rootMargin: '200px 0px', // 提前200px开始加载，提供更好的用户体验
+            threshold: 0.01 // 当图片可见入1%时开始加载
+          };
+          
           const imgObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
               if (entry.isIntersecting) {
                 const img = entry.target;
                 if (img.dataset.src) {
-                  img.src = img.dataset.src;
+                  // 加载图片
+                  const newSrc = img.dataset.src;
+                  // 先移除属性以防止重复触发
                   img.removeAttribute('data-src');
+                  // 在设置src前添加错误处理
+                  img.onerror = () => {
+                    img.src = '/img/placeholder.png'; // 回退到占位图像
+                    img.classList.add('img-load-error');
+                  };
+                  img.src = newSrc;
                 }
                 observer.unobserve(img);
               }
             });
-          });
+          }, imageObserverOptions);
 
-          // 观察带有data-src属性的图片
-          document.querySelectorAll('img[data-src]').forEach(img => {
-            imgObserver.observe(img);
+          // 在浏览器空闲时初始化观察者
+          runWhenIdle(() => {
+            document.querySelectorAll('img[data-src]').forEach(img => {
+              imgObserver.observe(img);
+            });
           });
         }
 
-        // 修复TMDB图片加载触发resize事件
-        document.querySelectorAll("img").forEach(img => {
-          if (img.complete) {
-            window.dispatchEvent(new Event('resize'));
-          } else {
-            img.addEventListener('load', () => window.dispatchEvent(new Event('resize')), { passive: true });
-          }
+        // 优化图片加载完成后的事件处理
+        runWhenIdle(() => {
+          const handleImageLoad = (img) => {
+            if (img.complete) {
+              // 使用passive事件监听器提高性能
+              window.dispatchEvent(new Event('resize', { bubbles: true, cancelable: false }));
+              img.classList.add('img-loaded');
+            } else {
+              img.addEventListener('load', () => {
+                window.dispatchEvent(new Event('resize', { bubbles: true, cancelable: false }));
+                img.classList.add('img-loaded');
+              }, { passive: true, once: true });
+            }
+          };
+          
+          // 使用更高效的选择器
+          document.querySelectorAll('img').forEach(handleImageLoad);
         });
         `}
       </Script>

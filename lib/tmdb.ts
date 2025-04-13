@@ -2,6 +2,9 @@ import process from 'process';
 
 const TMDB_API_BASE_URL = 'https://api.themoviedb.org/3';
 const TMDB_API_KEY = process.env.TMDB_API_KEY; // 使用 process.env 获取 API Key
+const TMDB_API_TIMEOUT = 5000; // 请求超时时间（毫秒）
+const TMDB_API_RETRY_COUNT = 2; // 失败后重试次数
+const TMDB_API_RETRY_DELAY = 300; // 重试延迟（毫秒）
 
 if (!TMDB_API_KEY) {
   throw new Error('Missing TMDB_API_KEY environment variable');
@@ -21,15 +24,29 @@ interface TmdbErrorResponse {
  * @returns API 响应的 JSON 数据
  * @throws 如果请求失败或 API 返回错误，则抛出错误
  */
-async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string | number> = {}, revalidateSeconds: number | false = 3600): Promise<T> {
-  // 再次确认 API Key 存在，以满足 TypeScript 类型检查
+/**
+ * 实现带重试机制的休眠函数
+ * @param ms 休眠时间（毫秒）
+ */
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
+ * 增强版TMDB API请求函数，带有超时、重试和增强的错误处理
+ * @param endpoint API端点路径
+ * @param params 查询参数对象
+ * @param revalidateSeconds 重新验证时间（秒）
+ * @param retryCount 当前重试次数（内部使用）
+ * @returns API响应的JSON数据
+ */
+async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string | number> = {}, revalidateSeconds: number | false = 3600, retryCount: number = 0): Promise<T> {
+  // 确认API Key存在
   if (!TMDB_API_KEY) {
     throw new Error('TMDB_API_KEY is not defined. This should not happen if the initial check passed.');
   }
 
   const url = new URL(`${TMDB_API_BASE_URL}${endpoint}`);
   url.searchParams.append('api_key', TMDB_API_KEY);
-  url.searchParams.append('language', 'en-US'); // 默认使用英文，后续可考虑支持多语言
+  url.searchParams.append('language', 'en-US'); // 默认使用英文
 
   Object.entries(params).forEach(([key, value]) => {
     url.searchParams.append(key, String(value));
@@ -39,8 +56,10 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
   const cacheKey = endpoint.replace(/\//g, '_') + '_' + Object.values(params).join('_');
   
   try {
-    // 优化 Next.js 缓存选项 - 添加标签以便于缓存失效
+    // 优化Next.js缓存选项
     const fetchOptions: RequestInit = {
+      // 添加请求超时
+      signal: AbortSignal.timeout(TMDB_API_TIMEOUT),
       next: revalidateSeconds === false 
         ? { revalidate: false } 
         : { 
@@ -51,27 +70,58 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
     
     // 只在开发环境记录详细日志
     if (process.env.NODE_ENV !== 'production') {
-      console.log(`[TMDB] Fetching: ${cacheKey} (revalidate: ${revalidateSeconds === false ? 'disabled' : revalidateSeconds}s)`);
+      const retryMessage = retryCount > 0 ? ` (retry ${retryCount}/${TMDB_API_RETRY_COUNT})` : '';
+      console.log(`[TMDB] Fetching: ${cacheKey}${retryMessage} (revalidate: ${revalidateSeconds === false ? 'disabled' : revalidateSeconds}s)`);
     }
     
     const response = await fetch(url.toString(), fetchOptions);
 
+    // 处理非成功响应
     if (!response.ok) {
       let errorData: TmdbErrorResponse | null = null;
       try {
-        // 尝试解析 TMDB 的错误响应体
+        // 尝试解析TMDB的错误响应体
         errorData = await response.json() as TmdbErrorResponse;
       } catch (_error) {
-        throw new Error(`TMDB API request failed with status ${response.status}: ${response.statusText}`);
+        // 无法解析JSON时使用通用错误
       }
-      throw new Error(`TMDB API Error (${errorData?.status_code}): ${errorData?.status_message || response.statusText}`);
+      
+      // 创建详细的错误对象
+      const error = new Error(`TMDB API Error (${errorData?.status_code || response.status}): ${errorData?.status_message || response.statusText}`);
+      (error as any).status = response.status;
+      (error as any).endpoint = endpoint;
+      throw error;
     }
 
     const data = await response.json() as T;
     return data;
   } catch (error) {
-    console.error(`[TMDB] Error fetching ${endpoint}:`, error instanceof Error ? error.message : error);
-    // 添加更多关于重试策略的信息
+    // 处理错误，包括超时、网络错误等
+    const isTimeoutError = error instanceof DOMException && error.name === 'TimeoutError';
+    const isNetworkError = error instanceof TypeError && error.message.includes('network');
+    const isServerError = error instanceof Error && (error as any).status >= 500;
+    
+    // 可重试的错误类型
+    const isRetryableError = isTimeoutError || isNetworkError || isServerError;
+    
+    if (isRetryableError && retryCount < TMDB_API_RETRY_COUNT) {
+      // 指数退避重试延迟 (300ms, 600ms, ...)
+      const delay = TMDB_API_RETRY_DELAY * Math.pow(2, retryCount);
+      console.warn(`[TMDB] Retrying ${endpoint} after ${delay}ms (${retryCount + 1}/${TMDB_API_RETRY_COUNT})`);
+      
+      await sleep(delay);
+      // 递归调用自身进行重试，增加重试计数
+      return fetchTmdbApi<T>(endpoint, params, revalidateSeconds, retryCount + 1);
+    }
+    
+    // 记录详细错误信息
+    console.error(`[TMDB] Failed fetching ${endpoint}:`, {
+      message: error instanceof Error ? error.message : String(error),
+      retries: retryCount,
+      params
+    });
+    
+    // 重新抛出增强的错误信息
     throw error;
   }
 }
@@ -113,18 +163,42 @@ export interface MovieDetails {
  * @param movieId TMDB 电影 ID
  * @returns 电影详情对象
  */
-export async function getMovieDetails(movieId: number): Promise<MovieDetails> {
-  console.log(`Fetching details for movie ID: ${movieId} (revalidate: 1 day)`); // 添加日志
+/**
+ * 获取电影详情，带有优化的缓存策略和错误处理
+ * @param movieId TMDB电影ID
+ * @param options 可选配置参数
+ * @returns 电影详情对象
+ */
+export async function getMovieDetails(
+  movieId: number, 
+  options: { cache?: number | false } = {}
+): Promise<MovieDetails> {
+  // 默认使用1天缓存，但允许自定义
+  const revalidateSeconds = options.cache !== undefined ? options.cache : 86400; // 默认1天
+  
   try {
-    // Fetch with a longer revalidation period (e.g., 1 day = 86400 seconds)
-    const movieDetails = await fetchTmdbApi<MovieDetails>(`/movie/${movieId}`, {}, 86400);
-    console.log(`Successfully fetched details for movie: ${movieDetails.title}`); // 成功日志
+    // 使用带重试机制的API调用
+    const movieDetails = await fetchTmdbApi<MovieDetails>(`/movie/${movieId}`, {}, revalidateSeconds);
+    
+    // 只在开发环境记录成功日志，减少生产环境日志量
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[TMDB] Successfully fetched details for movie: ${movieDetails.title}`);
+    }
+    
     return movieDetails;
   } catch (error) {
-    console.error(`Failed to fetch details for movie ID ${movieId}:`, error);
-    // 在这里可以决定是返回 null, undefined, 还是继续抛出错误
-    // 返回一个表示错误的特定对象可能更好，但这取决于你的错误处理策略
-    throw error; // 暂时重新抛出
+    const isServerError = error instanceof Error && (error as any).status >= 500;
+    const isClientError = error instanceof Error && (error as any).status >= 400 && (error as any).status < 500;
+    
+    // 客户端错误（如404）通常不需要重试，直接处理
+    if (isClientError && (error as any).status === 404) {
+      console.warn(`[TMDB] Movie ID ${movieId} not found`);
+      // 可以返回一个空的电影对象，取决于你的错误处理策略
+      throw new Error(`Movie with ID ${movieId} not found in TMDB`);
+    }
+    
+    console.error(`[TMDB] Failed to fetch details for movie ID ${movieId}:`, error);
+    throw error;
   }
 }
 
@@ -162,20 +236,45 @@ export interface MovieWatchProvidersResponse {
  * @param movieId TMDB 电影 ID
  * @returns 观看提供商信息
  */
-export async function getMovieWatchProviders(movieId: number): Promise<MovieWatchProvidersResponse> {
-  console.log(`Fetching watch providers for movie ID: ${movieId} (revalidate: 1 hour)`);
+/**
+ * 获取电影观看提供商信息，带有更快的缓存更新频率
+ * @param movieId TMDB电影ID
+ * @param options 可选配置参数
+ * @returns 观看提供商信息
+ */
+export async function getMovieWatchProviders(
+  movieId: number,
+  options: { cache?: number | false } = {}
+): Promise<MovieWatchProvidersResponse> {
+  // 提供商数据变化较频繁，默认使用1小时缓存
+  const revalidateSeconds = options.cache !== undefined ? options.cache : 3600; // 默认1小时
+  
   try {
-    // TMDB API 端点是 /movie/{movie_id}/watch/providers
-    // Revalidate providers more frequently (e.g., 1 hour = 3600 seconds)
-    const providers = await fetchTmdbApi<MovieWatchProvidersResponse>(`/movie/${movieId}/watch/providers`, {}, 3600);
-    console.log(`Successfully fetched watch providers for movie ID: ${movieId}`);
+    // TMDB API端点是/movie/{movie_id}/watch/providers
+    const providers = await fetchTmdbApi<MovieWatchProvidersResponse>(
+      `/movie/${movieId}/watch/providers`, 
+      {}, 
+      revalidateSeconds
+    );
+    
+    // 只在开发环境记录成功日志
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[TMDB] Successfully fetched watch providers for movie ID: ${movieId}`);
+    }
+    
     return providers;
   } catch (error) {
-    console.error(`Failed to fetch watch providers for movie ID ${movieId}:`, error);
-    // 根据错误处理策略决定如何处理
-    // 如果找不到提供商信息 (例如 404), TMDB 可能不返回错误，而是返回空 results
-    // 如果是 API 错误（如 401），fetchTmdbApi 会抛出
-    throw error; // 暂时重新抛出
+    // 对于提供商API，404并非严重错误，可能只是该电影没有提供商数据
+    if (error instanceof Error && (error as any).status === 404) {
+      // 返回一个有效但空的响应，而不是抛出错误
+      return {
+        id: movieId,
+        results: {}
+      };
+    }
+    
+    console.error(`[TMDB] Failed to fetch watch providers for movie ID ${movieId}:`, error);
+    throw error;
   }
 }
 

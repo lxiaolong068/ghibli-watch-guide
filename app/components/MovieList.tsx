@@ -1,17 +1,20 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { memo } from 'react';
 import type { Movie } from '@prisma/client';
 
-// Use Prisma type - remove the include for availabilities
-// type Movie = Prisma.MovieGetPayload<{}>;
-// Or simply use the model type if no includes are needed:
-// import type { Movie } from '@prisma/client';
+// 一个更高效的blurDataURL (WebP格式, 更小尺寸)
+const OPTIMIZED_BLUR_DATA_URL = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoQABAACMCWJQBOgCI4CAD+6Ty2AAA=';
+
+// 定义图片尺寸常量，便于维护
+const IMAGE_SIZES = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
 
 interface MovieListProps {
   movies: Movie[];
 }
 
-export function MovieList({ movies }: MovieListProps) {
+// 使用memo避免不必要的重渲染
+export const MovieList = memo(function MovieList({ movies }: MovieListProps) {
   return (
     <section className="bg-white shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
@@ -34,12 +37,14 @@ export function MovieList({ movies }: MovieListProps) {
                       alt={movie.titleEn || ''}
                       className="object-cover object-center transition-transform duration-200 ease-in-out group-hover:scale-105"
                       fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      sizes={IMAGE_SIZES}
                       priority={index < 3}
                       loading={index < 3 ? "eager" : "lazy"}
                       placeholder="blur"
-                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAEOgJ8lU8MqAAAAABJRU5ErkJggg=="
-                      quality={80}
+                      blurDataURL={OPTIMIZED_BLUR_DATA_URL}
+                      quality={75} /* 略微降低质量以减小文件大小，在视觉上几乎无法察觉 */
+                      fetchPriority={index < 3 ? "high" : "auto"} /* 使用fetchPriority优化加载优先级 */
+                      decoding="async" /* 使用异步解码避免阻塞主线程 */
                     />
                   </div>
                 )}
@@ -71,4 +76,4 @@ export function MovieList({ movies }: MovieListProps) {
       </div>
     </section>
   );
-} 
+});
