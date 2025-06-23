@@ -1,15 +1,20 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { handleApiError, createError } from '@/app/lib/error-handler';
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get('q');
-
-  if (!query || query.length < 2) {
-    return Response.json({ movies: [] });
-  }
-
   try {
+    const { searchParams } = new URL(request.url);
+    const query = searchParams.get('q');
+
+    if (!query) {
+      throw createError.badRequest('Search query is required');
+    }
+
+    if (query.length < 2) {
+      return Response.json({ movies: [] });
+    }
+
     const movies = await prisma.movie.findMany({
       where: {
         OR: [
@@ -30,7 +35,6 @@ export async function GET(request: NextRequest) {
 
     return Response.json({ movies });
   } catch (error) {
-    console.error('Search error:', error);
-    return Response.json({ error: 'Search failed' }, { status: 500 });
+    return handleApiError(error);
   }
 }

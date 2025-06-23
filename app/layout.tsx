@@ -4,6 +4,7 @@ import "./globals.css";
 import Breadcrumb from "./components/Breadcrumb";
 import { MovieSearch } from "./components/MovieSearch";
 import { RegionSelector } from "./components/RegionSelector";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import Link from "next/link";
 import Script from 'next/script';
 
@@ -59,7 +60,9 @@ export default function RootLayout({
 
         <main className="min-h-screen bg-gray-50">
           <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </div>
         </main>
 

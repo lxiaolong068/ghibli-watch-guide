@@ -3,7 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { MoviePoster } from './OptimizedImage';
+import { LoadingSpinner } from './LoadingSpinner';
+import { clientErrorHandler } from '@/app/lib/error-handler';
 
 interface MovieSearchResult {
   id: string;
@@ -22,6 +24,7 @@ export function MovieSearch({ placeholder = "Search movies..." }: MovieSearchPro
   const [results, setResults] = useState<MovieSearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -45,14 +48,17 @@ export function MovieSearch({ placeholder = "Search movies..." }: MovieSearchPro
       }
 
       setIsLoading(true);
+      setError(null);
       try {
         const response = await fetch(`/api/movies/search?q=${encodeURIComponent(query)}`);
-        const data = await response.json();
+        const data = await clientErrorHandler.handleResponse<{ movies: MovieSearchResult[] }>(response);
         setResults(data.movies || []);
         setIsOpen(true);
       } catch (error) {
         console.error('Search error:', error);
+        setError(clientErrorHandler.getDisplayMessage(error));
         setResults([]);
+        setIsOpen(true);
       } finally {
         setIsLoading(false);
       }
@@ -90,7 +96,13 @@ export function MovieSearch({ placeholder = "Search movies..." }: MovieSearchPro
           aria-label="Search results"
         >
           {isLoading ? (
-            <div className="p-4 text-center text-gray-500">Searching...</div>
+            <div className="p-4 text-center">
+              <LoadingSpinner size="sm" text="Searching..." />
+            </div>
+          ) : error ? (
+            <div className="p-4 text-center text-red-500 text-sm">
+              {error}
+            </div>
           ) : results.length > 0 ? (
             results.map((movie) => (
               <button
@@ -101,15 +113,12 @@ export function MovieSearch({ placeholder = "Search movies..." }: MovieSearchPro
                 aria-selected={false}
                 aria-label={`${movie.titleEn} (${movie.year})`}
               >
-                {movie.posterUrl && (
-                  <Image
-                    src={movie.posterUrl}
-                    alt={`${movie.titleEn} poster`}
-                    width={48}
-                    height={64}
-                    className="w-12 h-16 object-cover rounded"
-                  />
-                )}
+                <MoviePoster
+                  src={movie.posterUrl}
+                  title={movie.titleEn}
+                  size="sm"
+                  className="w-12 h-16"
+                />
                 <div>
                   <h4 className="font-medium text-gray-900">{movie.titleEn}</h4>
                   <p className="text-sm text-gray-600">{movie.year}</p>
