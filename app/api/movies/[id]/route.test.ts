@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Mock } from 'vitest'; // Import Mock type
 import { GET } from './route'; 
-import { NextRequest, NextResponse } from 'next/server'; // Need NextResponse for mocking json
+import { NextRequest } from 'next/server'; // NextResponse not used directly
 import type { MovieDetails } from '@/lib/tmdb'; 
 
 // Import the ORIGINAL modules. Vitest will replace them with mocks from __mocks__.
@@ -16,7 +16,7 @@ vi.mock('@/lib/prisma');
 const mockedGetMovieDetails = getMovieDetails as Mock;
 const mockedGetMovieWatchProviders = getMovieWatchProviders as Mock;
 const mockFindUnique = prisma.movie.findUnique as Mock;
-const mockDisconnect = prisma.$disconnect as Mock; // If needed
+const _mockDisconnect = prisma.$disconnect as Mock; // If needed
 
 // 模拟 NextResponse.json 用于断言
 const mockJson = vi.fn();

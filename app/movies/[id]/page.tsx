@@ -22,7 +22,7 @@ const movieArgs = Prisma.validator<Prisma.MovieFindUniqueArgs>()({
     titleEn: true, 
   },
 });
-type MovieWithTmdbId = Prisma.MovieGetPayload<typeof movieArgs>;
+type _MovieWithTmdbId = Prisma.MovieGetPayload<typeof movieArgs>;
 
 // Combined type for the page data
 interface MoviePageData {

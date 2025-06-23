@@ -23,10 +23,9 @@ export function MovieListContainer({
       <MovieList movies={initialMovies} />
       
       <PaginationControls
-        totalItems={totalMovies} 
+        totalItems={totalMovies}
         currentPage={currentPage}
         pageSize={pageSize}
-        basePath="/movies"
       />
     </div>
   );

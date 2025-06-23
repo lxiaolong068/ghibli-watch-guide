@@ -37,6 +37,7 @@ const platforms = [
 
 const movies = [
   {
+    tmdbId: 129,
     titleEn: 'Spirited Away',
     titleJa: '千と千尋の神隠し',
     year: 2001,
@@ -46,6 +47,7 @@ const movies = [
     posterUrl: 'https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg',
   },
   {
+    tmdbId: 10515,
     titleEn: 'My Neighbor Totoro',
     titleJa: 'となりのトトロ',
     year: 1988,
@@ -55,6 +57,7 @@ const movies = [
     posterUrl: 'https://image.tmdb.org/t/p/w500/rtGDOeG9LzoerkDGZF9dnVeLppL.jpg',
   },
   {
+    tmdbId: 12477,
     titleEn: 'Grave of the Fireflies',
     titleJa: '火垂るの墓',
     year: 1988,
@@ -146,25 +149,34 @@ async function main() {
       movieId: createdMovies[0].id,
       platformId: createdPlatforms[0].id,
       regionId: createdRegions[0].id,
-      type: 'SUBSCRIPTION',
+      type: 'SUBSCRIPTION' as const,
       lastChecked: new Date(),
-      priceInfo: { subscription: '$9.99/month' },
+      price: 9.99,
+      currency: 'USD',
+      url: 'https://www.netflix.com/title/60023642',
+      isAvailable: true,
     },
     {
       movieId: createdMovies[2].id,
       platformId: createdPlatforms[0].id,
       regionId: createdRegions[0].id,
-      type: 'SUBSCRIPTION',
+      type: 'SUBSCRIPTION' as const,
       lastChecked: new Date(),
-      priceInfo: { subscription: '$15.49/month' },
+      price: 15.49,
+      currency: 'USD',
+      url: 'https://www.max.com/movies/grave-of-the-fireflies',
+      isAvailable: true,
     },
     {
       movieId: createdMovies[0].id,
       platformId: createdPlatforms[0].id,
       regionId: createdRegions[4].id,
-      type: 'SUBSCRIPTION',
+      type: 'SUBSCRIPTION' as const,
       lastChecked: new Date(),
-      priceInfo: { subscription: '€4.99/month' },
+      price: 4.99,
+      currency: 'EUR',
+      url: 'https://www.netflix.com/title/60023642',
+      isAvailable: true,
     },
   ];
 

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
 import Breadcrumb from "./components/Breadcrumb";
+import { MovieSearch } from "./components/MovieSearch";
+import { RegionSelector } from "./components/RegionSelector";
 import Link from "next/link";
 import Script from 'next/script';
 
@@ -40,12 +42,17 @@ export default function RootLayout({
         </header>
         
         <nav className="bg-white border-b">
-          <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-            <Breadcrumb />
-            <div className="flex space-x-4">
-              <Link href="/" className="text-gray-700 hover:text-primary-600">Home</Link>
-              <Link href="/movies" className="text-gray-700 hover:text-primary-600">Movies</Link>
-              {/* Add more menu items here if needed */}
+          <div className="container mx-auto px-4 py-3">
+            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-3 lg:space-y-0">
+              <Breadcrumb />
+              <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                <MovieSearch />
+                <RegionSelector />
+                <div className="flex space-x-4">
+                  <Link href="/" className="text-gray-700 hover:text-primary-600">Home</Link>
+                  <Link href="/movies" className="text-gray-700 hover:text-primary-600">Movies</Link>
+                </div>
+              </div>
             </div>
           </div>
         </nav>

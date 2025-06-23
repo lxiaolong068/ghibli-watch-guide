@@ -34,6 +34,7 @@ export const getAllMovies = cache(async (page: number = 1, pageSize: number = 12
           tmdbId: true,
           titleEn: true,
           titleJa: true,
+          titleZh: true,
           year: true,
           director: true,
           duration: true,
@@ -41,6 +42,8 @@ export const getAllMovies = cache(async (page: number = 1, pageSize: number = 12
           posterUrl: true,
           backdropUrl: true,
           voteAverage: true,
+          createdAt: true,
+          updatedAt: true,
         },
         orderBy: {
           year: 'desc', // Keep the consistent order
@@ -73,6 +76,7 @@ export const getLatestMovies = cache(async (count: number) => {
         tmdbId: true,
         titleEn: true,
         titleJa: true,
+        titleZh: true,
         year: true,
         director: true,
         duration: true,
@@ -80,6 +84,8 @@ export const getLatestMovies = cache(async (count: number) => {
         posterUrl: true,
         backdropUrl: true,
         voteAverage: true,
+        createdAt: true,
+        updatedAt: true,
       },
       orderBy: {
         year: 'desc',

@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -15,9 +16,9 @@ export default function RegionsPage() {
       </p>
       <p className="mt-4">
         In the meantime, you can browse the full list of Ghibli movies on our{' '}
-        <a href="/" className="text-blue-600 hover:underline dark:text-blue-400">
+        <Link href="/" className="text-blue-600 hover:underline dark:text-blue-400">
           homepage
-        </a>
+        </Link>
         .
       </p>
     </div>

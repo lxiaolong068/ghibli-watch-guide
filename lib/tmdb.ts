@@ -87,9 +87,9 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
       }
       
       // 创建详细的错误对象
-      const error = new Error(`TMDB API Error (${errorData?.status_code || response.status}): ${errorData?.status_message || response.statusText}`);
-      (error as any).status = response.status;
-      (error as any).endpoint = endpoint;
+      const error = new Error(`TMDB API Error (${errorData?.status_code || response.status}): ${errorData?.status_message || response.statusText}`) as Error & { status: number; endpoint: string };
+      error.status = response.status;
+      error.endpoint = endpoint;
       throw error;
     }
 
@@ -99,7 +99,7 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
     // 处理错误，包括超时、网络错误等
     const isTimeoutError = error instanceof DOMException && error.name === 'TimeoutError';
     const isNetworkError = error instanceof TypeError && error.message.includes('network');
-    const isServerError = error instanceof Error && (error as any).status >= 500;
+    const isServerError = error instanceof Error && 'status' in error && typeof (error as { status: number }).status === 'number' && (error as { status: number }).status >= 500;
     
     // 可重试的错误类型
     const isRetryableError = isTimeoutError || isNetworkError || isServerError;
@@ -187,11 +187,11 @@ export async function getMovieDetails(
     
     return movieDetails;
   } catch (error) {
-    const isServerError = error instanceof Error && (error as any).status >= 500;
-    const isClientError = error instanceof Error && (error as any).status >= 400 && (error as any).status < 500;
+    const _isServerError = error instanceof Error && 'status' in error && typeof (error as { status: number }).status === 'number' && (error as { status: number }).status >= 500;
+    const isClientError = error instanceof Error && 'status' in error && typeof (error as { status: number }).status === 'number' && (error as { status: number }).status >= 400 && (error as { status: number }).status < 500;
     
     // 客户端错误（如404）通常不需要重试，直接处理
-    if (isClientError && (error as any).status === 404) {
+    if (isClientError && 'status' in error && (error as { status: number }).status === 404) {
       console.warn(`[TMDB] Movie ID ${movieId} not found`);
       // 可以返回一个空的电影对象，取决于你的错误处理策略
       throw new Error(`Movie with ID ${movieId} not found in TMDB`);
@@ -265,7 +265,7 @@ export async function getMovieWatchProviders(
     return providers;
   } catch (error) {
     // 对于提供商API，404并非严重错误，可能只是该电影没有提供商数据
-    if (error instanceof Error && (error as any).status === 404) {
+    if (error instanceof Error && 'status' in error && (error as { status: number }).status === 404) {
       // 返回一个有效但空的响应，而不是抛出错误
       return {
         id: movieId,
