@@ -1,8 +1,19 @@
 import React from 'react';
+import { LoadingSpinner } from './components/LoadingSpinner';
 
 export default function Loading() {
   return (
-    <div className="space-y-8 animate-pulse">
+    <div className="min-h-screen bg-gray-50">
+      {/* 顶部加载指示器 */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b">
+        <div className="flex items-center justify-center py-3">
+          <LoadingSpinner size="sm" color="primary" />
+          <span className="ml-2 text-sm text-gray-600">Loading Studio Ghibli content...</span>
+        </div>
+      </div>
+
+      {/* 主要内容骨架 */}
+      <div className="pt-16 space-y-8 animate-pulse">
       {/* Welcome section skeleton */}
       <section className="text-center space-y-4">
         <div className="h-10 bg-gray-200 rounded max-w-lg mx-auto"></div>
@@ -62,6 +73,7 @@ export default function Loading() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
-} 
+}

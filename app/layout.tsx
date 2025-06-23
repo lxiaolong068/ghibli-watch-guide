@@ -5,6 +5,9 @@ import Breadcrumb from "./components/Breadcrumb";
 import { MovieSearch } from "./components/MovieSearch";
 import { RegionSelector } from "./components/RegionSelector";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { AccessibilityTools } from "./components/AccessibilityTools";
+import { FeedbackWidget } from "./components/FeedbackWidget";
+import { PerformanceMonitor } from "./components/PerformanceMonitor";
 import Link from "next/link";
 import Script from 'next/script';
 
@@ -31,6 +34,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={notoSansSC.className}>
+        {/* 跳转到主内容链接 */}
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
+
         <header className="bg-gradient-to-r from-[#4AB1B3] to-[#76E4C4] shadow-lg">
           <div className="container mx-auto px-4 py-6">
             <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-2 tracking-tight">
@@ -58,7 +66,7 @@ export default function RootLayout({
           </div>
         </nav>
 
-        <main className="min-h-screen bg-gray-50">
+        <main id="main-content" className="min-h-screen bg-gray-50">
           <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <ErrorBoundary>
               {children}
@@ -76,6 +84,11 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+
+        {/* 用户体验工具 */}
+        <AccessibilityTools />
+        <FeedbackWidget />
+        <PerformanceMonitor enableConsoleLogging={process.env.NODE_ENV === 'development'} />
 
         {/* Microsoft Clarity Script */}
         <Script id="microsoft-clarity" strategy="afterInteractive">
