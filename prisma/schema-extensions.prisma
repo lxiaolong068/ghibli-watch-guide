@@ -1,0 +1,169 @@
+// 内容版本控制和管理扩展模型
+// 这些模型将扩展现有的schema以支持更好的内容管理
+
+// 内容版本控制模型
+model ContentVersion {
+  id          String         @id @default(cuid())
+  entityType  String         // 实体类型 (Movie, Platform, Region, etc.)
+  entityId    String         // 实体ID
+  version     Int            // 版本号
+  changes     Json           // 变更内容 (JSON格式)
+  changeType  ChangeType     // 变更类型
+  author      String?        // 变更作者
+  reason      String?        // 变更原因
+  isActive    Boolean        @default(false) // 是否为当前活跃版本
+  createdAt   DateTime       @default(now())
+  
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+// 内容审核模型
+model ContentReview {
+  id          String         @id @default(cuid())
+  entityType  String         // 实体类型
+  entityId    String         // 实体ID
+  versionId   String         // 版本ID
+  status      ReviewStatus   // 审核状态
+  reviewer    String?        // 审核员
+  comments    String?        // 审核意见
+  reviewedAt  DateTime?      // 审核时间
+  createdAt   DateTime       @default(now())
+  
+  version     ContentVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  
+  @@index([status])
+  @@index([createdAt])
+}
+
+// 内容更新任务模型
+model ContentUpdateTask {
+  id          String         @id @default(cuid())
+  taskType    TaskType       // 任务类型
+  entityType  String?        // 目标实体类型
+  entityId    String?        // 目标实体ID
+  priority    Priority       // 优先级
+  status      TaskStatus     // 任务状态
+  scheduledAt DateTime?      // 计划执行时间
+  startedAt   DateTime?      // 开始时间
+  completedAt DateTime?      // 完成时间
+  errorMessage String?       // 错误信息
+  metadata    Json?          // 任务元数据
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  @@index([status, priority])
+  @@index([scheduledAt])
+}
+
+// 内容质量指标模型
+model ContentQualityMetric {
+  id          String         @id @default(cuid())
+  entityType  String         // 实体类型
+  entityId    String         // 实体ID
+  metricType  String         // 指标类型 (completeness, accuracy, freshness)
+  score       Float          // 分数 (0-100)
+  details     Json?          // 详细信息
+  measuredAt  DateTime       @default(now())
+  
+  @@index([entityType, entityId])
+  @@index([metricType, score])
+}
+
+// 用户反馈模型
+model UserFeedback {
+  id          String         @id @default(cuid())
+  entityType  String         // 实体类型
+  entityId    String         // 实体ID
+  feedbackType FeedbackType  // 反馈类型
+  content     String         // 反馈内容
+  userAgent   String?        // 用户代理
+  ipAddress   String?        // IP地址 (匿名化)
+  isResolved  Boolean        @default(false) // 是否已解决
+  resolvedAt  DateTime?      // 解决时间
+  createdAt   DateTime       @default(now())
+  
+  @@index([entityType, entityId])
+  @@index([feedbackType, isResolved])
+}
+
+// 内容同步日志模型
+model ContentSyncLog {
+  id          String         @id @default(cuid())
+  source      String         // 数据源 (TMDB, Manual, etc.)
+  syncType    SyncType       // 同步类型
+  status      SyncStatus     // 同步状态
+  recordsProcessed Int       @default(0) // 处理记录数
+  recordsUpdated   Int       @default(0) // 更新记录数
+  recordsCreated   Int       @default(0) // 创建记录数
+  recordsFailed    Int       @default(0) // 失败记录数
+  errorDetails     Json?     // 错误详情
+  startedAt   DateTime       @default(now())
+  completedAt DateTime?      // 完成时间
+  
+  @@index([source, syncType])
+  @@index([startedAt])
+}
+
+// 枚举定义
+enum ChangeType {
+  CREATE
+  UPDATE
+  DELETE
+  RESTORE
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  NEEDS_REVISION
+}
+
+enum TaskType {
+  MOVIE_UPDATE
+  AVAILABILITY_CHECK
+  PLATFORM_SYNC
+  REGION_UPDATE
+  QUALITY_CHECK
+  CONTENT_REVIEW
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum FeedbackType {
+  INCORRECT_INFO
+  MISSING_INFO
+  BROKEN_LINK
+  SUGGESTION
+  BUG_REPORT
+  OTHER
+}
+
+enum SyncType {
+  FULL_SYNC
+  INCREMENTAL_SYNC
+  MANUAL_SYNC
+  SCHEDULED_SYNC
+}
+
+enum SyncStatus {
+  STARTED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}

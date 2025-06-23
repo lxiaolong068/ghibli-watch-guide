@@ -8,6 +8,11 @@ import { PrismaClient, Prisma } from '@prisma/client'; // Import Prisma
 import { getMovieDetails, getMovieWatchProviders } from '@/lib/tmdb'; // Import TMDB fetch functions
 import { getAllRegions } from '@/app/actions/availability'; // Import region retrieval function
 import { RegionSelector } from '@/app/components/movies/RegionSelector'; // Import region selector component
+import { SEOOptimizer, ResponsiveAdSenseAd, InArticleAdSenseAd } from '@/app/components/SEOOptimizer';
+import { MovieReviewSection } from '@/app/components/movies/MovieReviewSection';
+import { CharacterSection } from '@/app/components/movies/CharacterSection';
+import { RelatedMoviesSection } from '@/app/components/movies/RelatedMoviesSection';
+import { MovieStatsTracker } from '@/app/components/movies/MovieStatsTracker';
 
 // Singleton pattern for Prisma client
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
@@ -213,9 +218,23 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
   }
   
   return (
-    <div className="max-w-5xl mx-auto pb-12">
-      {/* Movie Detail Card */}
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+    <>
+      {/* SEO优化组件 */}
+      <SEOOptimizer
+        title={`${movie.title} | 吉卜力观影指南`}
+        description={`观看《${movie.title}》的完整指南。了解在哪里可以在线观看这部${movie.release_date?.substring(0, 4) || 'N/A'}年的吉卜力经典动画，包括流媒体平台、租赁和购买选项。`}
+        keywords={[movie.title, movie.original_title, '在线观看', '流媒体']}
+        canonicalUrl={`https://www.whereghibli.cc/movies/${id}`}
+        ogImage={posterUrl || undefined}
+        movieData={movie}
+      />
+
+      {/* 页面浏览统计 */}
+      <MovieStatsTracker movieId={id} />
+
+      <div className="max-w-5xl mx-auto pb-12">
+        {/* Movie Detail Card */}
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
         <div className="relative">
           {backdropUrl && (
             <div className="absolute inset-0">
@@ -426,11 +445,29 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         </div>
       )}
 
+      {/* 第一个广告位 - 观看信息后 */}
+      <ResponsiveAdSenseAd adSlot="1234567890" />
+
+      {/* 电影评论和分析部分 */}
+      <MovieReviewSection movieId={id} />
+
+      {/* 文章内广告 */}
+      <InArticleAdSenseAd adSlot="2345678901" />
+
+      {/* 角色介绍部分 */}
+      <CharacterSection movieId={id} />
+
+      {/* 相关电影推荐 */}
+      <RelatedMoviesSection currentMovieId={id} />
+
+      {/* 第二个广告位 - 页面底部 */}
+      <ResponsiveAdSenseAd adSlot="3456789012" />
+
       {/* Data Source Attribution */}
       <div className="mt-8 text-sm text-gray-500 text-center">
         <p>Movie information provided by TMDB (The Movie Database)</p>
         <div className="mt-2">
-          <a 
+          <a
             href={`https://www.themoviedb.org/movie/${movie.id}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -515,6 +552,7 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         });
         `}
       </Script>
-    </div>
+      </div>
+    </>
   );
-} 
+}

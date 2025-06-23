@@ -1,0 +1,264 @@
+// 内容扩展模型 - 丰富网站内容的数据结构
+
+// 角色模型
+model Character {
+  id          String         @id @default(cuid())
+  name        String         // 角色名称
+  nameJa      String?        // 日文名称
+  nameZh      String?        // 中文名称
+  description String?        // 角色描述
+  imageUrl    String?        // 角色图片URL
+  isMainCharacter Boolean    @default(false) // 是否主角
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  // 关联关系
+  movieCharacters MovieCharacter[]
+  
+  @@index([name])
+}
+
+// 电影角色关联模型
+model MovieCharacter {
+  id          String         @id @default(cuid())
+  movieId     String
+  characterId String
+  voiceActor  String?        // 配音演员
+  voiceActorJa String?       // 日文配音演员
+  importance  Int            @default(0) // 重要程度 (0-100)
+  createdAt   DateTime       @default(now())
+  
+  movie       Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  character   Character      @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  
+  @@unique([movieId, characterId])
+  @@index([movieId])
+}
+
+// 制作人员模型
+model CrewMember {
+  id          String         @id @default(cuid())
+  name        String         // 姓名
+  nameJa      String?        // 日文姓名
+  biography   String?        // 简介
+  imageUrl    String?        // 头像URL
+  birthDate   DateTime?      // 出生日期
+  nationality String?        // 国籍
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  // 关联关系
+  movieCrew   MovieCrew[]
+  
+  @@index([name])
+}
+
+// 电影制作人员关联模型
+model MovieCrew {
+  id          String         @id @default(cuid())
+  movieId     String
+  crewMemberId String
+  role        CrewRole       // 职位
+  department  String?        // 部门
+  createdAt   DateTime       @default(now())
+  
+  movie       Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  crewMember  CrewMember     @relation(fields: [crewMemberId], references: [id], onDelete: Cascade)
+  
+  @@unique([movieId, crewMemberId, role])
+  @@index([movieId])
+}
+
+// 电影评论和分析模型
+model MovieReview {
+  id          String         @id @default(cuid())
+  movieId     String
+  title       String         // 评论标题
+  content     String         // 评论内容
+  author      String         // 作者
+  rating      Float?         // 评分 (1-10)
+  reviewType  ReviewType     // 评论类型
+  language    String         @default("en") // 语言
+  isPublished Boolean        @default(false) // 是否发布
+  publishedAt DateTime?      // 发布时间
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  movie       Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  
+  @@index([movieId, isPublished])
+  @@index([reviewType, isPublished])
+}
+
+// 观影指南模型
+model WatchGuide {
+  id          String         @id @default(cuid())
+  title       String         // 指南标题
+  description String         // 指南描述
+  guideType   GuideType      // 指南类型
+  content     Json           // 指南内容 (结构化数据)
+  order       Int            @default(0) // 排序
+  isPublished Boolean        @default(false) // 是否发布
+  language    String         @default("en") // 语言
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  // 关联的电影
+  movies      WatchGuideMovie[]
+  
+  @@index([guideType, isPublished])
+  @@index([order])
+}
+
+// 观影指南电影关联模型
+model WatchGuideMovie {
+  id          String         @id @default(cuid())
+  guideId     String
+  movieId     String
+  order       Int            // 在指南中的顺序
+  notes       String?        // 备注
+  createdAt   DateTime       @default(now())
+  
+  guide       WatchGuide     @relation(fields: [guideId], references: [id], onDelete: Cascade)
+  movie       Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  
+  @@unique([guideId, movieId])
+  @@index([guideId, order])
+}
+
+// 多媒体内容模型
+model MediaContent {
+  id          String         @id @default(cuid())
+  movieId     String?        // 关联电影 (可选)
+  title       String         // 标题
+  description String?        // 描述
+  mediaType   MediaType      // 媒体类型
+  url         String         // 媒体URL
+  thumbnailUrl String?       // 缩略图URL
+  duration    Int?           // 时长 (秒)
+  fileSize    Int?           // 文件大小 (字节)
+  language    String?        // 语言
+  isPublished Boolean        @default(false) // 是否发布
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  movie       Movie?         @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  
+  @@index([movieId, mediaType])
+  @@index([mediaType, isPublished])
+}
+
+// 标签模型
+model Tag {
+  id          String         @id @default(cuid())
+  name        String         @unique // 标签名称
+  nameJa      String?        // 日文名称
+  nameZh      String?        // 中文名称
+  description String?        // 标签描述
+  color       String?        // 标签颜色
+  category    String?        // 标签分类
+  createdAt   DateTime       @default(now())
+  
+  // 关联关系
+  movieTags   MovieTag[]
+  
+  @@index([category])
+}
+
+// 电影标签关联模型
+model MovieTag {
+  id          String         @id @default(cuid())
+  movieId     String
+  tagId       String
+  createdAt   DateTime       @default(now())
+  
+  movie       Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  tag         Tag            @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@unique([movieId, tagId])
+  @@index([movieId])
+}
+
+// 用户收藏模型 (为未来用户功能预留)
+model UserFavorite {
+  id          String         @id @default(cuid())
+  userId      String         // 用户ID (未来实现用户系统时使用)
+  movieId     String
+  createdAt   DateTime       @default(now())
+  
+  movie       Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, movieId])
+  @@index([userId])
+}
+
+// 电影统计模型
+model MovieStats {
+  id          String         @id @default(cuid())
+  movieId     String         @unique
+  viewCount   Int            @default(0) // 浏览次数
+  favoriteCount Int          @default(0) // 收藏次数
+  shareCount  Int            @default(0) // 分享次数
+  lastViewed  DateTime?      // 最后浏览时间
+  updatedAt   DateTime       @updatedAt
+  
+  movie       Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  
+  @@index([viewCount])
+  @@index([favoriteCount])
+}
+
+// 枚举定义
+enum CrewRole {
+  DIRECTOR
+  PRODUCER
+  WRITER
+  ANIMATOR
+  COMPOSER
+  VOICE_DIRECTOR
+  ART_DIRECTOR
+  SOUND_DESIGNER
+  EDITOR
+  OTHER
+}
+
+enum ReviewType {
+  PROFESSIONAL    // 专业影评
+  EDITORIAL      // 编辑评论
+  ANALYSIS       // 深度分析
+  BEHIND_SCENES  // 幕后故事
+  TRIVIA         // 趣闻轶事
+}
+
+enum GuideType {
+  CHRONOLOGICAL  // 按时间顺序
+  THEMATIC      // 按主题
+  BEGINNER      // 新手指南
+  ADVANCED      // 进阶指南
+  FAMILY        // 家庭观影
+  SEASONAL      // 季节性推荐
+}
+
+enum MediaType {
+  TRAILER       // 预告片
+  CLIP          // 片段
+  BEHIND_SCENES // 幕后花絮
+  INTERVIEW     // 访谈
+  SOUNDTRACK    // 原声音乐
+  ARTWORK       // 艺术作品
+  POSTER        // 海报
+  WALLPAPER     // 壁纸
+}
+
+// 扩展现有Movie模型的关联关系 (需要添加到原schema中)
+/*
+在原有的Movie模型中添加以下关联：
+  movieCharacters MovieCharacter[]
+  movieCrew       MovieCrew[]
+  reviews         MovieReview[]
+  guideMovies     WatchGuideMovie[]
+  mediaContent    MediaContent[]
+  movieTags       MovieTag[]
+  favorites       UserFavorite[]
+  stats           MovieStats?
+*/
