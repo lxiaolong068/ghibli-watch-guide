@@ -33,6 +33,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6958408841088360"
+             crossOrigin="anonymous"></script>
+      </head>
       <body className={notoSansSC.className}>
         {/* 跳转到主内容链接 */}
         <a href="#main-content" className="skip-link">
