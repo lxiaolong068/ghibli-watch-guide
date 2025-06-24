@@ -2,13 +2,11 @@ import type { Metadata } from "next";
 import { Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
 import Breadcrumb from "./components/Breadcrumb";
-import { MovieSearch } from "./components/MovieSearch";
-import { RegionSelector } from "./components/RegionSelector";
+import { MobileNavBar, DesktopNavBar } from "./components/MobileNavigation";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AccessibilityTools } from "./components/AccessibilityTools";
 import { FeedbackWidget } from "./components/FeedbackWidget";
 import { PerformanceMonitor } from "./components/PerformanceMonitor";
-import Link from "next/link";
 import Script from 'next/script';
 
 const notoSansSC = Noto_Sans_SC({ 
@@ -56,20 +54,15 @@ export default function RootLayout({
         
         <nav className="bg-white border-b">
           <div className="container mx-auto px-4 py-3">
-            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-3 lg:space-y-0">
+            {/* 移动端导航 */}
+            <MobileNavBar>
               <Breadcrumb />
-              <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                <MovieSearch />
-                <RegionSelector />
-                <div className="flex space-x-4">
-                  <Link href="/" className="text-gray-700 hover:text-primary-600">Home</Link>
-                  <Link href="/movies" className="text-gray-700 hover:text-primary-600">Movies</Link>
-                  <Link href="/guides" className="text-gray-700 hover:text-primary-600">Guides</Link>
-                  <Link href="/characters" className="text-gray-700 hover:text-primary-600">Characters</Link>
-                  <Link href="/reviews" className="text-gray-700 hover:text-primary-600">Reviews</Link>
-                </div>
-              </div>
-            </div>
+            </MobileNavBar>
+
+            {/* 桌面端导航 */}
+            <DesktopNavBar>
+              <Breadcrumb />
+            </DesktopNavBar>
           </div>
         </nav>
 

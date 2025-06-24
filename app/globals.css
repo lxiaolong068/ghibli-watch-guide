@@ -223,3 +223,54 @@ a {
 .hover-lift {
   @apply transition-transform duration-200 hover:-translate-y-1;
 }
+
+/* 移动端优化样式 */
+@media (max-width: 768px) {
+  /* 移动端字体大小优化 */
+  h1 {
+    @apply text-2xl leading-tight;
+  }
+
+  h2 {
+    @apply text-xl leading-tight;
+  }
+
+  h3 {
+    @apply text-lg leading-tight;
+  }
+
+  /* 移动端间距优化 */
+  .mobile-spacing {
+    @apply px-4 py-3;
+  }
+
+  /* 移动端卡片优化 */
+  .mobile-card {
+    @apply p-4 rounded-lg;
+  }
+
+  /* 移动端按钮优化 */
+  .mobile-button {
+    @apply px-4 py-3 text-base min-h-[44px] rounded-lg;
+  }
+
+  /* 移动端触摸目标优化 */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* 移动端文本可读性优化 */
+  .mobile-text {
+    @apply text-base leading-relaxed;
+  }
+
+  /* 移动端网格优化 */
+  .mobile-grid {
+    @apply grid-cols-1 gap-4;
+  }
+
+  /* 移动端图片优化 */
+  .mobile-image {
+    @apply w-full h-auto rounded-lg;
+  }
+}
