@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 搜索高亮样式 */
+@import './styles/search-highlight.css';
+
 /* 无障碍性样式 */
 
 /* 屏幕阅读器专用内容 */

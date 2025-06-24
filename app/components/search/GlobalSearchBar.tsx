@@ -62,10 +62,10 @@ export function GlobalSearchBar({
     const searchQuick = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=${maxQuickResults}`);
+        const response = await fetch(`/api/search/quick?q=${encodeURIComponent(query)}&limit=${maxQuickResults}`);
         if (response.ok) {
           const data = await response.json();
-          const results = data.results.slice(0, maxQuickResults).map((result: any) => ({
+          const results = data.results.map((result: any) => ({
             id: result.id,
             type: result.type,
             title: result.title,
@@ -74,17 +74,18 @@ export function GlobalSearchBar({
             url: result.url,
           }));
           setQuickResults(results);
-          setIsOpen(true);
+          setIsOpen(results.length > 0);
         }
       } catch (error) {
         console.error('Quick search error:', error);
         setQuickResults([]);
+        setIsOpen(false);
       } finally {
         setIsLoading(false);
       }
     };
 
-    const debounceTimer = setTimeout(searchQuick, 300);
+    const debounceTimer = setTimeout(searchQuick, 200); // 减少延迟以提高响应性
     return () => clearTimeout(debounceTimer);
   }, [query, showQuickResults, maxQuickResults]);
 

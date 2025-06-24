@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { SearchResults } from '@/app/components/search/SearchResults';
 import { SearchFilters } from '@/app/components/search/SearchFilters';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
+import { SearchHistorySection } from '@/app/components/search/SearchHistorySection';
 
 interface SearchPageProps {
   searchParams: {
@@ -69,56 +70,64 @@ export default function SearchPage({ searchParams }: SearchPageProps) {
             </div>
           </div>
         ) : (
-          <div className="text-center py-16">
-            <div className="max-w-md mx-auto">
-              <div className="mb-8">
-                <svg
-                  className="mx-auto h-24 w-24 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                开始搜索
-              </h2>
-              <p className="text-gray-600 mb-8">
-                输入关键词搜索电影、角色、评论和观影指南等内容
-              </p>
-              
-              {/* 搜索建议 */}
-              <div className="text-left">
-                <h3 className="text-sm font-medium text-gray-900 mb-4">热门搜索</h3>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    '千与千寻',
-                    '龙猫',
-                    '萤火虫之墓',
-                    '哈尔的移动城堡',
-                    '天空之城',
-                    '魔女宅急便',
-                    '宫崎骏',
-                    '环保主题',
-                    '家庭观影'
-                  ].map((suggestion) => (
-                    <a
-                      key={suggestion}
-                      href={`/search?q=${encodeURIComponent(suggestion)}`}
-                      className="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
-                    >
-                      {suggestion}
-                    </a>
-                  ))}
+          <div className="space-y-8">
+            {/* 搜索提示 */}
+            <div className="text-center py-8">
+              <div className="max-w-md mx-auto">
+                <div className="mb-6">
+                  <svg
+                    className="mx-auto h-16 w-16 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  开始搜索
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  输入关键词搜索电影、角色、评论和观影指南等内容
+                </p>
+
+                {/* 搜索建议 */}
+                <div className="text-left">
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">推荐搜索</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      '千与千寻',
+                      '龙猫',
+                      '萤火虫之墓',
+                      '哈尔的移动城堡',
+                      '天空之城',
+                      '魔女宅急便',
+                      '宫崎骏',
+                      '环保主题',
+                      '家庭观影'
+                    ].map((suggestion) => (
+                      <a
+                        key={suggestion}
+                        href={`/search?q=${encodeURIComponent(suggestion)}`}
+                        className="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
+                      >
+                        {suggestion}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* 搜索历史和热门搜索 */}
+            <div className="max-w-4xl mx-auto">
+              <SearchHistorySection showStats={true} />
             </div>
           </div>
         )}

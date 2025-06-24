@@ -6,6 +6,8 @@ import { OptimizedImage } from '@/app/components/OptimizedImage';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 import { PaginationControls } from '@/app/components/PaginationControls';
 import { SearchResult } from '@/app/types';
+import { highlightSearchTerms, getSearchSnippet } from '@/app/utils/searchHighlight';
+import { SearchHistoryManager } from '@/app/utils/searchHistory';
 
 /*
 interface SearchResult {
@@ -90,6 +92,15 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
 
         const data = await response.json();
         setSearchData(data);
+
+        // 添加到搜索历史
+        if (data.results && data.results.length > 0) {
+          SearchHistoryManager.addToHistory(
+            query,
+            data.total,
+            searchParams.type || 'all'
+          );
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : '搜索出错');
       } finally {
@@ -208,7 +219,11 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
       {/* 搜索结果列表 */}
       <div className="space-y-4">
         {searchData.results.map((result) => (
-          <SearchResultCard key={`${result.type}-${result.id}`} result={result} />
+          <SearchResultCard
+            key={`${result.type}-${result.id}`}
+            result={result}
+            query={searchData.query}
+          />
         ))}
       </div>
 
@@ -227,7 +242,24 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
 }
 
 // 搜索结果卡片组件
-function SearchResultCard({ result }: { result: SearchResult }) {
+function SearchResultCard({ result, query }: { result: SearchResult; query: string }) {
+  // 创建高亮显示的内容
+  const highlightedTitle = query ? highlightSearchTerms(result.title, query, {
+    highlightClass: 'bg-yellow-200 px-1 rounded'
+  }) : result.title;
+
+  const highlightedSubtitle = query && result.subtitle ? highlightSearchTerms(result.subtitle, query, {
+    highlightClass: 'bg-yellow-200 px-1 rounded'
+  }) : result.subtitle;
+
+  const highlightedDescription = query && result.description ? highlightSearchTerms(
+    getSearchSnippet(result.description, query, 200, 50),
+    query,
+    {
+      highlightClass: 'bg-yellow-200 px-1 rounded'
+    }
+  ) : result.description;
+
   return (
     <div className="bg-white rounded-lg shadow hover:shadow-md transition-shadow">
       <Link href={result.url} className="block p-6">
@@ -250,22 +282,32 @@ function SearchResultCard({ result }: { result: SearchResult }) {
             <div className="flex items-start justify-between mb-2">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors">
-                  {result.title}
+                  <span dangerouslySetInnerHTML={{ __html: highlightedTitle }} />
                 </h3>
                 {result.subtitle && (
-                  <p className="text-sm text-gray-600 mt-1">{result.subtitle}</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    <span dangerouslySetInnerHTML={{ __html: highlightedSubtitle || result.subtitle }} />
+                  </p>
                 )}
               </div>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                typeColors[result.type]
-              }`}>
-                {typeLabels[result.type]}
-              </span>
+              <div className="flex items-center space-x-2">
+                {/* 相关性分数显示（仅在开发模式下） */}
+                {process.env.NODE_ENV === 'development' && (
+                  <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">
+                    {result.relevanceScore.toFixed(1)}
+                  </span>
+                )}
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  typeColors[result.type]
+                }`}>
+                  {typeLabels[result.type]}
+                </span>
+              </div>
             </div>
 
             {result.description && (
               <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                {result.description}
+                <span dangerouslySetInnerHTML={{ __html: highlightedDescription || result.description }} />
               </p>
             )}
 
