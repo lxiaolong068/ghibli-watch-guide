@@ -8,7 +8,7 @@ interface RecommendationItem {
   title: string;
   subtitle?: string;
   description?: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   url: string;
   score: number;
 }
