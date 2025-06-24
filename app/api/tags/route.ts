@@ -16,13 +16,13 @@ export async function GET(request: NextRequest) {
 
     const tags = await prisma.tag.findMany({
       where: whereCondition,
-      include: withCount ? {
-        movieTags: {
+      include: {
+        movieTags: withCount ? {
           select: {
             id: true
           }
-        }
-      } : undefined,
+        } : false
+      },
       orderBy: {
         name: 'asc'
       },
