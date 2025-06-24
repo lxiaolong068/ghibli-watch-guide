@@ -5,11 +5,12 @@ import { prisma } from '@/lib/prisma';
 
 interface UserBehaviorTrackerProps {
   movieId?: string;
-  pageType: 'home' | 'movie' | 'search' | 'about' | 'admin';
+  characterId?: string;
+  pageType: 'home' | 'movie' | 'search' | 'about' | 'admin' | 'character' | 'characters';
   userId?: string; // 为未来用户系统预留
 }
 
-export function UserBehaviorTracker({ movieId, pageType, userId }: UserBehaviorTrackerProps) {
+export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: UserBehaviorTrackerProps) {
   const startTime = useRef<number>(Date.now());
   const hasTrackedView = useRef<boolean>(false);
 
@@ -44,7 +45,7 @@ export function UserBehaviorTracker({ movieId, pageType, userId }: UserBehaviorT
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [movieId, pageType, userId]);
+  }, [movieId, characterId, pageType, userId]);
 
   const trackPageView = async () => {
     try {
@@ -61,7 +62,8 @@ export function UserBehaviorTracker({ movieId, pageType, userId }: UserBehaviorT
           page_title: document.title,
           page_location: window.location.href,
           page_type: pageType,
-          movie_id: movieId
+          movie_id: movieId,
+          character_id: characterId
         });
       }
 
@@ -70,6 +72,7 @@ export function UserBehaviorTracker({ movieId, pageType, userId }: UserBehaviorT
         timestamp: Date.now(),
         pageType,
         movieId,
+        characterId,
         userId,
         userAgent: navigator.userAgent,
         referrer: document.referrer,
@@ -100,7 +103,7 @@ export function UserBehaviorTracker({ movieId, pageType, userId }: UserBehaviorT
           value: timeSpent,
           event_category: 'engagement',
           custom_parameter_1: pageType,
-          custom_parameter_2: movieId
+          custom_parameter_2: movieId || characterId
         });
       }
     } catch (error) {
@@ -118,7 +121,8 @@ export function UserBehaviorTracker({ movieId, pageType, userId }: UserBehaviorT
           event_label: `${percentage}%`,
           value: percentage,
           page_type: pageType,
-          movie_id: movieId
+          movie_id: movieId,
+          character_id: characterId
         });
       }
     } catch (error) {

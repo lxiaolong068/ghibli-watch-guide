@@ -217,12 +217,9 @@ export function CharacterList({ page, search, isMainCharacter, movieId }: Charac
       {pagination.totalPages > 1 && (
         <div className="flex justify-center">
           <PaginationControls
+            totalItems={pagination.total}
             currentPage={pagination.page}
-            totalPages={pagination.totalPages}
-            hasNext={pagination.hasNext}
-            hasPrev={pagination.hasPrev}
-            baseUrl="/characters"
-            searchParams={{ search, isMainCharacter, movieId }}
+            pageSize={pagination.limit}
           />
         </div>
       )}
