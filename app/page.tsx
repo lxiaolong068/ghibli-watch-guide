@@ -27,13 +27,20 @@ export default async function HomePage() {
       </section>
 
       {/* Quick links */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Link
           href="/movies"
           className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
         >
           <h3 className="text-xl font-semibold text-gray-900 mb-2">Movie List</h3>
           <p className="text-gray-600">Browse all Studio Ghibli animated films</p>
+        </Link>
+        <Link
+          href="/characters"
+          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
+        >
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Characters</h3>
+          <p className="text-gray-600">Explore beloved Ghibli characters</p>
         </Link>
         <Link
           href="/regions"
