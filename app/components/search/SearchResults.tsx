@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { OptimizedImage } from '@/app/components/OptimizedImage';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 import { PaginationControls } from '@/app/components/PaginationControls';
+import { SearchResult } from '@/app/types';
 
+/*
 interface SearchResult {
   id: string;
   type: 'movie' | 'character' | 'review' | 'guide' | 'media';
@@ -17,6 +19,7 @@ interface SearchResult {
   relevanceScore: number;
   metadata?: Record<string, any>;
 }
+*/
 
 interface SearchResponse {
   results: SearchResult[];
@@ -214,9 +217,8 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
         <div className="flex justify-center">
           <PaginationControls
             currentPage={currentPage}
-            totalPages={totalPages}
-            baseUrl="/search"
-            searchParams={searchParams}
+            totalItems={searchData.total}
+            pageSize={20}
           />
         </div>
       )}

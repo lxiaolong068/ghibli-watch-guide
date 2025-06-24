@@ -1,19 +1,22 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { handleApiError, createError } from '@/app/lib/error-handler';
+import { SearchResult } from '@/app/types';
 
 // 搜索结果类型定义
+/*
 interface SearchResult {
   id: string;
   type: 'movie' | 'character' | 'review' | 'guide' | 'media';
   title: string;
   subtitle?: string;
   description?: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   url: string;
   relevanceScore: number;
   metadata?: Record<string, any>;
 }
+*/
 
 interface SearchResponse {
   results: SearchResult[];

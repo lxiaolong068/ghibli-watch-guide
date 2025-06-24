@@ -221,3 +221,16 @@ export interface WatchGuidesResponse {
     totalPages: number;
   };
 }
+
+// 搜索功能相关类型
+export interface SearchResult {
+  id: string;
+  type: 'movie' | 'character' | 'review' | 'guide' | 'media';
+  title: string;
+  subtitle?: string;
+  description?: string;
+  imageUrl?: string | null;
+  url: string;
+  relevanceScore: number;
+  metadata?: Record<string, any>;
+}
