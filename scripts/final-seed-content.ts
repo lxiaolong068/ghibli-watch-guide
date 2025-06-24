@@ -72,7 +72,7 @@ async function finalSeedCharacters() {
         }
 
       } catch (error) {
-        console.error(`    ❌ 处理角色 ${character.name} 时出错:`, error.message);
+        console.error(`    ❌ 处理角色 ${character.name} 时出错:`, error instanceof Error ? error.message : String(error));
       }
     }
   }
@@ -154,7 +154,7 @@ async function finalSeedWatchGuides() {
       console.log(`  ✅ 指南处理完成`);
 
     } catch (error) {
-      console.error(`  ❌ 处理指南时出错:`, error.message);
+      console.error(`  ❌ 处理指南时出错:`, error instanceof Error ? error.message : String(error));
     }
   }
 

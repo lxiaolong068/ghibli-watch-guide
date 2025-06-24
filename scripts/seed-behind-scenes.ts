@@ -39,13 +39,22 @@ async function seedBehindTheScenes() {
           }
         });
 
+        // 映射媒体类型到 schema 中定义的枚举值
+        const mediaTypeMapping: Record<string, 'BEHIND_SCENES' | 'SOUNDTRACK' | 'ARTWORK'> = {
+          'ARTICLE': 'BEHIND_SCENES',
+          'VIDEO': 'BEHIND_SCENES',
+          'AUDIO': 'SOUNDTRACK',
+          'IMAGE': 'ARTWORK'
+        };
+        const mappedMediaType = mediaTypeMapping[behindScenes.mediaType] || 'BEHIND_SCENES';
+
         if (existingContent) {
           console.log(`  ℹ️ 幕后故事已存在，更新内容`);
           await prisma.mediaContent.update({
             where: { id: existingContent.id },
             data: {
               description: `${behindScenes.category} - ${behindScenes.tags.join(', ')}`,
-              mediaType: behindScenes.mediaType,
+              mediaType: mappedMediaType,
               url: `#${behindScenes.title.replace(/\s+/g, '-').toLowerCase()}`, // 生成锚点链接
               language: 'zh',
               isPublished: behindScenes.isPublished
@@ -58,7 +67,7 @@ async function seedBehindTheScenes() {
               movieId: dbMovie.id,
               title: behindScenes.title,
               description: `${behindScenes.category} - ${behindScenes.tags.join(', ')}`,
-              mediaType: behindScenes.mediaType,
+              mediaType: mappedMediaType,
               url: `#${behindScenes.title.replace(/\s+/g, '-').toLowerCase()}`, // 生成锚点链接
               language: 'zh',
               isPublished: behindScenes.isPublished
@@ -100,12 +109,16 @@ async function seedBehindTheScenes() {
     console.log(`\n🎭 媒体类型统计:`);
     mediaTypeStats.forEach(stat => {
       const typeNames = {
-        'ARTICLE': '文章',
-        'VIDEO': '视频',
-        'AUDIO': '音频',
-        'IMAGE': '图片'
+        'BEHIND_SCENES': '幕后花絮',
+        'SOUNDTRACK': '原声音乐',
+        'ARTWORK': '艺术作品',
+        'TRAILER': '预告片',
+        'CLIP': '片段',
+        'INTERVIEW': '访谈',
+        'POSTER': '海报',
+        'WALLPAPER': '壁纸'
       };
-      console.log(`  - ${typeNames[stat.mediaType as keyof typeof typeNames]}: ${stat._count.id} 个内容`);
+      console.log(`  - ${typeNames[stat.mediaType as keyof typeof typeNames] || stat.mediaType}: ${stat._count.id} 个内容`);
     });
 
     // 显示每部电影的媒体内容数量

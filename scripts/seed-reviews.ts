@@ -48,8 +48,6 @@ async function seedReviews() {
               rating: review.rating,
               author: review.author,
               reviewType: review.reviewType,
-              tags: review.tags,
-              publishedAt: review.publishedAt,
               language: review.language,
               isPublished: true
             }
@@ -64,8 +62,6 @@ async function seedReviews() {
               rating: review.rating,
               author: review.author,
               reviewType: review.reviewType,
-              tags: review.tags,
-              publishedAt: review.publishedAt,
               language: review.language,
               isPublished: true
             }

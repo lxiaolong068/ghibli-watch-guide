@@ -37,9 +37,7 @@ async function seedWatchGuides() {
               description: guide.description,
               guideType: guide.guideType,
               content: guide.content,
-              tags: guide.tags,
-              isPublished: guide.isPublished,
-              publishedAt: guide.publishedAt
+              isPublished: guide.isPublished
             }
           });
 
@@ -55,9 +53,7 @@ async function seedWatchGuides() {
               description: guide.description,
               guideType: guide.guideType,
               content: guide.content,
-              tags: guide.tags,
-              isPublished: guide.isPublished,
-              publishedAt: guide.publishedAt
+              isPublished: guide.isPublished
             }
           });
           totalGuidesCreated++;
@@ -82,8 +78,7 @@ async function seedWatchGuides() {
               guideId: guideRecord.id,
               movieId: dbMovie.id,
               order: guideMovie.order,
-              reason: guideMovie.reason,
-              notes: guideMovie.notes
+              notes: guideMovie.reason + (guideMovie.notes ? ` | ${guideMovie.notes}` : '')
             }
           });
 

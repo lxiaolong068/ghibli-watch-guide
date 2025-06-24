@@ -87,7 +87,7 @@ async function fixedSeedCharacters() {
               movieId: dbMovie.id,
               characterId: characterRecord.id,
               voiceActorJa: character.voiceActorJa,
-              voiceActorEn: character.voiceActorEn,
+              voiceActor: character.voiceActorEn,
               importance: character.isMainCharacter ? 1 : 2
             }
           });
@@ -97,7 +97,7 @@ async function fixedSeedCharacters() {
         }
 
       } catch (error) {
-        console.error(`    ❌ 处理角色 ${character.name} 时出错:`, error.message);
+        console.error(`    ❌ 处理角色 ${character.name} 时出错:`, error instanceof Error ? error.message : String(error));
       }
     }
   }
@@ -166,7 +166,7 @@ async function fixedSeedReviews() {
       console.log(`  ✅ 评论处理完成`);
 
     } catch (error) {
-      console.error(`  ❌ 处理评论时出错:`, error.message);
+      console.error(`  ❌ 处理评论时出错:`, error instanceof Error ? error.message : String(error));
     }
   }
 
@@ -195,8 +195,7 @@ async function fixedSeedWatchGuides() {
             description: guide.description,
             guideType: guide.guideType,
             content: guide.content, // 直接使用字符串，schema中是Json类型
-            isPublished: guide.isPublished,
-            publishedAt: guide.publishedAt
+            isPublished: guide.isPublished
           }
         });
 
@@ -212,8 +211,7 @@ async function fixedSeedWatchGuides() {
             description: guide.description,
             guideType: guide.guideType,
             content: guide.content,
-            isPublished: guide.isPublished,
-            publishedAt: guide.publishedAt
+            isPublished: guide.isPublished
           }
         });
         totalGuidesCreated++;
@@ -247,7 +245,7 @@ async function fixedSeedWatchGuides() {
       console.log(`  ✅ 指南处理完成`);
 
     } catch (error) {
-      console.error(`  ❌ 处理指南时出错:`, error.message);
+      console.error(`  ❌ 处理指南时出错:`, error instanceof Error ? error.message : String(error));
     }
   }
 
@@ -311,7 +309,7 @@ async function fixedSeedBehindTheScenes() {
       console.log(`  ✅ 幕后故事处理完成`);
 
     } catch (error) {
-      console.error(`  ❌ 处理幕后故事时出错:`, error.message);
+      console.error(`  ❌ 处理幕后故事时出错:`, error instanceof Error ? error.message : String(error));
     }
   }
 

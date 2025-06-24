@@ -130,7 +130,7 @@ async function tryConnectToRealDatabase() {
     return prisma;
   } catch (error) {
     console.log('⚠️ 无法连接到生产数据库，将使用演示模式');
-    console.log('📝 错误信息:', error.message);
+    console.log('📝 错误信息:', error instanceof Error ? error.message : String(error));
     return null;
   }
 }
