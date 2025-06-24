@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
 // 注意：环境变量在 Vercel Serverless Functions 中是自动可用的
 // 不需要显式调用 dotenv.config()
 
-const prisma = new PrismaClient();
+
 
 const SITE_URL = process.env.DOMAIN;
 

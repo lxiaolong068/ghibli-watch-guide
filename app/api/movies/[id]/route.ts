@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMovieDetails, getMovieWatchProviders } from '@/lib/tmdb';
 import { prisma } from '@/lib/prisma'; // Import the shared prisma instance
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../../../prisma/generated/client';
 
 // 将此路由标记为动态路由，防止在构建时静态生成
 export const dynamic = 'force-dynamic';

@@ -193,7 +193,7 @@ export function AdSenseAd({
 }) {
   useEffect(() => {
     try {
-      // @ts-ignore
+      // @ts-expect-error - AdSense global variable
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (err) {
       console.error('AdSense error:', err);
@@ -215,14 +215,22 @@ export function AdSenseAd({
 }
 
 // 响应式AdSense广告组件
-export function ResponsiveAdSenseAd({ adSlot }: { adSlot: string }) {
+export function ResponsiveAdSenseAd({
+  adSlot,
+  adFormat = "auto",
+  fullWidthResponsive = true
+}: {
+  adSlot: string;
+  adFormat?: string;
+  fullWidthResponsive?: boolean;
+}) {
   return (
     <div className="w-full max-w-4xl mx-auto my-8">
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <p className="text-xs text-gray-500 text-center mb-2">广告</p>
         <AdSenseAd
           adSlot={adSlot}
-          adFormat="auto"
+          adFormat={adFormat}
           style={{ display: 'block', minHeight: '250px' }}
         />
       </div>
@@ -270,8 +278,9 @@ export function SEOPerformanceMonitor() {
             const navigationEntry = entry as PerformanceNavigationTiming;
             
             // 发送性能数据到分析服务
+            // @ts-expect-error - Google Analytics global function
             if (typeof gtag !== 'undefined') {
-              // @ts-ignore
+              // @ts-expect-error - Google Analytics global function
               gtag('event', 'page_load_time', {
                 event_category: 'Performance',
                 event_label: 'Page Load',

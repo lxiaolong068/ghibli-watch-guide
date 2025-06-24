@@ -1,8 +1,6 @@
 import { Suspense } from 'react';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
-
-const prisma = new PrismaClient();
 
 interface MovieReviewSectionProps {
   movieId: string;
@@ -40,7 +38,7 @@ async function MovieReviewContent({ movieId }: { movieId: string }) {
 
   return (
     <div className="space-y-8">
-      {reviews.map((review) => (
+      {reviews.map((review: any) => (
         <ReviewCard key={review.id} review={review} />
       ))}
     </div>

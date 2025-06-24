@@ -1,9 +1,7 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
-
-const prisma = new PrismaClient();
 
 interface CharacterSectionProps {
   movieId: string;
@@ -39,8 +37,8 @@ async function CharacterContent({ movieId }: { movieId: string }) {
   }
 
   // 分离主要角色和次要角色
-  const mainCharacters = characters.filter(char => char.isMainCharacter);
-  const supportingCharacters = characters.filter(char => !char.isMainCharacter);
+  const mainCharacters = characters.filter((char: any) => char.isMainCharacter);
+  const supportingCharacters = characters.filter((char: any) => !char.isMainCharacter);
 
   return (
     <div className="space-y-8">
@@ -49,7 +47,7 @@ async function CharacterContent({ movieId }: { movieId: string }) {
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-4">主要角色</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {mainCharacters.map((character) => (
+            {mainCharacters.map((character: any) => (
               <CharacterCard key={character.id} character={character} isMain={true} />
             ))}
           </div>
@@ -61,7 +59,7 @@ async function CharacterContent({ movieId }: { movieId: string }) {
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-4">其他角色</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {supportingCharacters.map((character) => (
+            {supportingCharacters.map((character: any) => (
               <CharacterCard key={character.id} character={character} isMain={false} />
             ))}
           </div>

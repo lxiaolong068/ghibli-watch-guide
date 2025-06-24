@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../../../prisma/generated/client';
 import { getMovieDetails, getMovieWatchProviders } from '@/lib/tmdb';
 
 const prisma = new PrismaClient();
@@ -169,7 +169,7 @@ class UpdateScheduler {
     }
   }
 
-  private calculatePriority(movie: any): string {
+  private calculatePriority(movie: any): 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT' {
     const qualityScore = movie.avg_quality_score || 0;
     const daysSinceUpdate = (Date.now() - new Date(movie.updatedAt).getTime()) / (1000 * 60 * 60 * 24);
 
@@ -197,7 +197,7 @@ export async function GET(request: Request) {
     // 开始同步
     await syncManager.startSync('TMDB', 'SCHEDULED_SYNC');
 
-    let stats = {
+    const stats = {
       recordsProcessed: 0,
       recordsUpdated: 0,
       recordsCreated: 0,
@@ -232,7 +232,7 @@ export async function GET(request: Request) {
           if (movie) {
             // 获取最新的TMDB数据
             const tmdbDetails = await getMovieDetails(movie.tmdbId);
-            const watchProviders = await getMovieWatchProviders(movie.tmdbId);
+            const _watchProviders = await getMovieWatchProviders(movie.tmdbId);
 
             // 更新电影信息
             await prisma.movie.update({
@@ -288,7 +288,7 @@ export async function GET(request: Request) {
     await scheduler.scheduleUpdates();
 
     // 3. 清理旧的日志和任务
-    await this.cleanupOldRecords();
+    await cleanupOldRecords();
 
     await syncManager.completeSync(stats);
 

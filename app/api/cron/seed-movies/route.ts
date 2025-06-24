@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import type { Prisma } from '@prisma/client';
+import { PrismaClient } from '../../../../prisma/generated/client';
+import type { Prisma } from '../../../../prisma/generated/client';
 
 // 注意：环境变量在 Vercel Serverless Functions 中是自动可用的
 

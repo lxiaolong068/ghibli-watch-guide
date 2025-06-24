@@ -126,18 +126,28 @@ async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string |
   }
 }
 
+// Define cast member type for Credits
+interface CastMember {
+  character?: string;
+  name?: string;
+  id: number;
+  order?: number;
+  profile_path?: string | null;
+}
+
 // Define crew member type for Credits
 interface CrewMember {
   job?: string;
   name?: string;
   id: number;
-  // Add other relevant crew properties if needed
+  department?: string;
+  profile_path?: string | null;
 }
 
 // Define movie credits type
 interface Credits {
+  cast?: CastMember[];
   crew?: CrewMember[];
-  // cast?: CastMember[]; // Can add cast later if needed
 }
 
 // Define movie details interface type (add more fields as needed)

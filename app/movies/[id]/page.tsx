@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Script from 'next/script';
 import { cache } from 'react'; // Import React's cache function
 import type { MovieDetails, WatchProviderResults, WatchProviderItem } from '@/lib/tmdb'; // Import types from tmdb
-import { PrismaClient, Prisma } from '@prisma/client'; // Import Prisma
+import { PrismaClient, Prisma } from '../../../prisma/generated/client'; // Import Prisma
 import { getMovieDetails, getMovieWatchProviders } from '@/lib/tmdb'; // Import TMDB fetch functions
 import { getAllRegions } from '@/app/actions/availability'; // Import region retrieval function
 import { RegionSelector } from '@/app/components/movies/RegionSelector'; // Import region selector component
@@ -13,6 +13,7 @@ import { MovieReviewSection } from '@/app/components/movies/MovieReviewSection';
 import { CharacterSection } from '@/app/components/movies/CharacterSection';
 import { RelatedMoviesSection } from '@/app/components/movies/RelatedMoviesSection';
 import { MovieStatsTracker } from '@/app/components/movies/MovieStatsTracker';
+import { UserBehaviorTracker } from '@/app/components/analytics/UserBehaviorTracker';
 
 // Singleton pattern for Prisma client
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
@@ -228,6 +229,9 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         ogImage={posterUrl || undefined}
         movieData={movie}
       />
+
+      {/* 用户行为跟踪 */}
+      <UserBehaviorTracker pageType="movie" movieId={id} />
 
       {/* 页面浏览统计 */}
       <MovieStatsTracker movieId={id} />

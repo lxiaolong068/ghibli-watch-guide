@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { getLatestMovies } from '@/app/actions/movies';
 import { MovieList } from '@/app/components/MovieList';
+import { UserBehaviorTracker } from '@/app/components/analytics/UserBehaviorTracker';
+import { ResponsiveAdSenseAd } from '@/app/components/SEOOptimizer';
 
 // Remove force-dynamic setting to allow page caching
 // export const dynamic = 'force-dynamic';
@@ -11,6 +13,8 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-8">
+      {/* 用户行为跟踪 */}
+      <UserBehaviorTracker pageType="home" />
       {/* Welcome section */}
       <section className="text-center space-y-4">
         <h2 className="text-3xl font-bold text-gray-900">
@@ -45,6 +49,15 @@ export default async function HomePage() {
           <h3 className="text-xl font-semibold text-gray-900 mb-2">About Us</h3>
           <p className="text-gray-600">Learn more about our watch guide</p>
         </Link>
+      </section>
+
+      {/* 广告位 */}
+      <section className="flex justify-center">
+        <ResponsiveAdSenseAd
+          adSlot="1234567890"
+          adFormat="auto"
+          fullWidthResponsive={true}
+        />
       </section>
 
       {/* Latest Movies List - showing only the latest 9 movies */}

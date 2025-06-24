@@ -1,0 +1,532 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id              String            @id @default(cuid())
+  tmdbId          Int               @unique // Add unique TMDB ID
+  titleEn         String // English title
+  titleJa         String // Japanese title
+  titleZh         String? // Chinese title (optional)
+  year            Int // Release year
+  director        String? // Director (optional)
+  duration        Int? // Duration (minutes, optional)
+  synopsis        String? // Synopsis (optional)
+  posterUrl       String? // Poster URL (optional)
+  backdropUrl     String? // Backdrop URL (optional)
+  voteAverage     Float? // TMDB vote average (optional)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  // Movie availability associations
+  availabilities  Availability[]
+  // Extended content associations
+  movieCharacters MovieCharacter[]
+  movieCrew       MovieCrew[]
+  reviews         MovieReview[]
+  guideMovies     WatchGuideMovie[]
+  mediaContent    MediaContent[]
+  movieTags       MovieTag[]
+  favorites       UserFavorite[]
+  stats           MovieStats?
+}
+
+model Platform {
+  id             String         @id @default(cuid())
+  name           String // Platform name
+  website        String // Platform website
+  type           PlatformType // Platform type
+  logo           String? // Platform logo URL (optional)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  // Platform to availability association
+  availabilities Availability[]
+}
+
+model Region {
+  id             String         @id @default(cuid())
+  code           String         @unique // Region code (e.g., US, JP, CN)
+  name           String // Region name
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  // Region to availability association
+  availabilities Availability[]
+}
+
+// Availability model for storing movie availability information across regions and platforms
+model Availability {
+  id          String           @id @default(cuid())
+  url         String? // Watch link
+  price       Float? // Price (if applicable)
+  currency    String? // Currency (USD, CNY, JPY, etc.)
+  type        AvailabilityType // Availability type (streaming, rental, etc.)
+  lastChecked DateTime // Last checked time
+  isAvailable Boolean          @default(true) // Currently available
+  notes       String? // Additional notes (e.g., limited time offer)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relationships
+  movie      Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  movieId    String
+  platform   Platform @relation(fields: [platformId], references: [id], onDelete: Cascade)
+  platformId String
+  region     Region   @relation(fields: [regionId], references: [id], onDelete: Cascade)
+  regionId   String
+
+  @@unique([movieId, platformId, regionId, type])
+  // Composite indexes to speed up queries
+  @@index([movieId, regionId])
+  @@index([platformId, regionId])
+}
+
+enum PlatformType {
+  STREAMING // Streaming service
+  RENTAL // Rental
+  PURCHASE // Purchase
+  FREE // Free
+  CINEMA // Cinema
+  PHYSICAL // Physical (e.g., DVD)
+}
+
+// Enum to represent availability type
+enum AvailabilityType {
+  SUBSCRIPTION // Subscription service
+  RENT // Rental
+  BUY // Purchase
+  FREE // Free
+  CINEMA // Cinema screening
+  LIBRARY // Library borrowing
+  DVD // DVD/Blu-ray
+}
+
+// 内容版本控制和管理扩展模型
+// 内容版本控制模型
+model ContentVersion {
+  id         String     @id @default(cuid())
+  entityType String // 实体类型 (Movie, Platform, Region, etc.)
+  entityId   String // 实体ID
+  version    Int // 版本号
+  changes    Json // 变更内容 (JSON格式)
+  changeType ChangeType // 变更类型
+  author     String? // 变更作者
+  reason     String? // 变更原因
+  isActive   Boolean    @default(false) // 是否为当前活跃版本
+  createdAt  DateTime   @default(now())
+
+  reviews ContentReview[]
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+// 内容审核模型
+model ContentReview {
+  id         String       @id @default(cuid())
+  entityType String // 实体类型
+  entityId   String // 实体ID
+  versionId  String // 版本ID
+  status     ReviewStatus // 审核状态
+  reviewer   String? // 审核员
+  comments   String? // 审核意见
+  reviewedAt DateTime? // 审核时间
+  createdAt  DateTime     @default(now())
+
+  version ContentVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// 内容更新任务模型
+model ContentUpdateTask {
+  id           String     @id @default(cuid())
+  taskType     TaskType // 任务类型
+  entityType   String? // 目标实体类型
+  entityId     String? // 目标实体ID
+  priority     Priority // 优先级
+  status       TaskStatus // 任务状态
+  scheduledAt  DateTime? // 计划执行时间
+  startedAt    DateTime? // 开始时间
+  completedAt  DateTime? // 完成时间
+  errorMessage String? // 错误信息
+  metadata     Json? // 任务元数据
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([status, priority])
+  @@index([scheduledAt])
+}
+
+// 内容质量指标模型
+model ContentQualityMetric {
+  id         String   @id @default(cuid())
+  entityType String // 实体类型
+  entityId   String // 实体ID
+  metricType String // 指标类型 (completeness, accuracy, freshness)
+  score      Float // 分数 (0-100)
+  details    Json? // 详细信息
+  measuredAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([metricType, score])
+}
+
+// 用户反馈模型
+model UserFeedback {
+  id           String       @id @default(cuid())
+  entityType   String // 实体类型
+  entityId     String // 实体ID
+  feedbackType FeedbackType // 反馈类型
+  content      String // 反馈内容
+  userAgent    String? // 用户代理
+  ipAddress    String? // IP地址 (匿名化)
+  isResolved   Boolean      @default(false) // 是否已解决
+  resolvedAt   DateTime? // 解决时间
+  createdAt    DateTime     @default(now())
+
+  @@index([entityType, entityId])
+  @@index([feedbackType, isResolved])
+}
+
+// 内容同步日志模型
+model ContentSyncLog {
+  id               String     @id @default(cuid())
+  source           String // 数据源 (TMDB, Manual, etc.)
+  syncType         SyncType // 同步类型
+  status           SyncStatus // 同步状态
+  recordsProcessed Int        @default(0) // 处理记录数
+  recordsUpdated   Int        @default(0) // 更新记录数
+  recordsCreated   Int        @default(0) // 创建记录数
+  recordsFailed    Int        @default(0) // 失败记录数
+  errorDetails     Json? // 错误详情
+  startedAt        DateTime   @default(now())
+  completedAt      DateTime? // 完成时间
+
+  @@index([source, syncType])
+  @@index([startedAt])
+}
+
+// 内容扩展模型 - 丰富网站内容的数据结构
+// 角色模型
+model Character {
+  id              String   @id @default(cuid())
+  name            String // 角色名称
+  nameJa          String? // 日文名称
+  nameZh          String? // 中文名称
+  description     String? // 角色描述
+  imageUrl        String? // 角色图片URL
+  isMainCharacter Boolean  @default(false) // 是否主角
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // 关联关系
+  movieCharacters MovieCharacter[]
+
+  @@index([name])
+}
+
+// 电影角色关联模型
+model MovieCharacter {
+  id           String   @id @default(cuid())
+  movieId      String
+  characterId  String
+  voiceActor   String? // 配音演员
+  voiceActorJa String? // 日文配音演员
+  importance   Int      @default(0) // 重要程度 (0-100)
+  createdAt    DateTime @default(now())
+
+  movie     Movie     @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, characterId])
+  @@index([movieId])
+}
+
+// 制作人员模型
+model CrewMember {
+  id          String    @id @default(cuid())
+  name        String // 姓名
+  nameJa      String? // 日文姓名
+  biography   String? // 简介
+  imageUrl    String? // 头像URL
+  birthDate   DateTime? // 出生日期
+  nationality String? // 国籍
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // 关联关系
+  movieCrew MovieCrew[]
+
+  @@index([name])
+}
+
+// 电影制作人员关联模型
+model MovieCrew {
+  id           String   @id @default(cuid())
+  movieId      String
+  crewMemberId String
+  role         CrewRole // 职位
+  department   String? // 部门
+  createdAt    DateTime @default(now())
+
+  movie      Movie      @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  crewMember CrewMember @relation(fields: [crewMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, crewMemberId, role])
+  @@index([movieId])
+}
+
+// 电影评论和分析模型
+model MovieReview {
+  id          String     @id @default(cuid())
+  movieId     String
+  title       String // 评论标题
+  content     String // 评论内容
+  author      String // 作者
+  rating      Float? // 评分 (1-10)
+  reviewType  ReviewType // 评论类型
+  language    String     @default("en") // 语言
+  isPublished Boolean    @default(false) // 是否发布
+  publishedAt DateTime? // 发布时间
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@index([movieId, isPublished])
+  @@index([reviewType, isPublished])
+}
+
+// 观影指南模型
+model WatchGuide {
+  id          String    @id @default(cuid())
+  title       String // 指南标题
+  description String // 指南描述
+  guideType   GuideType // 指南类型
+  content     Json // 指南内容 (结构化数据)
+  order       Int       @default(0) // 排序
+  isPublished Boolean   @default(false) // 是否发布
+  language    String    @default("en") // 语言
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // 关联的电影
+  movies WatchGuideMovie[]
+
+  @@index([guideType, isPublished])
+  @@index([order])
+}
+
+// 观影指南电影关联模型
+model WatchGuideMovie {
+  id        String   @id @default(cuid())
+  guideId   String
+  movieId   String
+  order     Int // 在指南中的顺序
+  notes     String? // 备注
+  createdAt DateTime @default(now())
+
+  guide WatchGuide @relation(fields: [guideId], references: [id], onDelete: Cascade)
+  movie Movie      @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([guideId, movieId])
+  @@index([guideId, order])
+}
+
+// 多媒体内容模型
+model MediaContent {
+  id           String    @id @default(cuid())
+  movieId      String? // 关联电影 (可选)
+  title        String // 标题
+  description  String? // 描述
+  mediaType    MediaType // 媒体类型
+  url          String // 媒体URL
+  thumbnailUrl String? // 缩略图URL
+  duration     Int? // 时长 (秒)
+  fileSize     Int? // 文件大小 (字节)
+  language     String? // 语言
+  isPublished  Boolean   @default(false) // 是否发布
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  movie Movie? @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@index([movieId, mediaType])
+  @@index([mediaType, isPublished])
+}
+
+// 标签模型
+model Tag {
+  id          String   @id @default(cuid())
+  name        String   @unique // 标签名称
+  nameJa      String? // 日文名称
+  nameZh      String? // 中文名称
+  description String? // 标签描述
+  color       String? // 标签颜色
+  category    String? // 标签分类
+  createdAt   DateTime @default(now())
+
+  // 关联关系
+  movieTags MovieTag[]
+
+  @@index([category])
+}
+
+// 电影标签关联模型
+model MovieTag {
+  id        String   @id @default(cuid())
+  movieId   String
+  tagId     String
+  createdAt DateTime @default(now())
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, tagId])
+  @@index([movieId])
+}
+
+// 用户收藏模型 (为未来用户功能预留)
+model UserFavorite {
+  id        String   @id @default(cuid())
+  userId    String // 用户ID (未来实现用户系统时使用)
+  movieId   String
+  createdAt DateTime @default(now())
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId])
+  @@index([userId])
+}
+
+// 电影统计模型
+model MovieStats {
+  id            String    @id @default(cuid())
+  movieId       String    @unique
+  viewCount     Int       @default(0) // 浏览次数
+  favoriteCount Int       @default(0) // 收藏次数
+  shareCount    Int       @default(0) // 分享次数
+  lastViewed    DateTime? // 最后浏览时间
+  updatedAt     DateTime  @updatedAt
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@index([viewCount])
+  @@index([favoriteCount])
+}
+
+// 枚举定义
+enum ChangeType {
+  CREATE
+  UPDATE
+  DELETE
+  RESTORE
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  NEEDS_REVISION
+}
+
+enum TaskType {
+  MOVIE_UPDATE
+  AVAILABILITY_CHECK
+  PLATFORM_SYNC
+  REGION_UPDATE
+  QUALITY_CHECK
+  CONTENT_REVIEW
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum FeedbackType {
+  INCORRECT_INFO
+  MISSING_INFO
+  BROKEN_LINK
+  SUGGESTION
+  BUG_REPORT
+  OTHER
+}
+
+enum SyncType {
+  FULL_SYNC
+  INCREMENTAL_SYNC
+  MANUAL_SYNC
+  SCHEDULED_SYNC
+}
+
+enum SyncStatus {
+  STARTED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum CrewRole {
+  DIRECTOR
+  PRODUCER
+  WRITER
+  ANIMATOR
+  COMPOSER
+  VOICE_DIRECTOR
+  ART_DIRECTOR
+  SOUND_DESIGNER
+  EDITOR
+  OTHER
+}
+
+enum ReviewType {
+  PROFESSIONAL // 专业影评
+  EDITORIAL // 编辑评论
+  ANALYSIS // 深度分析
+  BEHIND_SCENES // 幕后故事
+  TRIVIA // 趣闻轶事
+}
+
+enum GuideType {
+  CHRONOLOGICAL // 按时间顺序
+  THEMATIC // 按主题
+  BEGINNER // 新手指南
+  ADVANCED // 进阶指南
+  FAMILY // 家庭观影
+  SEASONAL // 季节性推荐
+}
+
+enum MediaType {
+  TRAILER // 预告片
+  CLIP // 片段
+  BEHIND_SCENES // 幕后花絮
+  INTERVIEW // 访谈
+  SOUNDTRACK // 原声音乐
+  ARTWORK // 艺术作品
+  POSTER // 海报
+  WALLPAPER // 壁纸
+}

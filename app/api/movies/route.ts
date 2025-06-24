@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../../prisma/generated/client';
 
 // 将此路由标记为动态路由，防止在构建时静态生成
 export const dynamic = 'force-dynamic';
