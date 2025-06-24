@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
         type: 'movie',
         title: movie.titleEn,
         subtitle: `${movie.year} • ${movie.director || 'Unknown Director'}`,
-        imageUrl: movie.posterUrl,
+        imageUrl: movie.posterUrl || undefined,
         url: `/movies/${movie.id}`,
         relevanceScore
       });
@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
           type: 'character',
           title: character.name,
           subtitle: firstMovie ? `角色 • ${firstMovie.titleEn}` : '角色',
-          imageUrl: character.imageUrl || firstMovie?.posterUrl,
+          imageUrl: character.imageUrl || firstMovie?.posterUrl || undefined,
           url: `/characters/${character.id}`,
           relevanceScore
         });
@@ -171,7 +171,7 @@ export async function GET(request: NextRequest) {
           type: 'guide',
           title: guide.title,
           subtitle: `观影指南 • ${guide.guideType}`,
-          imageUrl: guide.movies[0]?.movie.posterUrl,
+          imageUrl: guide.movies[0]?.movie.posterUrl || undefined,
           url: `/guides/${guide.id}`,
           relevanceScore
         });
