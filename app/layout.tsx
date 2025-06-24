@@ -65,6 +65,7 @@ export default function RootLayout({
                   <Link href="/" className="text-gray-700 hover:text-primary-600">Home</Link>
                   <Link href="/movies" className="text-gray-700 hover:text-primary-600">Movies</Link>
                   <Link href="/characters" className="text-gray-700 hover:text-primary-600">Characters</Link>
+                  <Link href="/reviews" className="text-gray-700 hover:text-primary-600">Reviews</Link>
                 </div>
               </div>
             </div>

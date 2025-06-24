@@ -1,6 +1,9 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
+import { ReviewStats } from './ReviewStats';
+import { ReviewCard } from './ReviewCard';
 
 interface MovieReviewSectionProps {
   movieId: string;
@@ -8,12 +11,28 @@ interface MovieReviewSectionProps {
 
 export function MovieReviewSection({ movieId }: MovieReviewSectionProps) {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">深度解析与评论</h2>
-      
-      <Suspense fallback={<LoadingSpinner />}>
-        <MovieReviewContent movieId={movieId} />
-      </Suspense>
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+      {/* 标题区域 */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 md:p-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-2">深度解析与评论</h2>
+            <p className="text-blue-100">专业影评人和编辑团队的深度分析</p>
+          </div>
+          <div className="hidden md:block">
+            <svg className="w-12 h-12 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1.586l-4 4z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* 内容区域 */}
+      <div className="p-6 md:p-8">
+        <Suspense fallback={<LoadingSpinner />}>
+          <MovieReviewContent movieId={movieId} />
+        </Suspense>
+      </div>
     </div>
   );
 }
@@ -21,84 +40,77 @@ export function MovieReviewSection({ movieId }: MovieReviewSectionProps) {
 async function MovieReviewContent({ movieId }: { movieId: string }) {
   // 获取电影评论
   const reviews = await getMovieReviews(movieId);
-  
+
   if (reviews.length === 0) {
     return (
-      <div className="text-center py-8">
-        <div className="text-gray-400 mb-4">
-          <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="text-center py-12">
+        <div className="text-gray-400 mb-6">
+          <svg className="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </div>
-        <p className="text-gray-500 mb-4">暂无深度评论</p>
-        <p className="text-sm text-gray-400">我们正在为这部电影准备详细的分析和评论</p>
+        <h3 className="text-xl font-semibold text-gray-700 mb-3">暂无深度评论</h3>
+        <p className="text-gray-500 mb-6 max-w-md mx-auto">
+          我们的专业影评团队正在为这部电影准备详细的分析和评论，敬请期待！
+        </p>
+        <div className="bg-blue-50 rounded-lg p-4 max-w-sm mx-auto">
+          <p className="text-sm text-blue-700">
+            💡 想要第一时间获得评论更新？关注我们的社交媒体账号
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      {reviews.map((review: any) => (
-        <ReviewCard key={review.id} review={review} />
-      ))}
+    <div className="space-y-6">
+      {/* 评论统计 */}
+      <ReviewStats movieId={movieId} reviews={reviews} />
+
+      {/* 评论列表 - 只显示前2篇 */}
+      <div className="space-y-8">
+        {reviews.slice(0, 2).map((review: any, index: number) => (
+          <ReviewCard key={review.id} review={review} index={index} />
+        ))}
+      </div>
+
+      {/* 查看更多评论按钮 */}
+      {reviews.length > 2 && (
+        <div className="text-center pt-6 border-t border-gray-200">
+          <Link
+            href={`/movies/${movieId}/reviews`}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            <span>查看全部 {reviews.length} 篇评论</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+          <p className="text-sm text-gray-500 mt-2">
+            包含专业影评、制作幕后、深度分析等多种类型的评论
+          </p>
+        </div>
+      )}
+
+      {/* 如果只有1-2篇评论，也显示链接 */}
+      {reviews.length <= 2 && reviews.length > 0 && (
+        <div className="text-center pt-6 border-t border-gray-200">
+          <Link
+            href={`/movies/${movieId}/reviews`}
+            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
+          >
+            <span>查看评论详情页</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
 
-function ReviewCard({ review }: { review: any }) {
-  const getReviewTypeLabel = (type: string) => {
-    const labels = {
-      PROFESSIONAL: '专业影评',
-      EDITORIAL: '编辑评论',
-      ANALYSIS: '深度分析',
-      BEHIND_SCENES: '幕后故事',
-      TRIVIA: '趣闻轶事'
-    };
-    return labels[type as keyof typeof labels] || '评论';
-  };
 
-  const getReviewTypeColor = (type: string) => {
-    const colors = {
-      PROFESSIONAL: 'bg-blue-100 text-blue-800',
-      EDITORIAL: 'bg-green-100 text-green-800',
-      ANALYSIS: 'bg-purple-100 text-purple-800',
-      BEHIND_SCENES: 'bg-orange-100 text-orange-800',
-      TRIVIA: 'bg-pink-100 text-pink-800'
-    };
-    return colors[type as keyof typeof colors] || 'bg-gray-100 text-gray-800';
-  };
-
-  return (
-    <article className="border border-gray-200 rounded-lg p-6">
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">{review.title}</h3>
-          <div className="flex items-center space-x-4 text-sm text-gray-500">
-            <span>作者：{review.author}</span>
-            {review.publishedAt && (
-              <span>发布于：{new Date(review.publishedAt).toLocaleDateString('zh-CN')}</span>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className={`px-2 py-1 text-xs font-medium rounded-full ${getReviewTypeColor(review.reviewType)}`}>
-            {getReviewTypeLabel(review.reviewType)}
-          </span>
-          {review.rating && (
-            <div className="flex items-center space-x-1">
-              <span className="text-yellow-400">★</span>
-              <span className="text-sm font-medium">{review.rating}/10</span>
-            </div>
-          )}
-        </div>
-      </div>
-      
-      <div className="prose prose-gray max-w-none">
-        <div dangerouslySetInnerHTML={{ __html: review.content }} />
-      </div>
-    </article>
-  );
-}
 
 // 获取电影评论的函数
 async function getMovieReviews(movieId: string) {
@@ -163,40 +175,4 @@ async function getMovieReviews(movieId: string) {
   }
 }
 
-// 评论统计组件
-export function ReviewStats({ movieId }: { movieId: string }) {
-  return (
-    <div className="bg-gray-50 rounded-lg p-4 mb-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-        <div>
-          <div className="text-2xl font-bold text-blue-600">4.8</div>
-          <div className="text-sm text-gray-600">平均评分</div>
-        </div>
-        <div>
-          <div className="text-2xl font-bold text-green-600">156</div>
-          <div className="text-sm text-gray-600">评论数量</div>
-        </div>
-        <div>
-          <div className="text-2xl font-bold text-purple-600">92%</div>
-          <div className="text-sm text-gray-600">推荐率</div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-// 评论表单组件（为未来用户评论功能预留）
-export function ReviewForm({ movieId }: { movieId: string }) {
-  return (
-    <div className="bg-gray-50 rounded-lg p-6 mt-8">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">分享你的观影感受</h3>
-      <p className="text-gray-600 mb-4">
-        我们正在开发用户评论功能，敬请期待！
-      </p>
-      <div className="flex items-center space-x-2 text-sm text-gray-500">
-        <span>📝</span>
-        <span>即将推出：用户评分和评论系统</span>
-      </div>
-    </div>
-  );
-}

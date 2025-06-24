@@ -43,18 +43,18 @@ export default async function HomePage() {
           <p className="text-gray-600">Explore beloved Ghibli characters</p>
         </Link>
         <Link
+          href="/reviews"
+          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
+        >
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Reviews</h3>
+          <p className="text-gray-600">Read professional film reviews and analysis</p>
+        </Link>
+        <Link
           href="/regions"
           className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
         >
           <h3 className="text-xl font-semibold text-gray-900 mb-2">Regional Guide</h3>
           <p className="text-gray-600">Check viewing options in your region</p>
-        </Link>
-        <Link
-          href="/about"
-          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
-        >
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">About Us</h3>
-          <p className="text-gray-600">Learn more about our watch guide</p>
         </Link>
       </section>
 
