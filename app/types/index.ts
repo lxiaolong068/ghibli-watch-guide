@@ -166,12 +166,9 @@ export interface TmdbWatchProvidersResponse {
 }
 
 // 观影指南相关类型
-export enum GuideType {
-  CHRONOLOGICAL = 'CHRONOLOGICAL',
-  BEGINNER = 'BEGINNER',
-  THEMATIC = 'THEMATIC',
-  FAMILY = 'FAMILY'
-}
+// GuideType 从 Prisma 客户端导入以确保类型一致性
+import { GuideType as PrismaGuideType } from '../../prisma/generated/client';
+export type GuideType = PrismaGuideType;
 
 export interface WatchGuideMovie {
   order: number;

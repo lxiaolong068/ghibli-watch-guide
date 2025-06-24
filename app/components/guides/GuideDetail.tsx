@@ -2,7 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { WatchGuide, GuideType } from '@/app/types';
+import { WatchGuide } from '@/app/types';
+import { GuideType } from '../../../prisma/generated/client';
 import { GuideMovieCard } from './GuideMovieCard';
 
 interface GuideDetailProps {
@@ -13,14 +14,18 @@ const guideTypeLabels: Record<GuideType, string> = {
   [GuideType.CHRONOLOGICAL]: '时间线指南',
   [GuideType.BEGINNER]: '新手入门',
   [GuideType.THEMATIC]: '主题分类',
-  [GuideType.FAMILY]: '家庭观影'
+  [GuideType.FAMILY]: '家庭观影',
+  [GuideType.ADVANCED]: '进阶指南',
+  [GuideType.SEASONAL]: '季节推荐'
 };
 
 const guideTypeColors: Record<GuideType, string> = {
   [GuideType.CHRONOLOGICAL]: 'bg-blue-100 text-blue-800',
   [GuideType.BEGINNER]: 'bg-green-100 text-green-800',
   [GuideType.THEMATIC]: 'bg-purple-100 text-purple-800',
-  [GuideType.FAMILY]: 'bg-pink-100 text-pink-800'
+  [GuideType.FAMILY]: 'bg-pink-100 text-pink-800',
+  [GuideType.ADVANCED]: 'bg-orange-100 text-orange-800',
+  [GuideType.SEASONAL]: 'bg-teal-100 text-teal-800'
 };
 
 export function GuideDetail({ guide }: GuideDetailProps) {
@@ -36,8 +41,8 @@ export function GuideDetail({ guide }: GuideDetailProps) {
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-3">
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${guideTypeColors[guide.guideType]}`}>
-                {guideTypeLabels[guide.guideType]}
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${guideTypeColors[guide.guideType as GuideType]}`}>
+                {guideTypeLabels[guide.guideType as GuideType]}
               </span>
               <span className="text-sm text-gray-500">
                 {guide.movies.length} 部电影
@@ -150,8 +155,8 @@ export function GuideDetail({ guide }: GuideDetailProps) {
                 <p className="text-sm text-gray-600 line-clamp-2 mb-2">
                   {relatedGuide.description}
                 </p>
-                <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${guideTypeColors[relatedGuide.guideType]}`}>
-                  {guideTypeLabels[relatedGuide.guideType]}
+                <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${guideTypeColors[relatedGuide.guideType as GuideType]}`}>
+                  {guideTypeLabels[relatedGuide.guideType as GuideType]}
                 </span>
               </Link>
             ))}

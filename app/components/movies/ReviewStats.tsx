@@ -6,9 +6,9 @@ interface ReviewStatsProps {
   movieId: string;
   reviews: Array<{
     id: string;
-    rating?: number;
+    rating?: number | null;
     reviewType: string;
-    publishedAt?: Date;
+    publishedAt?: Date | null;
   }>;
 }
 

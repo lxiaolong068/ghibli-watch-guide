@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { WatchGuide, GuideType } from '@/app/types';
+import { WatchGuide } from '@/app/types';
+import { GuideType } from '../../../prisma/generated/client';
 
 interface GuideCardProps {
   guide: WatchGuide;
@@ -10,14 +11,18 @@ const guideTypeLabels: Record<GuideType, string> = {
   [GuideType.CHRONOLOGICAL]: '时间线',
   [GuideType.BEGINNER]: '新手入门',
   [GuideType.THEMATIC]: '主题分类',
-  [GuideType.FAMILY]: '家庭观影'
+  [GuideType.FAMILY]: '家庭观影',
+  [GuideType.ADVANCED]: '进阶指南',
+  [GuideType.SEASONAL]: '季节推荐'
 };
 
 const guideTypeColors: Record<GuideType, string> = {
   [GuideType.CHRONOLOGICAL]: 'bg-blue-100 text-blue-800',
   [GuideType.BEGINNER]: 'bg-green-100 text-green-800',
   [GuideType.THEMATIC]: 'bg-purple-100 text-purple-800',
-  [GuideType.FAMILY]: 'bg-pink-100 text-pink-800'
+  [GuideType.FAMILY]: 'bg-pink-100 text-pink-800',
+  [GuideType.ADVANCED]: 'bg-orange-100 text-orange-800',
+  [GuideType.SEASONAL]: 'bg-teal-100 text-teal-800'
 };
 
 export function GuideCard({ guide }: GuideCardProps) {
@@ -49,8 +54,8 @@ export function GuideCard({ guide }: GuideCardProps) {
           
           {/* 指南类型标签 */}
           <div className="absolute top-3 left-3">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${guideTypeColors[guide.guideType]}`}>
-              {guideTypeLabels[guide.guideType]}
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${guideTypeColors[guide.guideType as GuideType]}`}>
+              {guideTypeLabels[guide.guideType as GuideType]}
             </span>
           </div>
           

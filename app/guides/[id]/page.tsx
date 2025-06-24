@@ -45,7 +45,9 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
     'CHRONOLOGICAL': '时间线指南',
     'BEGINNER': '新手入门',
     'THEMATIC': '主题分类',
-    'FAMILY': '家庭观影'
+    'FAMILY': '家庭观影',
+    'ADVANCED': '进阶指南',
+    'SEASONAL': '季节推荐'
   };
 
   return {

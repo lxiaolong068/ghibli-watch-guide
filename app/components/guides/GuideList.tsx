@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { GuideCard } from './GuideCard';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
-import { WatchGuide, WatchGuidesResponse, GuideType } from '@/app/types';
+import { WatchGuide, WatchGuidesResponse } from '@/app/types';
 
 interface GuideListProps {
   initialGuides?: WatchGuide[];
@@ -15,7 +15,9 @@ const guideTypeOptions = [
   { value: 'CHRONOLOGICAL', label: '时间线指南' },
   { value: 'BEGINNER', label: '新手入门' },
   { value: 'THEMATIC', label: '主题分类' },
-  { value: 'FAMILY', label: '家庭观影' }
+  { value: 'FAMILY', label: '家庭观影' },
+  { value: 'ADVANCED', label: '进阶指南' },
+  { value: 'SEASONAL', label: '季节推荐' }
 ];
 
 export function GuideList({ initialGuides = [], showFilters = true }: GuideListProps) {

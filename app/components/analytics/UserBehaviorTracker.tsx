@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma';
 interface UserBehaviorTrackerProps {
   movieId?: string;
   characterId?: string;
-  pageType: 'home' | 'movie' | 'search' | 'about' | 'admin' | 'character' | 'characters';
+  pageType: 'home' | 'movie' | 'movie-reviews' | 'reviews' | 'search' | 'about' | 'admin' | 'character' | 'characters';
   userId?: string; // 为未来用户系统预留
 }
 

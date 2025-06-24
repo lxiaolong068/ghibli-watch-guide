@@ -38,15 +38,15 @@ interface ReviewWithMovie {
   title: string;
   content: string;
   author: string;
-  rating?: number;
+  rating?: number | null;
   reviewType: string;
-  publishedAt?: Date;
+  publishedAt?: Date | null;
   movie: {
     id: string;
     titleEn: string;
     titleJa?: string;
     year: number;
-    posterUrl?: string;
+    posterUrl?: string | null;
   };
 }
 

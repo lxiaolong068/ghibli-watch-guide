@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '../../../prisma/generated/client';
+import { Prisma, GuideType } from '../../../prisma/generated/client';
 
 // 将此路由标记为动态路由，防止在构建时静态生成
 export const dynamic = 'force-dynamic';
@@ -19,8 +19,8 @@ export async function GET(request: NextRequest) {
     };
 
     // 如果指定了指南类型，添加筛选条件
-    if (guideType && ['CHRONOLOGICAL', 'BEGINNER', 'THEMATIC', 'FAMILY'].includes(guideType)) {
-      where.guideType = guideType as Prisma.GuideType;
+    if (guideType && ['CHRONOLOGICAL', 'BEGINNER', 'THEMATIC', 'FAMILY', 'ADVANCED', 'SEASONAL'].includes(guideType)) {
+      where.guideType = guideType as GuideType;
     }
 
     // 获取观影指南列表
