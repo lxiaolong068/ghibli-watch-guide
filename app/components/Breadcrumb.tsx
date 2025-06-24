@@ -6,6 +6,10 @@ import { HomeIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 // Path mapping configuration
 const pathMap: { [key: string]: string } = {
   'movies': 'Movies',
+  'guides': 'Watch Guides',
+  'characters': 'Characters',
+  'reviews': 'Reviews',
+  'regions': 'Regional Guide',
   'about': 'About',
   'contact': 'Contact',
   // Add more mappings as needed

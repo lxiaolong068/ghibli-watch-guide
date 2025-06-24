@@ -36,6 +36,13 @@ export default async function HomePage() {
           <p className="text-gray-600">Browse all Studio Ghibli animated films</p>
         </Link>
         <Link
+          href="/guides"
+          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
+        >
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Watch Guides</h3>
+          <p className="text-gray-600">Discover the best viewing order for Ghibli films</p>
+        </Link>
+        <Link
           href="/characters"
           className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
         >

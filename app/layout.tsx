@@ -64,6 +64,7 @@ export default function RootLayout({
                 <div className="flex space-x-4">
                   <Link href="/" className="text-gray-700 hover:text-primary-600">Home</Link>
                   <Link href="/movies" className="text-gray-700 hover:text-primary-600">Movies</Link>
+                  <Link href="/guides" className="text-gray-700 hover:text-primary-600">Guides</Link>
                   <Link href="/characters" className="text-gray-700 hover:text-primary-600">Characters</Link>
                   <Link href="/reviews" className="text-gray-700 hover:text-primary-600">Reviews</Link>
                 </div>

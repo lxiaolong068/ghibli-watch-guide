@@ -164,3 +164,63 @@ export interface TmdbWatchProvidersResponse {
     };
   };
 }
+
+// 观影指南相关类型
+export enum GuideType {
+  CHRONOLOGICAL = 'CHRONOLOGICAL',
+  BEGINNER = 'BEGINNER',
+  THEMATIC = 'THEMATIC',
+  FAMILY = 'FAMILY'
+}
+
+export interface WatchGuideMovie {
+  order: number;
+  notes?: string | null;
+  movie: {
+    id: string;
+    titleEn: string;
+    titleJa: string;
+    titleZh?: string | null;
+    year: number;
+    posterUrl?: string | null;
+    backdropUrl?: string | null;
+    synopsis?: string | null;
+    voteAverage?: number | null;
+    duration?: number | null;
+    director?: string | null;
+    tmdbId?: number;
+  };
+}
+
+export interface WatchGuide {
+  id: string;
+  title: string;
+  description: string;
+  guideType: GuideType;
+  content: string | object; // JSON content
+  language: string;
+  createdAt: Date;
+  updatedAt: Date;
+  movieCount?: number;
+  movies: WatchGuideMovie[];
+  relatedGuides?: RelatedGuide[];
+}
+
+export interface RelatedGuide {
+  id: string;
+  title: string;
+  description: string;
+  guideType: GuideType;
+  createdAt: Date;
+  coverImage?: string | null;
+}
+
+export interface WatchGuidesResponse {
+  guides: WatchGuide[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
