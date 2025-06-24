@@ -71,7 +71,16 @@ export async function GET(request: NextRequest) {
 
     // 搜索电影
     if (!type || type === 'movie') {
-      const movieResults = await searchMovies(query, { year, director, tags, language }, limit);
+      const movieResults = await searchMovies(
+        query,
+        {
+          year: year || undefined,
+          director: director || undefined,
+          tags: tags || undefined,
+          language
+        },
+        limit
+      );
       results.push(...movieResults);
     }
 
