@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MovieSearch } from './MovieSearch';
+import { GlobalSearchBar } from './search/GlobalSearchBar';
 import { RegionSelector } from './RegionSelector';
 
 interface MobileNavigationProps {
@@ -96,8 +96,8 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
               {/* 搜索和地区选择器 */}
               <div className="p-4 border-b border-gray-200 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Search Movies</label>
-                  <MovieSearch />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">搜索内容</label>
+                  <GlobalSearchBar placeholder="搜索电影、角色、评论..." />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Region</label>
@@ -181,7 +181,10 @@ export function DesktopNavBar({ children }: DesktopNavBarProps) {
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-3 lg:space-y-0">
         {children}
         <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-          <MovieSearch />
+          <GlobalSearchBar
+            placeholder="搜索电影、角色、评论..."
+            className="w-full sm:w-80"
+          />
           <RegionSelector />
           <div className="flex space-x-4">
             {navigationLinks.map((link) => (

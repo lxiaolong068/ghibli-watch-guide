@@ -74,6 +74,11 @@ export function MovieSearch({ placeholder = "Search movies..." }: MovieSearchPro
     router.push(`/movies/${movie.id}`);
   };
 
+  const handleViewAllResults = () => {
+    setIsOpen(false);
+    router.push(`/search?q=${encodeURIComponent(query)}`);
+  };
+
   return (
     <div ref={searchRef} className="relative w-full max-w-md">
       <div className="relative">
@@ -126,8 +131,28 @@ export function MovieSearch({ placeholder = "Search movies..." }: MovieSearchPro
               </button>
             ))
           ) : query.length >= 2 ? (
-            <div className="p-4 text-center text-gray-500">No movies found</div>
+            <div className="p-4 text-center">
+              <div className="text-gray-500 mb-3">No movies found</div>
+              <button
+                onClick={handleViewAllResults}
+                className="text-sm text-blue-600 hover:text-blue-800 underline"
+              >
+                搜索所有内容
+              </button>
+            </div>
           ) : null}
+
+          {/* 查看所有结果按钮 */}
+          {results.length > 0 && query.length >= 2 && (
+            <div className="border-t border-gray-200 p-3">
+              <button
+                onClick={handleViewAllResults}
+                className="w-full text-center text-sm text-blue-600 hover:text-blue-800 font-medium"
+              >
+                查看所有搜索结果 →
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
