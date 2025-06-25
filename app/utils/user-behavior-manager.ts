@@ -303,7 +303,7 @@ export class UserBehaviorManager {
       bounceRate,
       mostViewedContent: this.getMostViewedContent(pageViews, interactions),
       mostSearchedTerms: this.getMostSearchedTerms(searches),
-      preferredContentTypes: this.analyzeContentTypePreferences(pageViews, interactions),
+      preferredContentTypes: this.analyzeContentTypeStats(pageViews, interactions),
       activityHeatmap: this.generateActivityHeatmap(pageViews),
     };
   }
@@ -423,6 +423,34 @@ export class UserBehaviorManager {
       score: Math.min(100, (data.viewCount * 10 + data.engagementCount * 20) / Math.max(pageViews.length, 1) * 100),
       viewCount: data.viewCount,
       averageDwellTime: data.totalDwellTime / Math.max(data.viewCount, 1),
+    }));
+  }
+
+  private analyzeContentTypeStats(pageViews: PageView[], interactions: ContentInteraction[]) {
+    const stats = new Map<string, { viewCount: number; totalDwellTime: number; engagementCount: number }>();
+
+    // 分析页面访问
+    pageViews.forEach(pv => {
+      if (!pv.pageType || pv.pageType === 'home' || pv.pageType === 'search') return;
+
+      const current = stats.get(pv.pageType) || { viewCount: 0, totalDwellTime: 0, engagementCount: 0 };
+      current.viewCount++;
+      current.totalDwellTime += pv.dwellTime || 0;
+      stats.set(pv.pageType, current);
+    });
+
+    // 分析交互行为
+    interactions.forEach(interaction => {
+      const current = stats.get(interaction.contentType) || { viewCount: 0, totalDwellTime: 0, engagementCount: 0 };
+      current.engagementCount++;
+      stats.set(interaction.contentType, current);
+    });
+
+    return Array.from(stats.entries()).map(([type, data]) => ({
+      type,
+      viewCount: data.viewCount,
+      averageDwellTime: data.totalDwellTime / Math.max(data.viewCount, 1),
+      engagementRate: Math.min(100, (data.viewCount * 10 + data.engagementCount * 20) / Math.max(pageViews.length, 1) * 100),
     }));
   }
 

@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(parseInt(searchParams.get('limit') || '10'), 50);
     const types = searchParams.get('types')?.split(',') || ['movie', 'character', 'review', 'guide'];
     const contextType = searchParams.get('context') || 'general'; // general, movie_detail, search_result
-    const contextId = searchParams.get('contextId'); // 当前页面的内容ID
+    const contextId = searchParams.get('contextId') || undefined; // 当前页面的内容ID
     const sessionId = searchParams.get('sessionId'); // 用户会话ID
 
     // 获取用户行为管理器

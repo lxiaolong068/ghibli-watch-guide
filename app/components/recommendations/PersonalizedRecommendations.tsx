@@ -302,10 +302,10 @@ export function PersonalizedRecommendations({
             <p>上下文ID: {contextId || '无'}</p>
             <p>推荐数量: {recommendations.length}</p>
             <p>算法分布: {
-              recommendations.reduce((acc, rec) => {
+              JSON.stringify(recommendations.reduce((acc, rec) => {
                 acc[rec.algorithm] = (acc[rec.algorithm] || 0) + 1;
                 return acc;
-              }, {} as Record<string, number>)
+              }, {} as Record<string, number>))
             }</p>
           </div>
         </details>
