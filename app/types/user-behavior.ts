@@ -57,7 +57,7 @@ export interface ContentInteraction {
   contentId: string;
   interactionType: 'view' | 'like' | 'share' | 'favorite' | 'comment' | 'tag_click';
   timestamp: number;
-  metadata?: Record<string, any>; // 额外的交互数据
+  metadata?: Record<string, unknown>; // 额外的交互数据
 }
 
 // 用户偏好分析结果

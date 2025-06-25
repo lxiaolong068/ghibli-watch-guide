@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { UserBehaviorManager } from '@/app/utils/user-behavior-manager';
@@ -50,15 +50,7 @@ export function PersonalizedRecommendations({
   const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
 
-  useEffect(() => {
-    const behaviorManager = UserBehaviorManager.getInstance();
-    const context = behaviorManager.getRecommendationContext();
-    setSessionId(context.sessionId);
-    
-    fetchRecommendations();
-  }, [contextType, contextId, limit, types]);
-
-  const fetchRecommendations = async () => {
+  const fetchRecommendations = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -78,7 +70,7 @@ export function PersonalizedRecommendations({
       }
 
       const response = await fetch(`/api/recommendations/personalized?${params}`);
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch recommendations');
       }
@@ -91,7 +83,15 @@ export function PersonalizedRecommendations({
     } finally {
       setLoading(false);
     }
-  };
+  }, [limit, types, contextType, contextId, sessionId]);
+
+  useEffect(() => {
+    const behaviorManager = UserBehaviorManager.getInstance();
+    const context = behaviorManager.getRecommendationContext();
+    setSessionId(context.sessionId);
+
+    fetchRecommendations();
+  }, [contextType, contextId, limit, types, fetchRecommendations]);
 
   const handleRecommendationClick = (recommendation: PersonalizedRecommendation, position: number) => {
     // 记录推荐点击行为

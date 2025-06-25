@@ -138,7 +138,6 @@ export class SearchCache {
 
     try {
       this.cleanup(); // 清理过期项
-      this.ensureSize(); // 确保大小限制
 
       const key = this.generateKey(query, filters);
       const item: CacheItem = {
@@ -149,6 +148,7 @@ export class SearchCache {
       };
 
       this.cache.set(key, item);
+      this.ensureSize(); // 确保大小限制（在添加后检查）
     } catch (error) {
       console.error('Error setting cache:', error);
     }

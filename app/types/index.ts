@@ -275,5 +275,5 @@ export interface SearchResult {
   imageUrl?: string | null;
   url: string;
   relevanceScore: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }

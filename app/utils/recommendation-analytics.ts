@@ -443,7 +443,7 @@ export class RecommendationAnalytics {
     return totalRecommendations > 0 ? uniqueContent.size / totalRecommendations : 0;
   }
 
-  private calculateNoveltyScore(feedbackData: RecommendationFeedback[]): number {
+  private calculateNoveltyScore(_feedbackData: RecommendationFeedback[]): number {
     // 简化实现：基于内容的新颖性
     return 0.7; // 假设70%的推荐是新颖的
   }

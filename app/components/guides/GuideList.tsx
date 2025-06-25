@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { GuideCard } from './GuideCard';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 import { WatchGuide, WatchGuidesResponse } from '@/app/types';
@@ -29,10 +29,10 @@ export function GuideList({ initialGuides = [], showFilters = true }: GuideListP
   const [totalPages, setTotalPages] = useState(1);
 
   // 获取观影指南数据
-  const fetchGuides = async (type: string = '', page: number = 1) => {
+  const fetchGuides = useCallback(async (type: string = '', page: number = 1) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const params = new URLSearchParams();
       if (type) params.append('type', type);
@@ -53,7 +53,7 @@ export function GuideList({ initialGuides = [], showFilters = true }: GuideListP
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // 处理类型筛选
   const handleTypeChange = (type: string) => {
@@ -72,7 +72,7 @@ export function GuideList({ initialGuides = [], showFilters = true }: GuideListP
     if (initialGuides.length === 0) {
       fetchGuides();
     }
-  }, []);
+  }, [initialGuides.length, fetchGuides]);
 
   if (error) {
     return (

@@ -4,7 +4,7 @@
  */
 
 import { prisma } from '@/lib/prisma';
-import { Movie, Tag, MovieTag } from '@/app/types';
+// import { Movie, Tag, MovieTag } from '@/app/types';
 
 // 电影特征向量
 export interface MovieFeatures {

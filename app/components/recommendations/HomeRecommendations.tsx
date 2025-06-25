@@ -86,9 +86,9 @@ interface SearchRecommendationsProps {
   className?: string;
 }
 
-export function SearchRecommendations({ 
-  query, 
-  className = '' 
+export function SearchRecommendations({
+  query: _query,
+  className = ''
 }: SearchRecommendationsProps) {
   return (
     <div className={`${className}`}>

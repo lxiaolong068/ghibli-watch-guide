@@ -5,12 +5,12 @@
  */
 
 import { UserBehaviorManager } from './user-behavior-manager';
-import { 
-  PageView, 
-  SearchBehavior, 
-  ContentInteraction, 
-  UserPreferences,
-  RecommendationContext 
+import {
+  PageView,
+  SearchBehavior,
+  ContentInteraction,
+  // UserPreferences,
+  RecommendationContext
 } from '@/app/types/user-behavior';
 import { prisma } from '@/lib/prisma';
 
@@ -190,7 +190,7 @@ export class CollaborativeFilteringRecommender {
   private async generateRecommendations(
     currentPattern: UserBehaviorPattern,
     similarUsers: SimilarUser[],
-    context: RecommendationContext
+    _context: RecommendationContext
   ): Promise<CollaborativeRecommendation[]> {
     const recommendations = new Map<string, CollaborativeRecommendation>();
     
@@ -406,7 +406,7 @@ export class CollaborativeFilteringRecommender {
     }
   }
 
-  private async getAllUserPatterns(excludeSessionId: string): Promise<UserBehaviorPattern[]> {
+  private async getAllUserPatterns(_excludeSessionId: string): Promise<UserBehaviorPattern[]> {
     // 简化实现：从本地存储获取其他会话的数据
     // 在实际应用中，这些数据应该存储在服务器端
     const patterns: UserBehaviorPattern[] = [];

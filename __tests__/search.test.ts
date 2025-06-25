@@ -57,18 +57,18 @@ describe('搜索缓存功能', () => {
     });
 
     // 添加超过限制的缓存项
-    cache.set('query1', { data: 1 });
-    cache.set('query2', { data: 2 });
-    cache.set('query3', { data: 3 });
-    cache.set('query4', { data: 4 });
+    cache.set('query1', { results: [], total: 1 });
+    cache.set('query2', { results: [], total: 2 });
+    cache.set('query3', { results: [], total: 3 });
+    cache.set('query4', { results: [], total: 4 });
 
     const stats = cache.getStats();
     expect(stats.size).toBeLessThanOrEqual(3);
   });
 
   it('应该正确生成缓存统计信息', () => {
-    searchCache.set('test1', { data: 1 });
-    searchCache.set('test2', { data: 2 });
+    searchCache.set('test1', { results: [], total: 1 });
+    searchCache.set('test2', { results: [], total: 2 });
     
     // 访问缓存以增加命中次数
     searchCache.get('test1');
@@ -98,7 +98,7 @@ describe('搜索历史管理', () => {
     const historyCall = calls.find(call => call[0] === 'ghibli_search_history');
     expect(historyCall).toBeDefined();
     
-    const history = JSON.parse(historyCall[1]);
+    const history = JSON.parse(historyCall![1]);
     expect(history).toHaveLength(1);
     expect(history[0].query).toBe('千与千寻');
     expect(history[0].resultCount).toBe(10);

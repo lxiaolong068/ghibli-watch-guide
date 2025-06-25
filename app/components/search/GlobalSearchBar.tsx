@@ -151,7 +151,6 @@ export function GlobalSearchBar({
             `}
             aria-label="全局搜索"
             aria-haspopup="listbox"
-            aria-expanded={isOpen}
           />
           
           {query && (

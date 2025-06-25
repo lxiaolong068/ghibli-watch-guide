@@ -314,26 +314,26 @@ function SearchResultCard({ result, query }: { result: SearchResult; query: stri
             {/* 元数据 */}
             {result.metadata && (
               <div className="flex flex-wrap gap-2 text-xs text-gray-500">
-                {result.type === 'movie' && result.metadata.year && (
+                {result.type === 'movie' && result.metadata.year ? (
                   <span className="bg-gray-100 px-2 py-1 rounded">
-                    {result.metadata.year}年
+                    {String(result.metadata.year)}年
                   </span>
-                )}
-                {result.type === 'movie' && result.metadata.director && (
+                ) : null}
+                {result.type === 'movie' && result.metadata.director ? (
                   <span className="bg-gray-100 px-2 py-1 rounded">
-                    导演: {result.metadata.director}
+                    导演: {String(result.metadata.director)}
                   </span>
-                )}
-                {result.type === 'review' && result.metadata.rating && (
+                ) : null}
+                {result.type === 'review' && result.metadata.rating ? (
                   <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                    评分: {result.metadata.rating}/10
+                    评分: {String(result.metadata.rating)}/10
                   </span>
-                )}
-                {result.type === 'character' && result.metadata.isMainCharacter && (
+                ) : null}
+                {result.type === 'character' && result.metadata.isMainCharacter ? (
                   <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
                     主要角色
                   </span>
-                )}
+                ) : null}
               </div>
             )}
           </div>

@@ -10,6 +10,9 @@ import { UserBehaviorManager } from '@/app/utils/user-behavior-manager';
 import { prisma } from '@/lib/prisma';
 import { handleApiError } from '@/app/lib/error-handler';
 
+// 将此路由标记为动态路由，防止在构建时静态生成
+export const dynamic = 'force-dynamic';
+
 // 个性化推荐结果
 interface PersonalizedRecommendation {
   id: string;
@@ -54,7 +57,7 @@ export async function GET(request: NextRequest) {
     const types = searchParams.get('types')?.split(',') || ['movie', 'character', 'review', 'guide'];
     const contextType = searchParams.get('context') || 'general'; // general, movie_detail, search_result
     const contextId = searchParams.get('contextId') || undefined; // 当前页面的内容ID
-    const sessionId = searchParams.get('sessionId'); // 用户会话ID
+    const _sessionId = searchParams.get('sessionId'); // 用户会话ID
 
     // 获取用户行为管理器
     const behaviorManager = UserBehaviorManager.getInstance();
@@ -379,14 +382,14 @@ async function getRecentRecommendations(
  */
 async function calculateDynamicWeights(
   userPreferences: any,
-  context: any
+  _context: unknown
 ): Promise<AlgorithmWeights> {
   const weights = { ...DEFAULT_WEIGHTS };
-  
+
   if (!userPreferences) {
     return weights;
   }
-  
+
   // 根据用户活跃度调整权重
   const engagementLevel = userPreferences.averageSessionDuration || 0;
   

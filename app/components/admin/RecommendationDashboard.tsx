@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { RecommendationMetrics, OptimizationSuggestion } from '@/app/utils/recommendation-analytics';
 
 interface DashboardData {
@@ -21,11 +21,7 @@ export function RecommendationDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [timeRange, setTimeRange] = useState(30); // 默认30天
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, [timeRange]);
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -35,18 +31,23 @@ export function RecommendationDashboard() {
       );
 
       if (!response.ok) {
-        throw new Error('Failed to fetch analytics');
+        throw new Error('获取推荐分析数据失败');
       }
 
       const result = await response.json();
       setData(result.data);
     } catch (err) {
-      console.error('Error fetching analytics:', err);
-      setError('获取分析数据失败');
+      setError(err instanceof Error ? err.message : '未知错误');
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeRange]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
+
+
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {

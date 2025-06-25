@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 interface UserBehaviorTrackerProps {
   movieId?: string;
@@ -13,40 +13,7 @@ export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: 
   const startTime = useRef<number>(Date.now());
   const hasTrackedView = useRef<boolean>(false);
 
-  useEffect(() => {
-    // 记录页面访问
-    if (!hasTrackedView.current) {
-      trackPageView();
-      hasTrackedView.current = true;
-    }
-
-    // 记录页面停留时间
-    const handleBeforeUnload = () => {
-      const timeSpent = Date.now() - startTime.current;
-      trackTimeSpent(timeSpent);
-    };
-
-    // 记录滚动行为
-    const handleScroll = () => {
-      const scrollPercentage = Math.round(
-        (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
-      );
-      
-      if (scrollPercentage > 0 && scrollPercentage % 25 === 0) {
-        trackScrollDepth(scrollPercentage);
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [movieId, characterId, pageType, userId]);
-
-  const trackPageView = async () => {
+  const trackPageView = useCallback(async () => {
     try {
       // 更新电影统计（如果是电影页面）
       if (movieId && pageType === 'movie') {
@@ -90,9 +57,9 @@ export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: 
     } catch (error) {
       console.error('Error tracking page view:', error);
     }
-  };
+  }, [movieId, pageType, userId, characterId]);
 
-  const trackTimeSpent = async (timeSpent: number) => {
+  const trackTimeSpent = useCallback(async (timeSpent: number) => {
     try {
       // @ts-expect-error - Google Analytics global function
       if (typeof gtag !== 'undefined') {
@@ -108,9 +75,9 @@ export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: 
     } catch (error) {
       console.error('Error tracking time spent:', error);
     }
-  };
+  }, [characterId, movieId, pageType]);
 
-  const trackScrollDepth = async (percentage: number) => {
+  const trackScrollDepth = useCallback(async (percentage: number) => {
     try {
       // @ts-expect-error - Google Analytics global function
       if (typeof gtag !== 'undefined') {
@@ -127,7 +94,40 @@ export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: 
     } catch (error) {
       console.error('Error tracking scroll depth:', error);
     }
-  };
+  }, [characterId, movieId, pageType]);
+
+  useEffect(() => {
+    // 记录页面访问
+    if (!hasTrackedView.current) {
+      trackPageView();
+      hasTrackedView.current = true;
+    }
+
+    // 记录页面停留时间
+    const handleBeforeUnload = () => {
+      const timeSpent = Date.now() - startTime.current;
+      trackTimeSpent(timeSpent);
+    };
+
+    // 记录滚动行为
+    const handleScroll = () => {
+      const scrollPercentage = Math.round(
+        (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+      );
+
+      if (scrollPercentage > 0 && scrollPercentage % 25 === 0) {
+        trackScrollDepth(scrollPercentage);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [movieId, characterId, pageType, userId, trackPageView, trackScrollDepth, trackTimeSpent]);
 
   return null; // 这是一个无UI的跟踪组件
 }

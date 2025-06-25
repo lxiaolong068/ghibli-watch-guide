@@ -7,6 +7,9 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AccessibilityTools } from "./components/AccessibilityTools";
 import { FeedbackWidget } from "./components/FeedbackWidget";
 import { PerformanceMonitor } from "./components/PerformanceMonitor";
+import { GoogleAnalytics } from "./components/analytics/GoogleAnalytics";
+import { WebVitalsTracker } from "./components/performance/WebVitalsTracker";
+import { SearchConsoleVerification, WebsiteStructuredData } from "./components/seo/SearchConsoleVerification";
 import Script from 'next/script';
 
 const notoSansSC = Noto_Sans_SC({ 
@@ -34,6 +37,8 @@ export default function RootLayout({
       <head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6958408841088360"
              crossOrigin="anonymous"></script>
+        <SearchConsoleVerification verificationCode={process.env.GOOGLE_SITE_VERIFICATION} />
+        <WebsiteStructuredData />
       </head>
       <body className={notoSansSC.className}>
         {/* 跳转到主内容链接 */}
@@ -89,6 +94,12 @@ export default function RootLayout({
         <AccessibilityTools />
         <FeedbackWidget />
         <PerformanceMonitor enableConsoleLogging={process.env.NODE_ENV === 'development'} />
+
+        {/* Analytics and Performance Monitoring */}
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
+        <WebVitalsTracker />
 
         {/* Microsoft Clarity Script */}
         <Script id="microsoft-clarity" strategy="afterInteractive">
