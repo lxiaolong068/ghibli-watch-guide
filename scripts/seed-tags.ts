@@ -1,62 +1,71 @@
 import { prisma } from '../lib/prisma';
+import { PRESET_TAGS } from '../data/tag-categories';
 
-// 基础标签数据
-const baseTags = [
-  // 主题标签
-  { name: '环保主题', nameJa: '環境テーマ', nameZh: '环保主题', category: 'theme', color: '#10B981', description: '关注环境保护和自然的电影' },
-  { name: '成长故事', nameJa: '成長物語', nameZh: '成长故事', category: 'theme', color: '#F59E0B', description: '描述角色成长历程的电影' },
-  { name: '奇幻冒险', nameJa: 'ファンタジー冒険', nameZh: '奇幻冒险', category: 'genre', color: '#8B5CF6', description: '充满奇幻元素的冒险故事' },
-  { name: '家庭温情', nameJa: '家族の絆', nameZh: '家庭温情', category: 'theme', color: '#EF4444', description: '温馨的家庭故事' },
-  { name: '反战主题', nameJa: '反戦テーマ', nameZh: '反战主题', category: 'theme', color: '#6B7280', description: '反映战争残酷性的作品' },
-  { name: '爱情故事', nameJa: 'ラブストーリー', nameZh: '爱情故事', category: 'theme', color: '#EC4899', description: '浪漫的爱情故事' },
-  { name: '魔法世界', nameJa: '魔法の世界', nameZh: '魔法世界', category: 'setting', color: '#7C3AED', description: '充满魔法的奇幻世界' },
-  { name: '乡村生活', nameJa: '田舎暮らし', nameZh: '乡村生活', category: 'setting', color: '#059669', description: '描绘乡村生活的作品' },
-  { name: '都市生活', nameJa: '都市生活', nameZh: '都市生活', category: 'setting', color: '#0EA5E9', description: '现代都市背景的故事' },
-  { name: '历史背景', nameJa: '歴史的背景', nameZh: '历史背景', category: 'setting', color: '#92400E', description: '具有历史背景的作品' },
-  
-  // 情感标签
-  { name: '温馨治愈', nameJa: '癒し系', nameZh: '温馨治愈', category: 'mood', color: '#10B981', description: '能够治愈心灵的温馨作品' },
-  { name: '感人至深', nameJa: '感動的', nameZh: '感人至深', category: 'mood', color: '#F59E0B', description: '令人感动落泪的作品' },
-  { name: '轻松愉快', nameJa: '楽しい', nameZh: '轻松愉快', category: 'mood', color: '#06B6D4', description: '轻松愉快的娱乐作品' },
-  { name: '深刻思考', nameJa: '深く考える', nameZh: '深刻思考', category: 'mood', color: '#6366F1', description: '引人深思的作品' },
-  
-  // 年龄标签
-  { name: '全年龄', nameJa: '全年齢', nameZh: '全年龄', category: 'audience', color: '#10B981', description: '适合所有年龄观看' },
-  { name: '儿童友好', nameJa: '子供向け', nameZh: '儿童友好', category: 'audience', color: '#F59E0B', description: '特别适合儿童观看' },
-  { name: '成人向', nameJa: '大人向け', nameZh: '成人向', category: 'audience', color: '#EF4444', description: '更适合成人观看' },
-  
-  // 特色标签
-  { name: '经典之作', nameJa: 'クラシック', nameZh: '经典之作', category: 'quality', color: '#F59E0B', description: '公认的经典作品' },
-  { name: '获奖作品', nameJa: '受賞作品', nameZh: '获奖作品', category: 'quality', color: '#8B5CF6', description: '获得重要奖项的作品' },
-  { name: '票房佳作', nameJa: 'ヒット作品', nameZh: '票房佳作', category: 'quality', color: '#059669', description: '票房表现优秀的作品' },
-  { name: '口碑佳作', nameJa: '評価の高い', nameZh: '口碑佳作', category: 'quality', color: '#DC2626', description: '口碑极佳的作品' },
-];
+// 将预设标签转换为数据库格式
+const baseTags = PRESET_TAGS.map(tag => ({
+  name: tag.nameZh, // 使用中文名作为主名称
+  nameJa: tag.nameJa,
+  nameZh: tag.nameZh,
+  description: tag.description,
+  category: tag.category,
+  color: tag.color
+}));
 
-// 电影标签关联数据
+// 电影标签关联数据 - 使用新的标签体系
 const movieTagAssociations = [
   // 千与千寻
-  { movieTitleEn: 'Spirited Away', tags: ['奇幻冒险', '成长故事', '环保主题', '温馨治愈', '全年龄', '经典之作', '获奖作品', '票房佳作', '口碑佳作'] },
-  
+  {
+    movieTitleEn: 'Spirited Away',
+    tags: ['奇幻冒险', '成长故事', '环保主题', '温馨治愈', '全年龄', '经典之作', '获奖作品', '票房佳作', '口碑佳作', '强女性主角', '儿童主角', '魔法世界']
+  },
+
   // 龙猫
-  { movieTitleEn: 'My Neighbor Totoro', tags: ['家庭温情', '乡村生活', '奇幻冒险', '温馨治愈', '儿童友好', '全年龄', '经典之作', '口碑佳作'] },
-  
+  {
+    movieTitleEn: 'My Neighbor Totoro',
+    tags: ['家庭温情', '乡村生活', '奇幻冒险', '温馨治愈', '儿童友好', '全年龄', '经典之作', '口碑佳作', '动物伙伴', '儿童主角', '手绘动画']
+  },
+
   // 萤火虫之墓
-  { movieTitleEn: 'Grave of the Fireflies', tags: ['反战主题', '家庭温情', '历史背景', '感人至深', '深刻思考', '成人向', '经典之作', '获奖作品'] },
-  
+  {
+    movieTitleEn: 'Grave of the Fireflies',
+    tags: ['反战主题', '家庭温情', '历史背景', '感人至深', '深刻思考', '成人向', '经典之作', '获奖作品', '儿童主角']
+  },
+
   // 哈尔的移动城堡
-  { movieTitleEn: "Howl's Moving Castle", tags: ['爱情故事', '魔法世界', '奇幻冒险', '反战主题', '温馨治愈', '全年龄', '经典之作', '票房佳作'] },
-  
+  {
+    movieTitleEn: "Howl's Moving Castle",
+    tags: ['爱情故事', '魔法世界', '奇幻冒险', '反战主题', '温馨治愈', '全年龄', '经典之作', '票房佳作', '强女性主角', '手绘动画']
+  },
+
   // 天空之城
-  { movieTitleEn: 'Castle in the Sky', tags: ['奇幻冒险', '环保主题', '成长故事', '轻松愉快', '全年龄', '经典之作', '口碑佳作'] },
-  
+  {
+    movieTitleEn: 'Castle in the Sky',
+    tags: ['奇幻冒险', '环保主题', '成长故事', '轻松愉快', '全年龄', '经典之作', '口碑佳作', '强女性主角', '儿童主角', '手绘动画']
+  },
+
   // 魔女宅急便
-  { movieTitleEn: "Kiki's Delivery Service", tags: ['成长故事', '魔法世界', '都市生活', '温馨治愈', '儿童友好', '全年龄', '经典之作'] },
-  
+  {
+    movieTitleEn: "Kiki's Delivery Service",
+    tags: ['成长故事', '魔法世界', '都市生活', '温馨治愈', '儿童友好', '全年龄', '经典之作', '强女性主角', '儿童主角', '动物伙伴']
+  },
+
   // 红猪
-  { movieTitleEn: 'Porco Rosso', tags: ['历史背景', '反战主题', '轻松愉快', '成人向', '口碑佳作'] },
-  
+  {
+    movieTitleEn: 'Porco Rosso',
+    tags: ['历史背景', '反战主题', '轻松愉快', '成人向', '口碑佳作', '手绘动画']
+  },
+
   // 幽灵公主
-  { movieTitleEn: 'Princess Mononoke', tags: ['环保主题', '历史背景', '奇幻冒险', '深刻思考', '成人向', '经典之作', '获奖作品'] },
+  {
+    movieTitleEn: 'Princess Mononoke',
+    tags: ['环保主题', '历史背景', '奇幻冒险', '深刻思考', '成人向', '经典之作', '获奖作品', '强女性主角', '动物伙伴', '手绘动画']
+  },
+
+  // 风之谷
+  {
+    movieTitleEn: 'Nausicaä of the Valley of the Wind',
+    tags: ['环保主题', '奇幻冒险', '深刻思考', '全年龄', '经典之作', '强女性主角', '动物伙伴', '手绘动画']
+  },
 ];
 
 async function seedTags() {

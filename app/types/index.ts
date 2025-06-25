@@ -111,6 +111,49 @@ export interface PlatformDisplayInfo {
   url?: string;
 }
 
+// 标签相关类型
+export interface Tag {
+  id: string;
+  name: string;
+  nameJa?: string | null;
+  nameZh?: string | null;
+  description?: string | null;
+  color?: string | null;
+  category?: string | null;
+  createdAt: Date;
+  count?: number; // 用于显示标签关联的电影数量
+}
+
+export interface MovieTag {
+  id: string;
+  movieId: string;
+  tagId: string;
+  createdAt: Date;
+  movie?: Movie;
+  tag?: Tag;
+}
+
+// 标签分类枚举
+export enum TagCategory {
+  THEME = 'theme',        // 主题标签：环保、成长、爱情等
+  GENRE = 'genre',        // 类型标签：奇幻、冒险、剧情等
+  MOOD = 'mood',          // 情感标签：治愈、感人、轻松等
+  AUDIENCE = 'audience',  // 受众标签：全年龄、儿童友好、成人向等
+  QUALITY = 'quality',    // 品质标签：经典、获奖、口碑等
+  STYLE = 'style',        // 风格标签：手绘、写实、梦幻等
+  SETTING = 'setting',    // 背景标签：现代、历史、乡村等
+  CHARACTER = 'character' // 角色标签：强女性、动物伙伴等
+}
+
+// 标签筛选参数
+export interface TagFilterParams {
+  category?: TagCategory | string;
+  search?: string;
+  withCount?: boolean;
+  limit?: number;
+  movieId?: string; // 用于获取特定电影的标签
+}
+
 // API 响应类型
 export interface ApiResponse<T> {
   data?: T;

@@ -4,22 +4,35 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { MoviePoster } from './OptimizedImage';
 import { LoadingSpinner } from './LoadingSpinner';
-import type { Movie } from '@/app/types';
+import { TagGroup } from '@/app/components/ui/TagBadge';
+import type { Movie, Tag } from '@/app/types';
+
+// 扩展Movie类型以包含标签信息
+interface MovieWithTags extends Movie {
+  tags?: Tag[];
+  tagsByCategory?: Record<string, Tag[]>;
+}
 
 interface MovieCardProps {
-  movie: Movie;
+  movie: MovieWithTags;
   priority?: boolean;
   showYear?: boolean;
   showDirector?: boolean;
+  showTags?: boolean;
+  maxTags?: number;
+  onTagClick?: (tag: Tag) => void;
   className?: string;
 }
 
-export function MovieCard({ 
-  movie, 
-  priority = false, 
-  showYear = true, 
+export function MovieCard({
+  movie,
+  priority = false,
+  showYear = true,
   showDirector = true,
-  className = '' 
+  showTags = true,
+  maxTags = 3,
+  onTagClick,
+  className = ''
 }: MovieCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -84,6 +97,25 @@ export function MovieCard({
               {movie.duration} minutes
             </div>
           )}
+
+          {/* 标签显示 */}
+          {showTags && movie.tags && movie.tags.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <TagGroup
+                tags={movie.tags.slice(0, maxTags)}
+                size="sm"
+                variant="default"
+                clickable={!!onTagClick}
+                onTagClick={onTagClick}
+                className="justify-start"
+              />
+              {movie.tags.length > maxTags && (
+                <span className="inline-block mt-1 text-xs text-gray-500">
+                  +{movie.tags.length - maxTags} 更多
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </Link>
     </div>
@@ -109,13 +141,17 @@ export function MovieCardSkeleton({ className = '' }: { className?: string }) {
 }
 
 // 电影网格组件
-export function MovieGrid({ 
-  movies, 
-  isLoading = false, 
-  className = '' 
-}: { 
-  movies: Movie[]; 
+export function MovieGrid({
+  movies,
+  isLoading = false,
+  showTags = true,
+  onTagClick,
+  className = ''
+}: {
+  movies: MovieWithTags[];
   isLoading?: boolean;
+  showTags?: boolean;
+  onTagClick?: (tag: Tag) => void;
   className?: string;
 }) {
   if (isLoading) {
@@ -140,10 +176,12 @@ export function MovieGrid({
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${className}`}>
       {movies.map((movie, index) => (
-        <MovieCard 
-          key={movie.id} 
-          movie={movie} 
+        <MovieCard
+          key={movie.id}
+          movie={movie}
           priority={index < 4} // 前4个电影优先加载
+          showTags={showTags}
+          onTagClick={onTagClick}
         />
       ))}
     </div>

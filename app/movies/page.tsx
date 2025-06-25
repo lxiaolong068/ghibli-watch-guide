@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getAllMovies } from '@/app/actions/movies';
-import { MovieListContainer } from '@/app/components/MovieListContainer';
+import FilteredMovieList from '@/app/components/movies/FilteredMovieList';
 // import type { Region } from '@prisma/client'; // No longer needed here
 
 // Remove force-dynamic setting to allow page caching
@@ -41,11 +41,11 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
         </p>
       </div>
       
-      {/* Pass paginated data and controls props to MovieListContainer */}
-      <MovieListContainer 
-        initialMovies={movies} 
-        totalMovies={totalMovies} 
-        currentPage={currentPage} 
+      {/* 使用新的筛选电影列表组件 */}
+      <FilteredMovieList
+        initialMovies={movies}
+        initialTotal={totalMovies}
+        initialPage={currentPage}
         pageSize={PAGE_SIZE}
       />
       
