@@ -70,7 +70,6 @@ export default async function HomePage() {
         <ResponsiveAdSenseAd
           adSlot="1234567890"
           adFormat="auto"
-          fullWidthResponsive={true}
         />
       </section>
 

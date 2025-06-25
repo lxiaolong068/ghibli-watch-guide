@@ -69,7 +69,6 @@ export default function CharactersPage({ searchParams }: CharactersPageProps) {
           <ResponsiveAdSenseAd
             adSlot="1234567890"
             adFormat="auto"
-            fullWidthResponsive={true}
           />
         </div>
 
@@ -99,7 +98,6 @@ export default function CharactersPage({ searchParams }: CharactersPageProps) {
           <ResponsiveAdSenseAd
             adSlot="9876543210"
             adFormat="auto"
-            fullWidthResponsive={true}
           />
         </div>
 

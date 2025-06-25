@@ -226,7 +226,6 @@ export default async function ReviewsPage({ params }: ReviewsPageProps) {
           <ResponsiveAdSenseAd
             adSlot="1234567890"
             adFormat="auto"
-            fullWidthResponsive={true}
           />
         </div>
 
@@ -250,7 +249,6 @@ export default async function ReviewsPage({ params }: ReviewsPageProps) {
           <ResponsiveAdSenseAd
             adSlot="9876543210"
             adFormat="auto"
-            fullWidthResponsive={true}
           />
         </div>
       </div>
