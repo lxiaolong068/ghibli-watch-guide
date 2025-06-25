@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ContentBasedRecommender } from '@/app/utils/content-based-recommender';
 import { CollaborativeFilteringRecommender } from '@/app/utils/collaborative-filtering-recommender';
 import { UserBehaviorManager } from '@/app/utils/user-behavior-manager';
+import { RecommendationContext } from '@/app/types/user-behavior';
 import { prisma } from '@/lib/prisma';
 import { handleApiError } from '@/app/lib/error-handler';
 
@@ -62,11 +63,28 @@ export async function GET(request: NextRequest) {
     // 获取用户行为管理器
     const behaviorManager = UserBehaviorManager.getInstance();
     
-    // 获取推荐上下文
-    const context = behaviorManager.getRecommendationContext();
+    // 获取推荐上下文 - 如果没有活动会话则使用默认值
+    let context: RecommendationContext;
+    let userPreferences: any = null;
     
-    // 分析用户偏好
-    const userPreferences = behaviorManager.analyzeUserPreferences();
+    try {
+      context = behaviorManager.getRecommendationContext();
+      userPreferences = behaviorManager.analyzeUserPreferences();
+    } catch (error) {
+      // 服务器端没有活动会话时的默认上下文
+      const sessionId = `server_session_${Date.now()}`;
+      context = {
+        sessionId,
+        currentPageType: 'home',
+        currentEntityId: undefined,
+        recentViews: [],
+        recentSearches: [],
+        timeOfDay: new Date().getHours(),
+        dayOfWeek: new Date().getDay(),
+        deviceType: 'desktop',
+        referrer: undefined,
+      };
+    }
     
     // 根据用户行为调整算法权重
     const weights = await calculateDynamicWeights(userPreferences, context);
