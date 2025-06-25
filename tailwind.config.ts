@@ -8,6 +8,7 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/**/*.{js,ts,jsx,tsx,mdx}", // 添加 src 目录如果 Starwind UI 在这里
   ],
+  darkMode: 'class', // 启用基于类的深色模式
   theme: {
     extend: {
       colors: {

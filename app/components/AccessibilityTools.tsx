@@ -1,14 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  EyeIcon, 
-  EyeSlashIcon, 
-  SpeakerWaveIcon, 
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  SpeakerWaveIcon,
   SpeakerXMarkIcon,
   AdjustmentsHorizontalIcon,
-  XMarkIcon
+  XMarkIcon,
+  MoonIcon,
+  SunIcon
 } from '@heroicons/react/24/outline';
+import { useTheme } from './ThemeProvider';
 
 interface AccessibilitySettings {
   highContrast: boolean;
@@ -25,6 +28,7 @@ export function AccessibilityTools() {
     reducedMotion: false,
     screenReader: false,
   });
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   // 从localStorage加载设置
   useEffect(() => {
@@ -269,6 +273,47 @@ export function AccessibilityTools() {
                     <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                         settings.screenReader ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* 主题切换 */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    {resolvedTheme === 'dark' ? (
+                      <MoonIcon className="w-5 h-5 text-gray-500 mr-3" />
+                    ) : (
+                      <SunIcon className="w-5 h-5 text-gray-500 mr-3" />
+                    )}
+                    <div>
+                      <label htmlFor="theme-toggle" className="text-sm font-medium text-gray-900">
+                        Dark Mode
+                      </label>
+                      <p className="text-xs text-gray-500">
+                        Switch between light and dark themes
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    id="theme-toggle"
+                    onClick={() => {
+                      const newTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
+                      setTheme(newTheme);
+                      if (settings.screenReader) {
+                        announceToScreenReader(`Switched to ${newTheme} mode`);
+                      }
+                    }}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
+                      resolvedTheme === 'dark' ? 'bg-primary-600' : 'bg-gray-200'
+                    }`}
+                    role="switch"
+                    aria-checked={resolvedTheme === 'dark'}
+                    aria-labelledby="theme-toggle"
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        resolvedTheme === 'dark' ? 'translate-x-6' : 'translate-x-1'
                       }`}
                     />
                   </button>
