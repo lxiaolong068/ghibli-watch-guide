@@ -3,6 +3,7 @@ import { getLatestMovies } from '@/app/actions/movies';
 import { MovieList } from '@/app/components/MovieList';
 import { UserBehaviorTracker } from '@/app/components/analytics/UserBehaviorTracker';
 import { ResponsiveAdSenseAd } from '@/app/components/SEOOptimizer';
+import { HomeRecommendations } from '@/app/components/recommendations/HomeRecommendations';
 
 // Remove force-dynamic setting to allow page caching
 // export const dynamic = 'force-dynamic';
@@ -71,6 +72,11 @@ export default async function HomePage() {
           adSlot="1234567890"
           adFormat="auto"
         />
+      </section>
+
+      {/* 个性化推荐区域 */}
+      <section>
+        <HomeRecommendations />
       </section>
 
       {/* Latest Movies List - showing only the latest 9 movies */}

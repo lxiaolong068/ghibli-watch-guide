@@ -14,6 +14,7 @@ import { CharacterSection } from '@/app/components/movies/CharacterSection';
 import { RelatedMoviesSection } from '@/app/components/movies/RelatedMoviesSection';
 import { MovieStatsTracker } from '@/app/components/movies/MovieStatsTracker';
 import { UserBehaviorTracker } from '@/app/components/analytics/UserBehaviorTracker';
+import { MovieDetailRecommendations } from '@/app/components/recommendations/HomeRecommendations';
 
 // Singleton pattern for Prisma client
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
@@ -460,6 +461,9 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
 
       {/* 角色介绍部分 */}
       <CharacterSection movieId={id} />
+
+      {/* 智能推荐系统 */}
+      <MovieDetailRecommendations movieId={id} />
 
       {/* 相关电影推荐 */}
       <RelatedMoviesSection currentMovieId={id} />
