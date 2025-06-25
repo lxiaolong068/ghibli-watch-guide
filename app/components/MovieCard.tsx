@@ -41,9 +41,9 @@ export function MovieCard({
   };
 
   return (
-    <div className={`group relative bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden ${className}`}>
+    <div className={`group relative bg-white dark:bg-slate-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden ${className}`}>
       {isLoading && (
-        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+        <div className="absolute inset-0 bg-white dark:bg-slate-800 bg-opacity-75 dark:bg-opacity-75 flex items-center justify-center z-10">
           <LoadingSpinner size="md" text="Loading..." />
         </div>
       )}
@@ -72,35 +72,35 @@ export function MovieCard({
         </div>
         
         <div className="p-4">
-          <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 group-hover:text-primary-600 transition-colors">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-1 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
             {movie.titleEn}
           </h3>
-          
+
           {movie.titleJa && (
-            <p className="text-sm text-gray-600 mb-2 line-clamp-1">
+            <p className="text-sm text-gray-600 dark:text-slate-300 mb-2 line-clamp-1">
               {movie.titleJa}
             </p>
           )}
-          
-          <div className="flex items-center justify-between text-sm text-gray-500">
+
+          <div className="flex items-center justify-between text-sm text-gray-500 dark:text-slate-400">
             {showYear && (
               <span className="font-medium">{movie.year}</span>
             )}
-            
+
             {showDirector && movie.director && (
               <span className="truncate ml-2">{movie.director}</span>
             )}
           </div>
-          
+
           {movie.duration && (
-            <div className="mt-2 text-xs text-gray-400">
+            <div className="mt-2 text-xs text-gray-400 dark:text-slate-500">
               {movie.duration} minutes
             </div>
           )}
 
           {/* 标签显示 */}
           {showTags && movie.tags && movie.tags.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-slate-700">
               <TagGroup
                 tags={movie.tags.slice(0, maxTags)}
                 size="sm"
@@ -110,7 +110,7 @@ export function MovieCard({
                 className="justify-start"
               />
               {movie.tags.length > maxTags && (
-                <span className="inline-block mt-1 text-xs text-gray-500">
+                <span className="inline-block mt-1 text-xs text-gray-500 dark:text-slate-400">
                   +{movie.tags.length - maxTags} 更多
                 </span>
               )}
@@ -125,16 +125,16 @@ export function MovieCard({
 // 电影卡片骨架加载组件
 export function MovieCardSkeleton({ className = '' }: { className?: string }) {
   return (
-    <div className={`bg-white rounded-lg shadow-md overflow-hidden animate-pulse ${className}`}>
-      <div className="aspect-[2/3] bg-gray-300"></div>
+    <div className={`bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden animate-pulse ${className}`}>
+      <div className="aspect-[2/3] bg-gray-300 dark:bg-slate-600"></div>
       <div className="p-4">
-        <div className="h-5 bg-gray-300 rounded mb-2"></div>
-        <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+        <div className="h-5 bg-gray-300 dark:bg-slate-600 rounded mb-2"></div>
+        <div className="h-4 bg-gray-300 dark:bg-slate-600 rounded w-3/4 mb-2"></div>
         <div className="flex justify-between">
-          <div className="h-3 bg-gray-300 rounded w-12"></div>
-          <div className="h-3 bg-gray-300 rounded w-20"></div>
+          <div className="h-3 bg-gray-300 dark:bg-slate-600 rounded w-12"></div>
+          <div className="h-3 bg-gray-300 dark:bg-slate-600 rounded w-20"></div>
         </div>
-        <div className="h-3 bg-gray-300 rounded w-16 mt-2"></div>
+        <div className="h-3 bg-gray-300 dark:bg-slate-600 rounded w-16 mt-2"></div>
       </div>
     </div>
   );
@@ -167,8 +167,8 @@ export function MovieGrid({
   if (movies.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-gray-500 text-lg mb-2">No movies found</div>
-        <p className="text-gray-400">Try adjusting your search or filters</p>
+        <div className="text-gray-500 dark:text-slate-400 text-lg mb-2">No movies found</div>
+        <p className="text-gray-400 dark:text-slate-500">Try adjusting your search or filters</p>
       </div>
     );
   }

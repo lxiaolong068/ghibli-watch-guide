@@ -57,7 +57,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
       {/* 汉堡菜单按钮 */}
       <button
         onClick={() => setIsMenuOpen(true)}
-        className="p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+        className="p-2 rounded-md text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
         aria-label="Open navigation menu"
         aria-expanded={isMenuOpen}
       >
@@ -77,14 +77,14 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
           />
           
           {/* 菜单面板 */}
-          <div className="fixed inset-y-0 right-0 max-w-sm w-full bg-white shadow-xl transform transition-transform">
+          <div className="fixed inset-y-0 right-0 max-w-sm w-full bg-white dark:bg-slate-800 shadow-xl transform transition-transform">
             <div className="flex flex-col h-full">
               {/* 菜单头部 */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Navigation</h2>
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Navigation</h2>
                 <button
                   onClick={closeMenu}
-                  className="p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+                  className="p-2 rounded-md text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
                   aria-label="Close navigation menu"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,13 +94,13 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
               </div>
 
               {/* 搜索和地区选择器 */}
-              <div className="p-4 border-b border-gray-200 space-y-4">
+              <div className="p-4 border-b border-gray-200 dark:border-slate-700 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">搜索内容</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">搜索内容</label>
                   <GlobalSearchBar placeholder="搜索电影、角色、评论..." />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Region</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Region</label>
                   <RegionSelector />
                 </div>
               </div>
@@ -115,8 +115,8 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
                       onClick={handleLinkClick}
                       className={`flex items-center px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                         isActiveLink(link.href)
-                          ? 'bg-primary-50 text-primary-700 border border-primary-200'
-                          : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                          ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-700'
+                          : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-100'
                       }`}
                     >
                       <span className="mr-3 text-lg">{link.icon}</span>
@@ -132,10 +132,10 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
               </nav>
 
               {/* 菜单底部 */}
-              <div className="p-4 border-t border-gray-200">
+              <div className="p-4 border-t border-gray-200 dark:border-slate-700">
                 <div className="text-center">
-                  <p className="text-sm text-gray-500">Studio Ghibli Watch Guide</p>
-                  <p className="text-xs text-gray-400 mt-1">Find where to watch your favorite films</p>
+                  <p className="text-sm text-gray-500 dark:text-slate-400">Studio Ghibli Watch Guide</p>
+                  <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">Find where to watch your favorite films</p>
                 </div>
               </div>
             </div>
@@ -191,7 +191,7 @@ export function DesktopNavBar({ children }: DesktopNavBarProps) {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-700 hover:text-primary-600 transition-colors"
+                className="text-gray-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
               >
                 {link.label}
               </Link>

@@ -173,16 +173,22 @@
 /* 深色模式变量 */
 .dark {
   --background: #0f172a;
-  --foreground: #f1f5f9;
+  --foreground: #f8fafc; /* 提高主文字对比度 */
   --card: #1e293b;
-  --card-foreground: #f1f5f9;
+  --card-foreground: #f8fafc; /* 提高卡片文字对比度 */
   --popover: #1e293b;
-  --popover-foreground: #f1f5f9;
+  --popover-foreground: #f8fafc; /* 提高弹出层文字对比度 */
   --muted: #334155;
-  --muted-foreground: #94a3b8;
+  --muted-foreground: #cbd5e1; /* 提高次要文字对比度 */
   --border: #334155;
   --input: #334155;
   --ring: #10b981;
+
+  /* 深色模式专用文字颜色变量 */
+  --text-primary: #f8fafc;     /* 主要文字 - 高对比度 */
+  --text-secondary: #e2e8f0;   /* 次要文字 - 中等对比度 */
+  --text-muted: #cbd5e1;       /* 辅助文字 - 符合AA标准的最低对比度 */
+  --text-subtle: #94a3b8;      /* 微妙文字 - 仅用于装饰性内容 */
 }
 
 @layer base {
@@ -206,6 +212,23 @@
     background-color: var(--card);
     color: var(--card-foreground);
     @apply rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
+  }
+
+  /* 深色模式文字工具类 */
+  .text-primary-dark {
+    color: var(--text-primary);
+  }
+
+  .text-secondary-dark {
+    color: var(--text-secondary);
+  }
+
+  .text-muted-dark {
+    color: var(--text-muted);
+  }
+
+  .text-subtle-dark {
+    color: var(--text-subtle);
   }
 }
 

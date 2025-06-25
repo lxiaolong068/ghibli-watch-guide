@@ -18,11 +18,11 @@ export default async function HomePage() {
       <UserBehaviorTracker pageType="home" />
       {/* Welcome section */}
       <section className="text-center space-y-4">
-        <h2 className="text-3xl font-bold text-gray-900">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
           Where to Watch Studio Ghibli Movies Online
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Find the latest information on where to watch Studio Ghibli movies worldwide, 
+        <p className="text-lg text-gray-600 dark:text-slate-300 max-w-2xl mx-auto">
+          Find the latest information on where to watch Studio Ghibli movies worldwide,
           including streaming platforms, subscription services, and purchase options.
         </p>
       </section>
@@ -31,38 +31,38 @@ export default async function HomePage() {
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Link
           href="/movies"
-          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
+          className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-slate-700 text-center"
         >
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Movie List</h3>
-          <p className="text-gray-600">Browse all Studio Ghibli animated films</p>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">Movie List</h3>
+          <p className="text-gray-600 dark:text-slate-300">Browse all Studio Ghibli animated films</p>
         </Link>
         <Link
           href="/guides"
-          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
+          className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-slate-700 text-center"
         >
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Watch Guides</h3>
-          <p className="text-gray-600">Discover the best viewing order for Ghibli films</p>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">Watch Guides</h3>
+          <p className="text-gray-600 dark:text-slate-300">Discover the best viewing order for Ghibli films</p>
         </Link>
         <Link
           href="/characters"
-          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
+          className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-slate-700 text-center"
         >
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Characters</h3>
-          <p className="text-gray-600">Explore beloved Ghibli characters</p>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">Characters</h3>
+          <p className="text-gray-600 dark:text-slate-300">Explore beloved Ghibli characters</p>
         </Link>
         <Link
           href="/reviews"
-          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
+          className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-slate-700 text-center"
         >
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Reviews</h3>
-          <p className="text-gray-600">Read professional film reviews and analysis</p>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">Reviews</h3>
+          <p className="text-gray-600 dark:text-slate-300">Read professional film reviews and analysis</p>
         </Link>
         <Link
           href="/regions"
-          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-center"
+          className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-slate-700 text-center"
         >
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Regional Guide</h3>
-          <p className="text-gray-600">Check viewing options in your region</p>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">Regional Guide</h3>
+          <p className="text-gray-600 dark:text-slate-300">Check viewing options in your region</p>
         </Link>
       </section>
 
@@ -81,11 +81,11 @@ export default async function HomePage() {
 
       {/* Latest Movies List - showing only the latest 9 movies */}
       <section>
-        <h2 className="text-2xl font-bold text-center mb-6">Latest Ghibli Movies</h2>
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-slate-100">Latest Ghibli Movies</h2>
         {latestMovies.length > 0 ? (
           <MovieList movies={latestMovies} />
         ) : (
-          <p className="text-center text-gray-500">Could not load latest movies.</p>
+          <p className="text-center text-gray-500 dark:text-slate-400">Could not load latest movies.</p>
         )}
       </section>
 

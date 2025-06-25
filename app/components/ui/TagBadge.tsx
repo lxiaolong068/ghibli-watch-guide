@@ -42,12 +42,12 @@ export default function TagBadge({
   const getVariantClasses = () => {
     switch (variant) {
       case 'outline':
-        return `border-2 bg-transparent text-gray-700 dark:text-gray-300`;
+        return `border-2 bg-transparent text-gray-700 dark:text-slate-200`;
       case 'solid':
-        return `text-white`;
+        return `text-white dark:text-white`;
       case 'default':
       default:
-        return `bg-opacity-10 text-gray-800 dark:text-gray-200`;
+        return `bg-opacity-10 dark:bg-opacity-20 text-gray-800 dark:text-slate-100`;
     }
   };
 
@@ -58,7 +58,7 @@ export default function TagBadge({
 
   // 选中样式
   const selectedClasses = selected
-    ? 'ring-2 ring-blue-500 ring-offset-1 bg-blue-50 dark:bg-blue-900 shadow-md'
+    ? 'ring-2 ring-blue-500 dark:ring-blue-400 ring-offset-1 dark:ring-offset-slate-800 bg-blue-50 dark:bg-blue-900/30 shadow-md'
     : '';
 
   // 动画样式
@@ -122,7 +122,7 @@ export default function TagBadge({
 
       {/* 数量显示 */}
       {showCount && tag.count !== undefined && (
-        <span className="text-xs opacity-75 bg-black bg-opacity-10 rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center">
+        <span className="text-xs opacity-75 bg-black dark:bg-white bg-opacity-10 dark:bg-opacity-20 rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center">
           {tag.count}
         </span>
       )}
@@ -131,7 +131,7 @@ export default function TagBadge({
       {onRemove && (
         <button
           onClick={handleRemove}
-          className="ml-1 hover:bg-black hover:bg-opacity-10 rounded-full p-0.5 transition-colors"
+          className="ml-1 hover:bg-black dark:hover:bg-white hover:bg-opacity-10 dark:hover:bg-opacity-20 rounded-full p-0.5 transition-colors"
           aria-label={`移除标签 ${tag.nameZh || tag.name}`}
         >
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -183,7 +183,7 @@ export function TagGroup({
   return (
     <div className={`space-y-2 ${className}`}>
       {title && (
-        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <h4 className="text-sm font-medium text-gray-700 dark:text-slate-300">
           {title}
         </h4>
       )}
@@ -203,7 +203,7 @@ export function TagGroup({
           />
         ))}
         {remainingCount > 0 && (
-          <span className="inline-flex items-center px-3 py-1.5 text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 rounded-full">
+          <span className="inline-flex items-center px-3 py-1.5 text-sm text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-700 rounded-full">
             +{remainingCount} 更多
           </span>
         )}
