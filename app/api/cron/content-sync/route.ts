@@ -113,7 +113,7 @@ class ContentQualityChecker {
     return (score / totalWeight) * 100;
   }
 
-  private async checkAccuracy(movie: any): Promise<number> {
+  private async checkAccuracy(_movie: any): Promise<number> {
     // 这里可以实现与外部数据源的对比验证
     // 暂时返回基础分数
     return 85;

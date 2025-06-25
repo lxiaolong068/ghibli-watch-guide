@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { prisma } from '@/lib/prisma';
 
 interface UserBehaviorTrackerProps {
   movieId?: string;

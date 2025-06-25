@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // 获取基础统计数据
     const [
@@ -90,7 +90,7 @@ async function getAverageQualityScore(): Promise<number> {
     });
 
     return Math.round(qualityMetrics._avg.score || 85); // 默认85分
-  } catch (error) {
+  } catch (_error) {
     console.log('ContentQualityMetric table not found, returning default score');
     return 85; // 默认质量分数
   }
@@ -125,7 +125,7 @@ async function getRecentActivity(): Promise<any[]> {
           status: log.status.toLowerCase()
         });
       });
-    } catch (error) {
+    } catch (_error) {
       console.log('ContentSyncLog table not available');
     }
 
@@ -152,7 +152,7 @@ async function getRecentActivity(): Promise<any[]> {
           status: task.status.toLowerCase()
         });
       });
-    } catch (error) {
+    } catch (_error) {
       console.log('ContentUpdateTask table not available');
     }
 
@@ -235,7 +235,7 @@ async function cleanupOldLogs() {
           }
         }
       });
-    } catch (error) {
+    } catch (_error) {
       console.log('ContentSyncLog cleanup skipped - table not available');
     }
 
@@ -248,7 +248,7 @@ async function cleanupOldLogs() {
           }
         }
       });
-    } catch (error) {
+    } catch (_error) {
       console.log('ContentQualityMetric cleanup skipped - table not available');
     }
 

@@ -2,17 +2,17 @@
  * 搜索功能测试用例
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { searchCache, quickSearchCache } from '@/app/utils/searchCache';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { searchCache, quickSearchCache, SearchCache } from '@/app/utils/searchCache';
 import { SearchHistoryManager } from '@/app/utils/searchHistory';
 import { highlightSearchTerms, getSearchSnippet, getSearchMatchStats } from '@/app/utils/searchHighlight';
 
 // Mock localStorage for testing
 const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
 };
 
 Object.defineProperty(window, 'localStorage', {
@@ -51,7 +51,7 @@ describe('搜索缓存功能', () => {
   });
 
   it('应该正确处理缓存大小限制', () => {
-    const cache = new (require('@/app/utils/searchCache').SearchCache)({
+    const cache = new SearchCache({
       maxSize: 3,
       ttl: 60000
     });

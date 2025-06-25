@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
 
 interface CharacterSearchProps {
@@ -24,8 +24,7 @@ export function CharacterSearch({
   initialMovieId 
 }: CharacterSearchProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  
+
   const [search, setSearch] = useState(initialSearch);
   const [isMainCharacter, setIsMainCharacter] = useState(initialIsMainCharacter || '');
   const [movieId, setMovieId] = useState(initialMovieId || '');

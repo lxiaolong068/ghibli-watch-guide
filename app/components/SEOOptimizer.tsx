@@ -217,12 +217,10 @@ export function AdSenseAd({
 // 响应式AdSense广告组件
 export function ResponsiveAdSenseAd({
   adSlot,
-  adFormat = "auto",
-  fullWidthResponsive = true
+  adFormat = "auto"
 }: {
   adSlot: string;
   adFormat?: string;
-  fullWidthResponsive?: boolean;
 }) {
   return (
     <div className="w-full max-w-4xl mx-auto my-8">

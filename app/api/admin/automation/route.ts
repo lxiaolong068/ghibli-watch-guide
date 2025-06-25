@@ -125,7 +125,7 @@ async function autoGenerateCharacters(movieId: string, options: any) {
 }
 
 // 自动生成制作人员信息
-async function autoGenerateCrew(movieId: string, options: any) {
+async function autoGenerateCrew(movieId: string, _options: any) {
   try {
     const movie = await prisma.movie.findUnique({
       where: { id: movieId },
@@ -199,7 +199,7 @@ async function autoGenerateCrew(movieId: string, options: any) {
 }
 
 // 自动生成评论模板
-async function autoGenerateReviewTemplate(movieId: string, options: any) {
+async function autoGenerateReviewTemplate(movieId: string, _options: any) {
   try {
     const movie = await prisma.movie.findUnique({
       where: { id: movieId },
@@ -248,7 +248,7 @@ async function autoGenerateReviewTemplate(movieId: string, options: any) {
 }
 
 // 自动更新电影元数据
-async function autoUpdateMovieMetadata(movieId: string, options: any) {
+async function autoUpdateMovieMetadata(movieId: string, _options: any) {
   try {
     const movie = await prisma.movie.findUnique({
       where: { id: movieId }
@@ -285,7 +285,7 @@ async function autoUpdateMovieMetadata(movieId: string, options: any) {
 }
 
 // 自动生成标签
-async function autoGenerateTags(movieId: string, options: any) {
+async function autoGenerateTags(movieId: string, _options: any) {
   try {
     const movie = await prisma.movie.findUnique({
       where: { id: movieId }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { prisma } from '@/lib/prisma';
 
 interface DashboardStats {
   totalMovies: number;

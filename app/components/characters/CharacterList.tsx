@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { CharacterCard } from './CharacterCard';
 import { PaginationControls } from '@/app/components/PaginationControls';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';

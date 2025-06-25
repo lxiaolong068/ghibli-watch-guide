@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { prisma } from '@/lib/prisma';
 import { ReviewCard } from '@/app/components/movies/ReviewCard';
@@ -49,7 +50,7 @@ async function getMovieWithReviews(movieId: string) {
           { publishedAt: 'desc' }
         ]
       });
-    } catch (error) {
+    } catch (_error) {
       // 返回示例数据
       reviews = [
         {
@@ -192,10 +193,13 @@ export default async function ReviewsPage({ params }: ReviewsPageProps) {
           
           <div className="flex items-start gap-6">
             {movie.posterUrl && (
-              <img
+              <Image
                 src={movie.posterUrl}
                 alt={movie.titleEn}
-                className="w-24 h-36 object-cover rounded-lg shadow-md"
+                width={96}
+                height={144}
+                className="object-cover rounded-lg shadow-md"
+                sizes="96px"
               />
             )}
             

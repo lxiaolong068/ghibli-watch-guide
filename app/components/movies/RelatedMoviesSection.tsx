@@ -205,7 +205,7 @@ async function getRelatedMovies(currentMovieId: string, limit: number = 6) {
 }
 
 // 推荐算法组件（为未来功能预留）
-export function RecommendationEngine({ userId, movieId }: { userId?: string; movieId: string }) {
+export function RecommendationEngine({ userId: _userId, movieId: _movieId }: { userId?: string; movieId: string }) {
   return (
     <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 mt-8">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">个性化推荐</h3>
@@ -223,7 +223,7 @@ export function RecommendationEngine({ userId, movieId }: { userId?: string; mov
 }
 
 // 观影指南链接组件
-export function WatchGuideLinks({ movieId }: { movieId: string }) {
+export function WatchGuideLinks({ movieId: _movieId }: { movieId: string }) {
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
       <h3 className="text-lg font-semibold text-blue-900 mb-4">📚 相关观影指南</h3>

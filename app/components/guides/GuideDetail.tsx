@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { WatchGuide } from '@/app/types';

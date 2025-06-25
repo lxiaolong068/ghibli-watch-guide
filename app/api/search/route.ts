@@ -1,8 +1,11 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { handleApiError, createError } from '@/app/lib/error-handler';
+import { handleApiError } from '@/app/lib/error-handler';
 import { SearchResult } from '@/app/types';
 import { searchCache } from '@/app/utils/searchCache';
+
+// 将此路由标记为动态路由，防止在构建时静态生成
+export const dynamic = 'force-dynamic';
 
 // 搜索结果类型定义
 /*
@@ -156,7 +159,13 @@ export async function GET(request: NextRequest) {
 
     // 缓存搜索结果（仅缓存有结果的搜索）
     if (response.results.length > 0) {
-      searchCache.set(query, response, cacheFilters);
+      // 转换为兼容的缓存数据格式
+      const cacheData = {
+        ...response,
+        filters: response.filters as unknown as Record<string, unknown>,
+        facets: response.facets as unknown as Record<string, unknown>
+      };
+      searchCache.set(query, cacheData, cacheFilters);
     }
 
     return Response.json(response);
@@ -644,7 +653,6 @@ function calculateRelevanceScore(
     exactMatchBonus = 100,
     prefixMatchBonus = 80,
     containsMatchBonus = 60,
-    wordMatchBonus = 40,
     fuzzyMatchThreshold = 0.8
   } = options;
 
@@ -858,7 +866,7 @@ async function generateSearchSuggestions(query: string): Promise<string[]> {
 }
 
 // 生成搜索面向
-async function generateSearchFacets(query: string): Promise<SearchFacets> {
+async function generateSearchFacets(_query: string): Promise<SearchFacets> {
   // 这里可以实现搜索面向统计
   // 暂时返回空的面向数据
   return {

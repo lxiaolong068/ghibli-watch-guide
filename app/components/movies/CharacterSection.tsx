@@ -172,7 +172,7 @@ async function getMovieCharacters(movieId: string) {
       voiceActorJa: mc.voiceActorJa,
       importance: mc.importance
     }));
-  } catch (error) {
+  } catch (_error) {
     console.log('MovieCharacter table not yet created, returning sample data');
     
     // 返回示例数据
@@ -218,7 +218,7 @@ async function getMovieCharacters(movieId: string) {
 }
 
 // 角色关系图组件（为未来功能预留）
-export function CharacterRelationshipChart({ movieId }: { movieId: string }) {
+export function CharacterRelationshipChart({ movieId: _movieId }: { movieId: string }) {
   return (
     <div className="bg-gray-50 rounded-lg p-6 mt-8">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">角色关系图</h3>

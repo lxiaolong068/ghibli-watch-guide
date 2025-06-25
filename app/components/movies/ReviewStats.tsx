@@ -12,7 +12,7 @@ interface ReviewStatsProps {
   }>;
 }
 
-export function ReviewStats({ movieId, reviews }: ReviewStatsProps) {
+export function ReviewStats({ movieId: _movieId, reviews }: ReviewStatsProps) {
   // 计算统计数据
   const totalReviews = reviews.length;
   const reviewsWithRating = reviews.filter(r => r.rating);

@@ -3,7 +3,17 @@
  * 用于缓存搜索结果，提升搜索性能
  */
 
-export interface CacheItem<T = any> {
+// 搜索结果数据类型
+export interface SearchResultData {
+  results: unknown[];
+  total: number;
+  query?: string;
+  filters?: Record<string, unknown>;
+  suggestions?: string[];
+  facets?: Record<string, unknown>;
+}
+
+export interface CacheItem<T = SearchResultData | string> {
   data: T;
   timestamp: number;
   ttl: number; // Time to live in milliseconds
@@ -37,7 +47,7 @@ export class SearchCache {
    * @param filters 搜索筛选条件
    * @returns 缓存键
    */
-  private generateKey(query: string, filters: Record<string, any> = {}): string {
+  private generateKey(query: string, filters: Record<string, unknown> = {}): string {
     const normalizedQuery = query.toLowerCase().trim();
     const sortedFilters = Object.keys(filters)
       .sort()
@@ -46,7 +56,7 @@ export class SearchCache {
           result[key] = filters[key];
         }
         return result;
-      }, {} as Record<string, any>);
+      }, {} as Record<string, unknown>);
 
     return `search:${normalizedQuery}:${JSON.stringify(sortedFilters)}`;
   }
@@ -56,7 +66,7 @@ export class SearchCache {
    * @param data 要压缩的数据
    * @returns 压缩后的字符串
    */
-  private compress(data: any): string {
+  private compress(data: SearchResultData): string {
     if (!this.enableCompression) {
       return JSON.stringify(data);
     }
@@ -70,7 +80,7 @@ export class SearchCache {
    * @param compressedData 压缩的数据
    * @returns 解压缩后的数据
    */
-  private decompress(compressedData: string): any {
+  private decompress(compressedData: string): SearchResultData {
     return JSON.parse(compressedData);
   }
 
@@ -87,7 +97,6 @@ export class SearchCache {
    * 清理过期的缓存项
    */
   private cleanup(): void {
-    const now = Date.now();
     for (const [key, item] of this.cache.entries()) {
       if (this.isExpired(item)) {
         this.cache.delete(key);
@@ -124,7 +133,7 @@ export class SearchCache {
    * @param filters 搜索筛选条件
    * @param ttl 自定义TTL（可选）
    */
-  set(query: string, data: any, filters: Record<string, any> = {}, ttl?: number): void {
+  set(query: string, data: SearchResultData, filters: Record<string, unknown> = {}, ttl?: number): void {
     if (!query || query.length < 2) return;
 
     try {
@@ -151,7 +160,7 @@ export class SearchCache {
    * @param filters 搜索筛选条件
    * @returns 缓存的数据或null
    */
-  get(query: string, filters: Record<string, any> = {}): any | null {
+  get(query: string, filters: Record<string, unknown> = {}): SearchResultData | null {
     if (!query || query.length < 2) return null;
 
     try {
@@ -169,7 +178,7 @@ export class SearchCache {
       item.hits++;
 
       // 返回数据
-      return this.enableCompression ? this.decompress(item.data as string) : item.data;
+      return this.enableCompression ? this.decompress(item.data as string) : (item.data as SearchResultData);
     } catch (error) {
       console.error('Error getting cache:', error);
       return null;
@@ -182,7 +191,7 @@ export class SearchCache {
    * @param filters 搜索筛选条件
    * @returns 是否有有效缓存
    */
-  has(query: string, filters: Record<string, any> = {}): boolean {
+  has(query: string, filters: Record<string, unknown> = {}): boolean {
     if (!query || query.length < 2) return false;
 
     const key = this.generateKey(query, filters);
@@ -203,7 +212,7 @@ export class SearchCache {
    * @param query 搜索查询
    * @param filters 搜索筛选条件
    */
-  delete(query: string, filters: Record<string, any> = {}): void {
+  delete(query: string, filters: Record<string, unknown> = {}): void {
     const key = this.generateKey(query, filters);
     this.cache.delete(key);
   }
@@ -265,7 +274,7 @@ export class SearchCache {
    */
   async warmup(
     commonQueries: string[], 
-    searchFunction: (query: string, filters?: Record<string, any>) => Promise<any>
+    searchFunction: (query: string, filters?: Record<string, unknown>) => Promise<SearchResultData>
   ): Promise<void> {
     const promises = commonQueries.map(async (query) => {
       try {

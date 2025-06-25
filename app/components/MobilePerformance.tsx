@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useIsMobile } from './MobileOptimized';
+import Image from 'next/image';
 
 // 移动端图片懒加载Hook
 export function useLazyLoading() {
@@ -61,11 +62,13 @@ export function LazyImage({
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
       {!isIntersecting ? (
-        <img
+        <Image
           src={placeholder}
           alt=""
-          className="w-full h-full object-cover blur-sm"
+          fill
+          className="object-cover blur-sm"
           aria-hidden="true"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       ) : (
         <>
@@ -84,15 +87,16 @@ export function LazyImage({
               </svg>
             </div>
           ) : (
-            <img
+            <Image
               src={src}
               alt={alt}
               width={width}
               height={height}
-              className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
               onLoad={handleLoad}
               onError={handleError}
               loading="lazy"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           )}
         </>

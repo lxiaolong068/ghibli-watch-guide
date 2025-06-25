@@ -130,7 +130,7 @@ async function getMovieReviews(movieId: string) {
     });
     
     return reviews;
-  } catch (error) {
+  } catch (_error) {
     console.log('MovieReview table not yet created, returning sample data');
     
     // 返回示例数据

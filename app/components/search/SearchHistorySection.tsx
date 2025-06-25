@@ -122,7 +122,7 @@ export function SearchHistorySection({ className = '', showStats = false }: Sear
 
             {searchHistory.length > 0 ? (
               <div className="space-y-2">
-                {searchHistory.map((item, index) => (
+                {searchHistory.map((item, _index) => (
                   <div
                     key={`${item.query}-${item.timestamp}`}
                     className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group"

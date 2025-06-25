@@ -3,6 +3,9 @@ import { prisma } from '@/lib/prisma';
 import { handleApiError } from '@/app/lib/error-handler';
 import { quickSearchCache } from '@/app/utils/searchCache';
 
+// 将此路由标记为动态路由，防止在构建时静态生成
+export const dynamic = 'force-dynamic';
+
 interface QuickSearchResult {
   id: string;
   type: 'movie' | 'character' | 'review' | 'guide' | 'suggestion';
