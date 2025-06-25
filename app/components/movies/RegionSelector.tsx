@@ -59,19 +59,19 @@ export function RegionSelector({ regions, defaultRegionCode }: RegionSelectorPro
   
   return (
     <div className="mb-6">
-      <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-2">
+      <label htmlFor="region" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
         Select Region
       </label>
       <select
         id="region"
         name="region"
-        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+        className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-white dark:bg-slate-800 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 sm:text-sm rounded-md transition-colors"
         value={currentRegionCode || ''}
         onChange={(e) => handleRegionChange(e.target.value)}
       >
-        <option value="">Global</option>
+        <option value="" className="bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100">Global</option>
         {regions.map((region) => (
-          <option key={region.id} value={region.code}>
+          <option key={region.id} value={region.code} className="bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100">
             {region.name}
           </option>
         ))}
