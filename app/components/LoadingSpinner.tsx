@@ -76,7 +76,7 @@ export function LoadingSpinner({
   return spinner;
 }
 
-// 页面级加载组件
+// Page-level loading component
 export function PageLoading({ message = "Loading..." }: { message?: string }) {
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -85,7 +85,7 @@ export function PageLoading({ message = "Loading..." }: { message?: string }) {
   );
 }
 
-// 卡片级加载组件
+// Card-level loading component
 export function CardLoading() {
   return (
     <div className="animate-pulse">
@@ -98,7 +98,7 @@ export function CardLoading() {
   );
 }
 
-// 列表加载组件
+// List loading component
 export function ListLoading({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-4">

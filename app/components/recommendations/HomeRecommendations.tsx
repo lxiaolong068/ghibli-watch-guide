@@ -10,32 +10,32 @@ interface HomeRecommendationsProps {
 export function HomeRecommendations({ className = '' }: HomeRecommendationsProps) {
   return (
     <div className={`space-y-12 ${className}`}>
-      {/* 个性化电影推荐 */}
+      {/* Personalized Movie Recommendations */}
       <PersonalizedRecommendations
         contextType="general"
         types={['movie']}
         limit={6}
-        title="🎬 为您推荐的电影"
+        title="🎬 Recommended Movies for You"
         showReasons={false}
         className="bg-white rounded-lg p-6 shadow-sm"
       />
 
-      {/* 角色推荐 */}
+      {/* Character Recommendations */}
       <PersonalizedRecommendations
         contextType="general"
         types={['character']}
         limit={4}
-        title="👤 精彩角色"
+        title="👤 Featured Characters"
         showReasons={false}
         className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6"
       />
 
-      {/* 评论和指南混合推荐 */}
+      {/* Reviews and Guides Mixed Recommendations */}
       <PersonalizedRecommendations
         contextType="general"
         types={['review', 'guide']}
         limit={4}
-        title="📚 深度内容"
+        title="📚 In-Depth Content"
         showReasons={true}
         className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6"
       />
@@ -43,7 +43,7 @@ export function HomeRecommendations({ className = '' }: HomeRecommendationsProps
   );
 }
 
-// 电影详情页推荐组件
+// Movie Detail Page Recommendation Component
 interface MovieDetailRecommendationsProps {
   movieId: string;
   className?: string;
@@ -55,24 +55,24 @@ export function MovieDetailRecommendations({
 }: MovieDetailRecommendationsProps) {
   return (
     <div className={`space-y-8 ${className}`}>
-      {/* 相似电影推荐 */}
+      {/* Similar Movie Recommendations */}
       <PersonalizedRecommendations
         contextType="movie_detail"
         contextId={movieId}
         types={['movie']}
         limit={6}
-        title="🎯 相似电影推荐"
+        title="🎯 Similar Movies"
         showReasons={true}
         className="bg-white rounded-lg p-6 shadow-sm"
       />
 
-      {/* 相关内容推荐 */}
+      {/* Related Content Recommendations */}
       <PersonalizedRecommendations
         contextType="movie_detail"
         contextId={movieId}
         types={['character', 'review', 'guide']}
         limit={4}
-        title="📖 相关内容"
+        title="📖 Related Content"
         showReasons={false}
         className="bg-gray-50 rounded-lg p-6"
       />
@@ -80,7 +80,7 @@ export function MovieDetailRecommendations({
   );
 }
 
-// 搜索结果页推荐组件
+// Search Results Page Recommendation Component
 interface SearchRecommendationsProps {
   query?: string;
   className?: string;
@@ -96,7 +96,7 @@ export function SearchRecommendations({
         contextType="search_result"
         types={['movie', 'character', 'review', 'guide']}
         limit={8}
-        title="💡 您可能感兴趣的内容"
+        title="💡 Content You Might Be Interested In"
         showReasons={false}
         className="bg-white rounded-lg p-6 shadow-sm"
       />
@@ -104,7 +104,7 @@ export function SearchRecommendations({
   );
 }
 
-// 紧凑型推荐组件（侧边栏使用）
+// Compact Recommendation Component (for sidebar use)
 interface CompactRecommendationsProps {
   contextType?: 'general' | 'movie_detail' | 'search_result';
   contextId?: string;
@@ -119,7 +119,7 @@ export function CompactRecommendations({
   contextId,
   types = ['movie'],
   limit = 3,
-  title = '推荐内容',
+  title = 'Recommended Content',
   className = '',
 }: CompactRecommendationsProps) {
   return (

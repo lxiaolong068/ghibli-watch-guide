@@ -24,7 +24,7 @@ interface GlobalSearchBarProps {
 }
 
 export function GlobalSearchBar({ 
-  placeholder = "搜索电影、角色、评论...", 
+  placeholder = "Search movies, characters, reviews...",
   className = "",
   showQuickResults = true,
   maxQuickResults = 5
@@ -118,10 +118,10 @@ export function GlobalSearchBar({
   };
 
   const typeLabels = {
-    movie: '电影',
-    character: '角色',
-    review: '评论',
-    guide: '指南'
+    movie: 'Movie',
+    character: 'Character',
+    review: 'Review',
+    guide: 'Guide'
   };
 
   const typeColors = {
@@ -151,7 +151,7 @@ export function GlobalSearchBar({
               transition-all duration-200
               ${isFocused ? 'shadow-lg' : 'shadow-sm'}
             `}
-            aria-label="全局搜索"
+            aria-label="Global search"
             aria-haspopup="listbox"
           />
 
@@ -160,7 +160,7 @@ export function GlobalSearchBar({
               type="button"
               onClick={handleClear}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 transition-colors"
-              aria-label="清除搜索"
+              aria-label="Clear search"
             >
               <XMarkIcon className="w-5 h-5" />
             </button>
@@ -173,7 +173,7 @@ export function GlobalSearchBar({
         <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
           {isLoading ? (
             <div className="p-4 text-center">
-              <LoadingSpinner size="sm" text="搜索中..." />
+              <LoadingSpinner size="sm" text="Searching..." />
             </div>
           ) : quickResults.length > 0 ? (
             <>
@@ -224,19 +224,19 @@ export function GlobalSearchBar({
                   onClick={handleResultClick}
                   className="block w-full text-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium py-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
                 >
-                  查看所有搜索结果 ({quickResults.length}+)
+                  View all search results ({quickResults.length}+)
                 </Link>
               </div>
             </>
           ) : query.length >= 2 ? (
             <div className="p-4 text-center">
-              <div className="text-gray-500 dark:text-slate-400 mb-3">未找到相关结果</div>
+              <div className="text-gray-500 dark:text-slate-400 mb-3">No results found</div>
               <Link
                 href={`/search?q=${encodeURIComponent(query)}`}
                 onClick={handleResultClick}
                 className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"
               >
-                搜索所有内容
+                Search all content
               </Link>
             </div>
           ) : null}

@@ -4,10 +4,10 @@ const nextConfig = {
   images: {
     domains: ['image.tmdb.org'],
   },
-  // TypeScript和ESLint错误已修复，移除忽略配置
-  // 实验性配置
+  // TypeScript and ESLint errors fixed, ignore configuration removed
+  // Experimental configuration
   experimental: {
-    // 排除不需要的文件以减小部署大小
+    // Exclude unnecessary files to reduce deployment size
     outputFileTracingExcludes: {
       '*': [
         'node_modules/@swc/core-darwin-arm64',
@@ -17,7 +17,7 @@ const nextConfig = {
       ],
     },
   },
-  // 删除重定向配置
+  // Redirect configuration removed
   // async redirects() {
   //   return [
   //     {

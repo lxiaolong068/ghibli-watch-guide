@@ -107,7 +107,7 @@ export function ErrorMessage({
   );
 }
 
-// 预定义的错误消息组件
+// Predefined error message components
 export function NetworkError({ onRetry }: { onRetry?: () => void }) {
   return (
     <ErrorMessage

@@ -21,15 +21,15 @@ export async function generateMetadata({ searchParams }: SearchPageProps): Promi
   const query = searchParams.q || '';
   
   return {
-    title: query ? `搜索结果: ${query} - 吉卜力观影指南` : '搜索 - 吉卜力观影指南',
-    description: query 
-      ? `搜索 "${query}" 的结果，包括电影、角色、评论和观影指南等内容。`
-      : '搜索吉卜力工作室的电影、角色、评论和观影指南等内容。',
+    title: query ? `Search Results: ${query} - Ghibli Watch Guide` : 'Search - Ghibli Watch Guide',
+    description: query
+      ? `Search results for "${query}", including movies, characters, reviews and watch guides.`
+      : 'Search Studio Ghibli movies, characters, reviews and watch guides.',
     openGraph: {
-      title: query ? `搜索结果: ${query}` : '搜索',
-      description: query 
-        ? `搜索 "${query}" 的结果，包括电影、角色、评论和观影指南等内容。`
-        : '搜索吉卜力工作室的电影、角色、评论和观影指南等内容。',
+      title: query ? `Search Results: ${query}` : 'Search',
+      description: query
+        ? `Search results for "${query}", including movies, characters, reviews and watch guides.`
+        : 'Search Studio Ghibli movies, characters, reviews and watch guides.',
     },
   };
 }
@@ -41,28 +41,28 @@ export default function SearchPage({ searchParams }: SearchPageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 页面标题 */}
+        {/* Page Title */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {query ? `搜索结果: "${query}"` : '搜索'}
+            {query ? `Search Results: "${query}"` : 'Search'}
           </h1>
           {query && (
             <p className="text-gray-600">
-              搜索电影、角色、评论和观影指南等内容
+              Search movies, characters, reviews and watch guides
             </p>
           )}
         </div>
 
         {hasQuery ? (
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* 筛选器侧边栏 */}
+            {/* Filter Sidebar */}
             <div className="lg:col-span-1">
               <Suspense fallback={<div className="bg-white rounded-lg shadow p-6"><LoadingSpinner size="sm" /></div>}>
                 <SearchFilters searchParams={searchParams} />
               </Suspense>
             </div>
 
-            {/* 搜索结果主区域 */}
+            {/* Search Results Main Area */}
             <div className="lg:col-span-3">
               <Suspense fallback={<SearchResultsSkeleton />}>
                 <SearchResults searchParams={searchParams} />
@@ -71,7 +71,7 @@ export default function SearchPage({ searchParams }: SearchPageProps) {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* 搜索提示 */}
+            {/* Search Prompt */}
             <div className="text-center py-8">
               <div className="max-w-md mx-auto">
                 <div className="mb-6">
@@ -91,26 +91,26 @@ export default function SearchPage({ searchParams }: SearchPageProps) {
                   </svg>
                 </div>
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                  开始搜索
+                  Start Searching
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  输入关键词搜索电影、角色、评论和观影指南等内容
+                  Enter keywords to search movies, characters, reviews and watch guides
                 </p>
 
-                {/* 搜索建议 */}
+                {/* Search Suggestions */}
                 <div className="text-left">
-                  <h3 className="text-sm font-medium text-gray-900 mb-3">推荐搜索</h3>
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">Recommended Searches</h3>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      '千与千寻',
-                      '龙猫',
-                      '萤火虫之墓',
-                      '哈尔的移动城堡',
-                      '天空之城',
-                      '魔女宅急便',
-                      '宫崎骏',
-                      '环保主题',
-                      '家庭观影'
+                      'Spirited Away',
+                      'My Neighbor Totoro',
+                      'Grave of the Fireflies',
+                      'Howl\'s Moving Castle',
+                      'Castle in the Sky',
+                      'Kiki\'s Delivery Service',
+                      'Hayao Miyazaki',
+                      'Environmental themes',
+                      'Family viewing'
                     ].map((suggestion) => (
                       <a
                         key={suggestion}
@@ -125,7 +125,7 @@ export default function SearchPage({ searchParams }: SearchPageProps) {
               </div>
             </div>
 
-            {/* 搜索历史和热门搜索 */}
+            {/* Search History and Popular Searches */}
             <div className="max-w-4xl mx-auto">
               <SearchHistorySection showStats={true} />
             </div>
@@ -136,11 +136,11 @@ export default function SearchPage({ searchParams }: SearchPageProps) {
   );
 }
 
-// 搜索结果骨架屏
+// Search Results Skeleton Screen
 function SearchResultsSkeleton() {
   return (
     <div className="space-y-6">
-      {/* 结果统计骨架 */}
+      {/* Results Statistics Skeleton */}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="h-4 bg-gray-200 rounded w-48 mb-4"></div>
         <div className="flex space-x-4">
@@ -150,7 +150,7 @@ function SearchResultsSkeleton() {
         </div>
       </div>
 
-      {/* 搜索结果骨架 */}
+      {/* Search Results Skeleton */}
       {[1, 2, 3, 4, 5].map((i) => (
         <div key={i} className="bg-white rounded-lg shadow p-6">
           <div className="flex space-x-4">

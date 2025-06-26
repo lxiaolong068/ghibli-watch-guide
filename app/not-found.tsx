@@ -5,7 +5,7 @@ export default function NotFound() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
       <div className="max-w-lg w-full text-center">
-        {/* 404 图标 */}
+        {/* 404 Icon */}
         <div className="mb-8">
           <div className="mx-auto w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center mb-4">
             <FilmIcon className="w-12 h-12 text-primary-600" />
@@ -16,7 +16,7 @@ export default function NotFound() {
           </h2>
         </div>
 
-        {/* 错误描述 */}
+        {/* Error Description */}
         <div className="mb-8">
           <p className="text-gray-600 text-lg mb-4">
             Oops! The page you&apos;re looking for seems to have wandered off into the spirit world.
@@ -26,7 +26,7 @@ export default function NotFound() {
           </p>
         </div>
 
-        {/* 操作按钮 */}
+        {/* Action Buttons */}
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -46,7 +46,7 @@ export default function NotFound() {
             </Link>
           </div>
 
-          {/* 搜索建议 */}
+          {/* Search Suggestions */}
           <div className="mt-8 p-4 bg-white rounded-lg shadow-sm border">
             <h3 className="text-sm font-medium text-gray-900 mb-2 flex items-center">
               <MagnifyingGlassIcon className="w-4 h-4 mr-2" />
@@ -69,7 +69,7 @@ export default function NotFound() {
           </div>
         </div>
 
-        {/* 帮助信息 */}
+        {/* Help Information */}
         <div className="mt-8 text-sm text-gray-500">
           <p>
             If you believe this is an error, please{' '}
