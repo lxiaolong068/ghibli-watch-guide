@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 // 健康检查端点
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // 检查数据库连接
     await prisma.$queryRaw`SELECT 1`;
@@ -15,8 +15,8 @@ export async function GET(request: NextRequest) {
         api: 'operational'
       }
     }, { status: 200 });
-  } catch (error) {
-    console.error('Health check failed:', error);
+  } catch (_error) {
+    console.error('Health check failed:', _error);
     
     return NextResponse.json({
       status: 'unhealthy',
@@ -31,11 +31,11 @@ export async function GET(request: NextRequest) {
 }
 
 // HEAD请求用于快速连接检查
-export async function HEAD(request: NextRequest) {
+export async function HEAD(_request: NextRequest) {
   try {
     // 简单的连接检查，不查询数据库
     return new NextResponse(null, { status: 200 });
-  } catch (error) {
+  } catch (_error) {
     return new NextResponse(null, { status: 503 });
   }
 }

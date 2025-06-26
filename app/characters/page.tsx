@@ -109,7 +109,7 @@ export default function CharactersPage({ searchParams }: CharactersPageProps) {
           <div className="prose prose-lg max-w-none text-gray-700">
             <p>
               Studio Ghibli has created countless unforgettable characters, each carrying profound meaning and emotion.
-              From the brave and growing Chihiro in "Spirited Away" to the warm and protective Totoro in "My Neighbor Totoro",
+              From the brave and growing Chihiro in &ldquo;Spirited Away&rdquo; to the warm and protective Totoro in &ldquo;My Neighbor Totoro&rdquo;,
               these characters are not only the protagonists of animations, but also eternal friends in the hearts of audiences.
             </p>
             <p>

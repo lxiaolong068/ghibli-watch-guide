@@ -28,7 +28,7 @@ export function AccessibilityTools() {
     reducedMotion: false,
     screenReader: false,
   });
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
 
   // 从localStorage加载设置
   useEffect(() => {
