@@ -345,6 +345,65 @@ async function getPopularRecommendations(
       console.error('Popular movies error:', error);
     }
   }
+
+  if (types.includes('character')) {
+    try {
+      const popularCharacters = await prisma.character.findMany({
+        include: {
+          movieCharacters: {
+            include: {
+              movie: {
+                select: { 
+                  id: true, 
+                  titleEn: true, 
+                  posterUrl: true, 
+                  stats: true,
+                  year: true,
+                },
+              },
+            },
+            orderBy: { importance: 'desc' },
+            take: 1, // 取最重要的电影关联
+          },
+        },
+        where: { 
+          isMainCharacter: true,
+          movieCharacters: {
+            some: {} // 确保有关联的电影
+          }
+        },
+        orderBy: { nameEn: 'asc' },
+        take: limit,
+      });
+      
+      recommendations.push(...popularCharacters.map(character => {
+        const mainMovie = character.movieCharacters[0]?.movie;
+        return {
+          id: character.id,
+          type: 'character' as const,
+          title: character.nameEn || character.nameJa || character.nameCn || '未知角色',
+          subtitle: mainMovie ? `来自《${mainMovie.titleEn}》(${mainMovie.year})` : '吉卜力角色',
+          description: character.description?.substring(0, 150) || '经典吉卜力动画角色',
+          imageUrl: character.imageUrl || mainMovie?.posterUrl,
+          url: `/characters/${character.id}`,
+          score: 0.75,
+          algorithm: 'popular' as const,
+          reasons: [{
+            type: 'popularity',
+            description: `经典主要角色`,
+            confidence: 0.75,
+          }],
+          metadata: {
+            movieTitle: mainMovie?.titleEn,
+            movieYear: mainMovie?.year,
+            isMainCharacter: character.isMainCharacter,
+          },
+        };
+      }));
+    } catch (error) {
+      console.error('Popular characters error:', error);
+    }
+  }
   
   return recommendations;
 }
@@ -389,6 +448,63 @@ async function getRecentRecommendations(
       })));
     } catch (error) {
       console.error('Recent reviews error:', error);
+    }
+  }
+
+  if (types.includes('character')) {
+    try {
+      const recentCharacters = await prisma.character.findMany({
+        include: {
+          movieCharacters: {
+            include: {
+              movie: {
+                select: { 
+                  id: true, 
+                  titleEn: true, 
+                  posterUrl: true,
+                  year: true,
+                },
+              },
+            },
+            orderBy: { importance: 'desc' },
+            take: 1,
+          },
+        },
+        where: { 
+          movieCharacters: {
+            some: {} // 确保有关联的电影
+          }
+        },
+        orderBy: { updatedAt: 'desc' },
+        take: limit,
+      });
+      
+      recommendations.push(...recentCharacters.map(character => {
+        const mainMovie = character.movieCharacters[0]?.movie;
+        return {
+          id: character.id,
+          type: 'character' as const,
+          title: character.nameEn || character.nameJa || character.nameCn || '未知角色',
+          subtitle: mainMovie ? `来自《${mainMovie.titleEn}》(${mainMovie.year})` : '吉卜力角色',
+          description: character.description?.substring(0, 150) || '经典吉卜力动画角色',
+          imageUrl: character.imageUrl || mainMovie?.posterUrl,
+          url: `/characters/${character.id}`,
+          score: 0.5,
+          algorithm: 'popular' as const,
+          reasons: [{
+            type: 'recency',
+            description: '最近更新的角色信息',
+            confidence: 0.5,
+          }],
+          metadata: {
+            movieTitle: mainMovie?.titleEn,
+            movieYear: mainMovie?.year,
+            lastUpdated: character.updatedAt,
+          },
+        };
+      }));
+    } catch (error) {
+      console.error('Recent characters error:', error);
     }
   }
   
