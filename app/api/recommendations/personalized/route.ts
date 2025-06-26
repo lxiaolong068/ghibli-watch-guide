@@ -372,7 +372,7 @@ async function getPopularRecommendations(
             some: {} // 确保有关联的电影
           }
         },
-        orderBy: { nameEn: 'asc' },
+        orderBy: { name: 'asc' },
         take: limit,
       });
       
@@ -381,7 +381,7 @@ async function getPopularRecommendations(
         return {
           id: character.id,
           type: 'character' as const,
-          title: character.nameEn || character.nameJa || character.nameCn || '未知角色',
+          title: character.name || character.nameJa || character.nameZh || '未知角色',
           subtitle: mainMovie ? `来自《${mainMovie.titleEn}》(${mainMovie.year})` : '吉卜力角色',
           description: character.description?.substring(0, 150) || '经典吉卜力动画角色',
           imageUrl: character.imageUrl || mainMovie?.posterUrl,
@@ -484,7 +484,7 @@ async function getRecentRecommendations(
         return {
           id: character.id,
           type: 'character' as const,
-          title: character.nameEn || character.nameJa || character.nameCn || '未知角色',
+          title: character.name || character.nameJa || character.nameZh || '未知角色',
           subtitle: mainMovie ? `来自《${mainMovie.titleEn}》(${mainMovie.year})` : '吉卜力角色',
           description: character.description?.substring(0, 150) || '经典吉卜力动画角色',
           imageUrl: character.imageUrl || mainMovie?.posterUrl,
