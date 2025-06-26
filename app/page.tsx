@@ -74,11 +74,6 @@ export default async function HomePage() {
         />
       </section>
 
-      {/* 个性化推荐区域 */}
-      <section>
-        <HomeRecommendations />
-      </section>
-
       {/* Latest Movies List - showing only the latest 9 movies */}
       <section>
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-slate-100">Latest Ghibli Movies</h2>
@@ -87,6 +82,11 @@ export default async function HomePage() {
         ) : (
           <p className="text-center text-gray-500 dark:text-slate-400">Could not load latest movies.</p>
         )}
+      </section>
+
+      {/* 个性化推荐区域 */}
+      <section>
+        <HomeRecommendations />
       </section>
 
       {/* Featured Content */}
