@@ -6,6 +6,7 @@ import { RelatedCharacters } from '@/app/components/characters/RelatedCharacters
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 import { UserBehaviorTracker } from '@/app/components/analytics/UserBehaviorTracker';
 import { ResponsiveAdSenseAd } from '@/app/components/SEOOptimizer';
+import { prisma } from '@/lib/prisma';
 
 interface CharacterPageProps {
   params: { id: string };
@@ -13,15 +14,101 @@ interface CharacterPageProps {
 
 async function getCharacter(id: string) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/characters/${id}`, {
-      cache: 'no-store'
+    const character = await prisma.character.findUnique({
+      where: { id },
+      include: {
+        movieCharacters: {
+          include: {
+            movie: {
+              select: {
+                id: true,
+                titleEn: true,
+                titleJa: true,
+                titleZh: true,
+                year: true,
+                posterUrl: true,
+                backdropUrl: true,
+                synopsis: true,
+                voteAverage: true,
+                duration: true
+              }
+            }
+          },
+          orderBy: { importance: 'desc' }
+        }
+      }
     });
-    
-    if (!response.ok) {
+
+    if (!character) {
       return null;
     }
-    
-    return await response.json();
+
+    // 获取相关角色（出现在相同电影中的其他角色）
+    const relatedCharacters = await prisma.character.findMany({
+      where: {
+        AND: [
+          { id: { not: character.id } },
+          {
+            movieCharacters: {
+              some: {
+                movieId: {
+                  in: character.movieCharacters.map(mc => mc.movieId)
+                }
+              }
+            }
+          }
+        ]
+      },
+      include: {
+        movieCharacters: {
+          include: {
+            movie: {
+              select: {
+                id: true,
+                titleEn: true,
+                titleJa: true,
+                titleZh: true,
+                year: true,
+                posterUrl: true
+              }
+            }
+          },
+          orderBy: { importance: 'desc' }
+        }
+      },
+      orderBy: [
+        { isMainCharacter: 'desc' },
+        { name: 'asc' }
+      ],
+      take: 6
+    });
+
+    // 格式化角色数据
+    const formattedCharacter = {
+      ...character,
+      movies: character.movieCharacters.map(mc => ({
+        ...mc.movie,
+        voiceActor: mc.voiceActor,
+        voiceActorJa: mc.voiceActorJa,
+        importance: mc.importance
+      }))
+    };
+
+    const formattedRelatedCharacters = relatedCharacters.map(char => ({
+      ...char,
+      movies: char.movieCharacters.map(mc => ({
+        ...mc.movie,
+        voiceActor: mc.voiceActor,
+        voiceActorJa: mc.voiceActorJa,
+        importance: mc.importance
+      }))
+    }));
+
+    return {
+      character: formattedCharacter,
+      relatedCharacters: formattedRelatedCharacters
+    };
+
   } catch (error) {
     console.error('Error fetching character:', error);
     return null;
