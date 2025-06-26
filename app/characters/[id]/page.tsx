@@ -86,20 +86,38 @@ async function getCharacter(id: string) {
     // 格式化角色数据
     const formattedCharacter = {
       ...character,
+      nameJa: character.nameJa || undefined,
+      nameZh: character.nameZh || undefined,
+      description: character.description || undefined,
+      imageUrl: character.imageUrl || undefined,
       movies: character.movieCharacters.map(mc => ({
-        ...mc.movie,
-        voiceActor: mc.voiceActor,
-        voiceActorJa: mc.voiceActorJa,
+        id: mc.movie.id,
+        titleEn: mc.movie.titleEn,
+        titleJa: mc.movie.titleJa || undefined,
+        titleZh: mc.movie.titleZh || undefined,
+        year: mc.movie.year,
+        posterUrl: mc.movie.posterUrl || undefined,
+        voiceActor: mc.voiceActor || undefined,
+        voiceActorJa: mc.voiceActorJa || undefined,
         importance: mc.importance
       }))
     };
 
     const formattedRelatedCharacters = relatedCharacters.map(char => ({
       ...char,
+      nameJa: char.nameJa || undefined,
+      nameZh: char.nameZh || undefined,
+      description: char.description || undefined,
+      imageUrl: char.imageUrl || undefined,
       movies: char.movieCharacters.map(mc => ({
-        ...mc.movie,
-        voiceActor: mc.voiceActor,
-        voiceActorJa: mc.voiceActorJa,
+        id: mc.movie.id,
+        titleEn: mc.movie.titleEn,
+        titleJa: mc.movie.titleJa || undefined,
+        titleZh: mc.movie.titleZh || undefined,
+        year: mc.movie.year,
+        posterUrl: mc.movie.posterUrl || undefined,
+        voiceActor: mc.voiceActor || undefined,
+        voiceActorJa: mc.voiceActorJa || undefined,
         importance: mc.importance
       }))
     }));
@@ -186,7 +204,7 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
         {/* 相关角色 */}
         {relatedCharacters && relatedCharacters.length > 0 && (
           <Suspense fallback={<div className="h-64 bg-white rounded-lg animate-pulse" />}>
-            <RelatedCharacters characters={relatedCharacters} />
+            <RelatedCharacters characters={relatedCharacters as any} />
           </Suspense>
         )}
 
