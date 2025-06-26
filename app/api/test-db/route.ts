@@ -3,16 +3,16 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 测试数据库连接...');
+    console.log('🔍 Testing database connection...');
 
-    // 测试数据库连接
+    // Test database connection
     const movieCount = await prisma.movie.count();
     const characterCount = await prisma.character.count();
     const movieCharacterCount = await prisma.movieCharacter.count();
 
-    console.log(`📊 数据库统计: 电影 ${movieCount}, 角色 ${characterCount}, 关联 ${movieCharacterCount}`);
+    console.log(`📊 Database statistics: Movies ${movieCount}, Characters ${characterCount}, Relations ${movieCharacterCount}`);
 
-    // 获取一些示例数据
+    // Get some sample data
     const sampleMovies = await prisma.movie.findMany({
       take: 3,
       select: {
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('❌ 数据库测试失败:', error);
+    console.error('❌ Database test failed:', error);
     
     return NextResponse.json({
       success: false,

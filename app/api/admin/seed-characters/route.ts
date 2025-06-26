@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// 生产环境安全的角色数据
+// Production-safe character data
 const PRODUCTION_CHARACTERS = [
   {
     name: "Chihiro Ogino",
     nameJa: "荻野千尋",
     nameZh: "荻野千寻",
-    description: "10岁的小女孩，勇敢善良，在神灵世界中成长并拯救了父母",
+    description: "A 10-year-old girl who is brave and kind, grows in the spirit world and saves her parents",
     isMainCharacter: true,
     movieTmdbId: 129, // Spirited Away
     voiceActor: "Daveigh Chase",
@@ -18,7 +18,7 @@ const PRODUCTION_CHARACTERS = [
     name: "Haku",
     nameJa: "ハク",
     nameZh: "白龙",
-    description: "神秘的少年，实际上是琥珀川的河神，帮助千寻在神灵世界生存",
+    description: "A mysterious boy who is actually the river god of the Kohaku River, helps Chihiro survive in the spirit world",
     isMainCharacter: true,
     movieTmdbId: 129, // Spirited Away
     voiceActor: "Jason Marsden",
@@ -29,7 +29,7 @@ const PRODUCTION_CHARACTERS = [
     name: "No-Face",
     nameJa: "カオナシ",
     nameZh: "无脸男",
-    description: "神秘的精灵，渴望被接纳和理解，象征着现代社会的孤独",
+    description: "A mysterious spirit who longs to be accepted and understood, symbolizing loneliness in modern society",
     isMainCharacter: true,
     movieTmdbId: 129, // Spirited Away
     voiceActorJa: "中村彰男",
@@ -105,7 +105,7 @@ const PRODUCTION_CHARACTERS = [
     name: "Sophie Hatter",
     nameJa: "ソフィー・ハッター",
     nameZh: "苏菲·哈特",
-    description: "帽子店的长女，被变成老婆婆后发现了自己的内在力量",
+    description: "The eldest daughter of a hat shop, discovers her inner strength after being transformed into an old woman",
     isMainCharacter: true,
     movieTmdbId: 4935, // Howl's Moving Castle
     voiceActor: "Jean Simmons",
@@ -116,7 +116,7 @@ const PRODUCTION_CHARACTERS = [
     name: "Calcifer",
     nameJa: "カルシファー",
     nameZh: "卡西法",
-    description: "火恶魔，哈尔的心脏，为城堡提供动力",
+    description: "A fire demon, Howl's heart, providing power to the castle",
     isMainCharacter: true,
     movieTmdbId: 4935, // Howl's Moving Castle
     voiceActor: "Billy Crystal",
@@ -127,7 +127,7 @@ const PRODUCTION_CHARACTERS = [
     name: "Markl",
     nameJa: "マルクル",
     nameZh: "马鲁克",
-    description: "哈尔的徒弟，聪明的小男孩",
+    description: "Howl's apprentice, a clever young boy",
     isMainCharacter: false,
     movieTmdbId: 4935, // Howl's Moving Castle
     voiceActor: "Josh Hutcherson",
@@ -138,7 +138,7 @@ const PRODUCTION_CHARACTERS = [
 
 export async function GET(request: NextRequest) {
   try {
-    // 检查是否在生产环境中，如果是，需要特殊参数
+    // Check if in production environment, if so, special parameters are required
     const { searchParams } = new URL(request.url);
     const force = searchParams.get('force');
 
@@ -152,14 +152,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log('🎭 开始生产环境角色数据种子化...');
+    console.log('🎭 Starting production character data seeding...');
 
     let totalCharactersCreated = 0;
     let totalCharactersUpdated = 0;
     let totalMovieCharacterRelationsCreated = 0;
 
     for (const characterData of PRODUCTION_CHARACTERS) {
-      console.log(`👤 处理角色: ${characterData.nameZh} (${characterData.name})`);
+      console.log(`👤 Processing character: ${characterData.name} (${characterData.nameZh})`);
 
       // 查找对应的电影
       const movie = await prisma.movie.findUnique({
@@ -167,11 +167,11 @@ export async function GET(request: NextRequest) {
       });
 
       if (!movie) {
-        console.log(`⚠️ 电影 TMDB ID ${characterData.movieTmdbId} 不存在，跳过角色 ${characterData.name}`);
+        console.log(`⚠️ Movie TMDB ID ${characterData.movieTmdbId} does not exist, skipping character ${characterData.name}`);
         continue;
       }
 
-      // 检查角色是否已存在
+      // Check if character already exists
       const existingCharacter = await prisma.character.findFirst({
         where: {
           OR: [
@@ -208,7 +208,7 @@ export async function GET(request: NextRequest) {
         totalCharactersCreated++;
       }
 
-      // 检查电影-角色关联是否已存在
+      // Check if movie-character relationship already exists
       const existingMovieCharacter = await prisma.movieCharacter.findFirst({
         where: {
           movieId: movie.id,
@@ -239,13 +239,13 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // 获取最终统计
+    // Get final statistics
     const totalCharacters = await prisma.character.count();
     const totalMovieCharacterRelations = await prisma.movieCharacter.count();
 
     const result = {
       success: true,
-      message: '生产环境角色数据种子化完成',
+      message: 'Production character data seeding completed',
       statistics: {
         charactersCreated: totalCharactersCreated,
         charactersUpdated: totalCharactersUpdated,
@@ -255,16 +255,16 @@ export async function GET(request: NextRequest) {
       }
     };
 
-    console.log('✅ 生产环境角色种子化完成:', result);
+    console.log('✅ Production character seeding completed:', result);
 
     return NextResponse.json(result);
 
   } catch (error) {
-    console.error('❌ 生产环境角色种子化失败:', error);
+    console.error('❌ Production character seeding failed:', error);
     return NextResponse.json(
       { 
         success: false,
-        error: '角色种子化失败',
+        error: 'Character seeding failed',
         details: error instanceof Error ? error.message : String(error)
       },
       { status: 500 }

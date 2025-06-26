@@ -38,7 +38,7 @@ export function GlobalSearchBar({
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  // 处理点击外部关闭
+  // Handle click outside to close
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {

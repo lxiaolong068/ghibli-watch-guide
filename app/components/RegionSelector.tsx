@@ -23,7 +23,7 @@ export function RegionSelector() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // 从 localStorage 读取保存的地区
+    // Read saved region from localStorage
     const saved = localStorage.getItem('selectedRegion');
     if (saved) {
       const region = REGIONS.find(r => r.code === saved);
@@ -35,7 +35,7 @@ export function RegionSelector() {
     setSelectedRegion(region);
     localStorage.setItem('selectedRegion', region.code);
     setIsOpen(false);
-    // 触发地区变更事件
+    // Trigger region change event
     window.dispatchEvent(new CustomEvent('regionChanged', { 
       detail: region 
     }));
