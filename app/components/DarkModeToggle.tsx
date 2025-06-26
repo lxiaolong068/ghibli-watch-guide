@@ -21,7 +21,7 @@ export function DarkModeToggle({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 点击外部关闭下拉菜单
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -38,7 +38,7 @@ export function DarkModeToggle({
     };
   }, [isOpen]);
 
-  // 键盘导航支持
+  // Keyboard navigation support
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
       setIsOpen(false);
@@ -57,7 +57,7 @@ export function DarkModeToggle({
     lg: 'w-7 h-7'
   };
 
-  // 获取当前主题图标
+  // Get current theme icon
   const getCurrentIcon = () => {
     if (theme === 'system') {
       return <ComputerDesktopIcon className={iconSizeClasses[size]} />;
@@ -67,17 +67,17 @@ export function DarkModeToggle({
       : <SunIcon className={iconSizeClasses[size]} />;
   };
 
-  // 获取主题标签
+  // Get theme label
   const getThemeLabel = (themeType: string) => {
     const labels = {
-      light: '浅色模式',
-      dark: '深色模式',
-      system: '跟随系统'
+      light: 'Light Mode',
+      dark: 'Dark Mode',
+      system: 'Follow System'
     };
     return labels[themeType as keyof typeof labels] || themeType;
   };
 
-  // 简单按钮模式
+  // Simple button mode
   if (variant === 'button') {
     const handleClick = () => {
       const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
@@ -98,8 +98,8 @@ export function DarkModeToggle({
           transition-colors duration-200
           ${className}
         `}
-        title={`切换到${resolvedTheme === 'dark' ? '浅色' : '深色'}模式`}
-        aria-label={`切换到${resolvedTheme === 'dark' ? '浅色' : '深色'}模式`}
+        title={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
+        aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
       >
         {getCurrentIcon()}
         {showLabel && (
@@ -111,7 +111,7 @@ export function DarkModeToggle({
     );
   }
 
-  // 下拉菜单模式
+  // Dropdown menu mode
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
@@ -127,8 +127,8 @@ export function DarkModeToggle({
           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
           transition-colors duration-200
         `}
-        title="选择主题"
-        aria-label="选择主题"
+        title="Select Theme"
+        aria-label="Select Theme"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
@@ -144,9 +144,9 @@ export function DarkModeToggle({
         <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
           <div className="py-1" role="menu">
             {[
-              { key: 'light', label: '浅色模式', icon: SunIcon },
-              { key: 'dark', label: '深色模式', icon: MoonIcon },
-              { key: 'system', label: '跟随系统', icon: ComputerDesktopIcon }
+              { key: 'light', label: 'Light Mode', icon: SunIcon },
+              { key: 'dark', label: 'Dark Mode', icon: MoonIcon },
+              { key: 'system', label: 'Follow System', icon: ComputerDesktopIcon }
             ].map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
