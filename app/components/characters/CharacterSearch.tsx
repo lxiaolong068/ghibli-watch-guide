@@ -42,7 +42,7 @@ export function CharacterSearch({
           setMovies(data.movies || []);
         }
       } catch (error) {
-        console.error('获取电影列表失败:', error);
+        console.error('Failed to fetch movie list:', error);
       }
     }
     fetchMovies();
@@ -97,7 +97,7 @@ export function CharacterSearch({
           </div>
           <input
             type="text"
-            placeholder="搜索角色名称、描述..."
+            placeholder="Search character names, descriptions..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -116,20 +116,20 @@ export function CharacterSearch({
           `}
         >
           <FunnelIcon className="h-5 w-5" />
-          筛选
+          Filter
           {hasActiveFilters && (
             <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {[search, isMainCharacter, movieId].filter(Boolean).length}
             </span>
           )}
         </button>
-        
+
         <button
           onClick={handleSearch}
           disabled={isLoading}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {isLoading ? '搜索中...' : '搜索'}
+          {isLoading ? 'Searching...' : 'Search'}
         </button>
       </div>
 
@@ -140,30 +140,30 @@ export function CharacterSearch({
             {/* 角色类型筛选 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                角色类型
+                Character Type
               </label>
               <select
                 value={isMainCharacter}
                 onChange={(e) => setIsMainCharacter(e.target.value)}
                 className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">全部角色</option>
-                <option value="true">主要角色</option>
-                <option value="false">次要角色</option>
+                <option value="">All Characters</option>
+                <option value="true">Main Characters</option>
+                <option value="false">Supporting Characters</option>
               </select>
             </div>
 
             {/* 电影筛选 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                出演电影
+                Featured Movie
               </label>
               <select
                 value={movieId}
                 onChange={(e) => setMovieId(e.target.value)}
                 className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">全部电影</option>
+                <option value="">All Movies</option>
                 {movies.map((movie) => (
                   <option key={movie.id} value={movie.id}>
                     {movie.titleEn} ({movie.year})
@@ -179,21 +179,21 @@ export function CharacterSearch({
               onClick={handleClear}
               className="text-gray-600 hover:text-gray-800 text-sm"
             >
-              清除所有筛选
+              Clear All Filters
             </button>
-            
+
             <div className="flex gap-2">
               <button
                 onClick={() => setShowFilters(false)}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm"
               >
-                收起
+                Collapse
               </button>
               <button
                 onClick={handleSearch}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
               >
-                应用筛选
+                Apply Filters
               </button>
             </div>
           </div>
@@ -205,7 +205,7 @@ export function CharacterSearch({
         <div className="mt-4 flex flex-wrap gap-2">
           {search && (
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
-              搜索: {search}
+              Search: {search}
               <button
                 onClick={() => {
                   setSearch('');
@@ -217,10 +217,10 @@ export function CharacterSearch({
               </button>
             </span>
           )}
-          
+
           {isMainCharacter && (
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-              {isMainCharacter === 'true' ? '主要角色' : '次要角色'}
+              {isMainCharacter === 'true' ? 'Main Characters' : 'Supporting Characters'}
               <button
                 onClick={() => {
                   setIsMainCharacter('');
@@ -232,10 +232,10 @@ export function CharacterSearch({
               </button>
             </span>
           )}
-          
+
           {movieId && (
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-purple-100 text-purple-800">
-              电影: {movies.find(m => m.id === movieId)?.titleEn || '未知'}
+              Movie: {movies.find(m => m.id === movieId)?.titleEn || 'Unknown'}
               <button
                 onClick={() => {
                   setMovieId('');

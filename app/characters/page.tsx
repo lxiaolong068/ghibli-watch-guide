@@ -7,12 +7,12 @@ import { UserBehaviorTracker } from '@/app/components/analytics/UserBehaviorTrac
 import { ResponsiveAdSenseAd } from '@/app/components/SEOOptimizer';
 
 export const metadata: Metadata = {
-  title: '吉卜力电影角色大全 | 角色介绍与配音演员信息',
-  description: '探索吉卜力工作室电影中的经典角色，包括千寻、龙猫、无脸男等，了解角色背景故事和配音演员信息。',
-  keywords: '吉卜力角色, 千寻, 龙猫, 无脸男, 白龙, 汤婆婆, 配音演员, 角色介绍',
+  title: 'Studio Ghibli Characters Guide | Character Profiles & Voice Actors',
+  description: 'Explore iconic characters from Studio Ghibli films, including Chihiro, Totoro, No-Face and more. Learn about character backgrounds and voice actor information.',
+  keywords: 'ghibli characters, chihiro, totoro, no-face, haku, yubaba, voice actors, character profiles',
   openGraph: {
-    title: '吉卜力电影角色大全 | 角色介绍与配音演员信息',
-    description: '探索吉卜力工作室电影中的经典角色，包括千寻、龙猫、无脸男等，了解角色背景故事和配音演员信息。',
+    title: 'Studio Ghibli Characters Guide | Character Profiles & Voice Actors',
+    description: 'Explore iconic characters from Studio Ghibli films, including Chihiro, Totoro, No-Face and more. Learn about character backgrounds and voice actor information.',
     type: 'website',
     url: 'https://www.whereghibli.cc/characters',
     images: [
@@ -20,14 +20,14 @@ export const metadata: Metadata = {
         url: 'https://www.whereghibli.cc/images/characters-og.jpg',
         width: 1200,
         height: 630,
-        alt: '吉卜力电影角色大全'
+        alt: 'Studio Ghibli Characters Guide'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: '吉卜力电影角色大全 | 角色介绍与配音演员信息',
-    description: '探索吉卜力工作室电影中的经典角色，包括千寻、龙猫、无脸男等，了解角色背景故事和配音演员信息。',
+    title: 'Studio Ghibli Characters Guide | Character Profiles & Voice Actors',
+    description: 'Explore iconic characters from Studio Ghibli films, including Chihiro, Totoro, No-Face and more. Learn about character backgrounds and voice actor information.',
     images: ['https://www.whereghibli.cc/images/characters-og.jpg']
   }
 };
@@ -56,11 +56,11 @@ export default function CharactersPage({ searchParams }: CharactersPageProps) {
         {/* 页面标题 */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            吉卜力电影角色大全
+            Studio Ghibli Characters Guide
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            探索吉卜力工作室电影中的经典角色，了解他们的背景故事、性格特点和配音演员信息。
-            从千寻到龙猫，从无脸男到白龙，每个角色都有着独特的魅力和深刻的内涵。
+            Explore iconic characters from Studio Ghibli films and learn about their background stories, personality traits, and voice actor information.
+            From Chihiro to Totoro, from No-Face to Haku, each character has unique charm and profound meaning.
           </p>
         </div>
 
@@ -104,26 +104,26 @@ export default function CharactersPage({ searchParams }: CharactersPageProps) {
         {/* SEO内容 */}
         <div className="mt-16 bg-white rounded-lg shadow-sm p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            关于吉卜力电影角色
+            About Studio Ghibli Characters
           </h2>
           <div className="prose prose-lg max-w-none text-gray-700">
             <p>
-              吉卜力工作室创造了无数令人难忘的角色，每个角色都承载着深刻的寓意和情感。
-              从《千与千寻》中勇敢成长的千寻，到《龙猫》中温暖守护的龙猫，
-              这些角色不仅是动画的主角，更是观众心中永恒的朋友。
+              Studio Ghibli has created countless unforgettable characters, each carrying profound meaning and emotion.
+              From the brave and growing Chihiro in "Spirited Away" to the warm and protective Totoro in "My Neighbor Totoro",
+              these characters are not only the protagonists of animations, but also eternal friends in the hearts of audiences.
             </p>
             <p>
-              我们的角色大全收录了吉卜力主要电影中的重要角色，包括：
+              Our character collection includes important characters from major Studio Ghibli films, featuring:
             </p>
             <ul>
-              <li><strong>主要角色</strong>：电影的核心人物，推动故事发展的关键角色</li>
-              <li><strong>配音信息</strong>：日文原版和中文配音演员的详细信息</li>
-              <li><strong>角色背景</strong>：角色的性格特点、成长历程和象征意义</li>
-              <li><strong>相关电影</strong>：角色出现的电影作品和重要场景</li>
+              <li><strong>Main Characters</strong>: Core figures of the films, key characters who drive the story forward</li>
+              <li><strong>Voice Actor Information</strong>: Detailed information about Japanese original and English voice actors</li>
+              <li><strong>Character Background</strong>: Character traits, growth journey, and symbolic meaning</li>
+              <li><strong>Related Movies</strong>: Films and important scenes where characters appear</li>
             </ul>
             <p>
-              通过深入了解这些角色，您可以更好地理解宫崎骏和高畑勋等导演想要传达的主题思想，
-              感受吉卜力动画独特的人文关怀和艺术魅力。
+              Through in-depth understanding of these characters, you can better comprehend the thematic ideas that directors like Hayao Miyazaki and Isao Takahata want to convey,
+              and experience the unique humanistic care and artistic charm of Studio Ghibli animations.
             </p>
           </div>
         </div>

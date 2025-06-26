@@ -132,13 +132,13 @@ export function CharacterCard({ character, isMain }: CharacterCardProps) {
               <div className="mb-2 text-sm">
                 {voiceActor && (
                   <p className="text-gray-600">
-                    <span className="font-medium">配音：</span>
+                    <span className="font-medium">Voice Actor: </span>
                     {voiceActor}
                   </p>
                 )}
                 {voiceActorJa && (
                   <p className="text-gray-600">
-                    <span className="font-medium">日配：</span>
+                    <span className="font-medium">Japanese VA: </span>
                     {voiceActorJa}
                   </p>
                 )}
@@ -164,8 +164,8 @@ export function CharacterCard({ character, isMain }: CharacterCardProps) {
             {primaryMovie && (
               <div className="mt-2">
                 <p className="text-xs text-gray-500">
-                  出演：{primaryMovie.titleEn}
-                  {movies.length > 1 && ` 等${movies.length}部作品`}
+                  Featured in: {primaryMovie.titleEn}
+                  {movies.length > 1 && ` and ${movies.length - 1} more`}
                 </p>
               </div>
             )}
@@ -174,13 +174,13 @@ export function CharacterCard({ character, isMain }: CharacterCardProps) {
             <div className="mt-2 flex items-center gap-2">
               {character.isMainCharacter && (
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  主要角色
+                  Main Character
                 </span>
               )}
-              
+
               {character.importance && character.importance > 80 && (
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                  重要角色
+                  Important Role
                 </span>
               )}
             </div>
@@ -190,7 +190,7 @@ export function CharacterCard({ character, isMain }: CharacterCardProps) {
         {/* 悬停效果指示器 */}
         <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div className="flex items-center text-blue-600 text-sm">
-            <span>查看详情</span>
+            <span>View Details</span>
             <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

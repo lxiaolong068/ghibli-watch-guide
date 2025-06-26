@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 搜索高亮样式 */
+/* Search highlight styles */
 @import './styles/search-highlight.css';
 
-/* 无障碍性样式 */
+/* Accessibility styles */
 
-/* 屏幕阅读器专用内容 */
+/* Screen reader only content */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -20,7 +20,7 @@
   border: 0;
 }
 
-/* 高对比度模式 */
+/* High contrast mode */
 .high-contrast {
   --tw-bg-opacity: 1;
   --tw-text-opacity: 1;
@@ -64,7 +64,7 @@
   text-decoration: underline;
 }
 
-/* 大字体模式 */
+/* Large text mode */
 .large-text {
   font-size: 1.125rem; /* 18px */
 }
@@ -89,7 +89,7 @@
   font-size: 0.875rem; /* 14px */
 }
 
-/* 减少动画模式 */
+/* Reduced motion mode */
 .reduced-motion *,
 .reduced-motion *::before,
 .reduced-motion *::after {
@@ -99,13 +99,13 @@
   scroll-behavior: auto !important;
 }
 
-/* 焦点样式增强 */
+/* Enhanced focus styles */
 .focus-visible:focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
-/* 跳转到主内容链接 */
+/* Skip to main content link */
 .skip-link {
   position: absolute;
   top: -40px;
@@ -122,7 +122,7 @@
   top: 6px;
 }
 
-/* 文本截断工具类 */
+/* Text truncation utility classes */
 .line-clamp-1 {
   overflow: hidden;
   display: -webkit-box;
@@ -156,7 +156,7 @@
   --primary-800: #065f46;
   --primary-900: #064e3b;
 
-  /* 浅色模式变量 */
+  /* Light mode variables */
   --background: #ffffff;
   --foreground: #0f172a;
   --card: #ffffff;
@@ -170,25 +170,25 @@
   --ring: #059669;
 }
 
-/* 深色模式变量 */
+/* Dark mode variables */
 .dark {
   --background: #0f172a;
-  --foreground: #f8fafc; /* 提高主文字对比度 */
+  --foreground: #f8fafc; /* Improve main text contrast */
   --card: #1e293b;
-  --card-foreground: #f8fafc; /* 提高卡片文字对比度 */
+  --card-foreground: #f8fafc; /* Improve card text contrast */
   --popover: #1e293b;
-  --popover-foreground: #f8fafc; /* 提高弹出层文字对比度 */
+  --popover-foreground: #f8fafc; /* Improve popover text contrast */
   --muted: #334155;
-  --muted-foreground: #cbd5e1; /* 提高次要文字对比度 */
+  --muted-foreground: #cbd5e1; /* Improve secondary text contrast */
   --border: #334155;
   --input: #334155;
   --ring: #10b981;
 
-  /* 深色模式专用文字颜色变量 */
-  --text-primary: #f8fafc;     /* 主要文字 - 高对比度 */
-  --text-secondary: #e2e8f0;   /* 次要文字 - 中等对比度 */
-  --text-muted: #cbd5e1;       /* 辅助文字 - 符合AA标准的最低对比度 */
-  --text-subtle: #94a3b8;      /* 微妙文字 - 仅用于装饰性内容 */
+  /* Dark mode specific text color variables */
+  --text-primary: #f8fafc;     /* Primary text - high contrast */
+  --text-secondary: #e2e8f0;   /* Secondary text - medium contrast */
+  --text-muted: #cbd5e1;       /* Auxiliary text - minimum contrast meeting AA standards */
+  --text-subtle: #94a3b8;      /* Subtle text - for decorative content only */
 }
 
 @layer base {
@@ -214,7 +214,7 @@
     @apply rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
   }
 
-  /* 深色模式文字工具类 */
+  /* Dark mode text utility classes */
   .text-primary-dark {
     color: var(--text-primary);
   }
@@ -232,12 +232,12 @@
   }
 }
 
-/* 添加平滑滚动效果 */
+/* Add smooth scrolling effect */
 html {
   scroll-behavior: smooth;
 }
 
-/* 自定义滚动条样式 */
+/* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -271,7 +271,7 @@ html {
   background-color: var(--primary-500);
 }
 
-/* 页面过渡效果 */
+/* Page transition effects */
 .page-transition {
   @apply transition-opacity duration-300;
 }
@@ -284,19 +284,19 @@ html {
   @apply opacity-100;
 }
 
-/* 链接悬停效果 */
+/* Link hover effects */
 a {
   @apply transition-colors duration-200;
 }
 
-/* 卡片悬停效果 */
+/* Card hover effects */
 .hover-lift {
   @apply transition-transform duration-200 hover:-translate-y-1;
 }
 
-/* 移动端优化样式 */
+/* Mobile optimization styles */
 @media (max-width: 768px) {
-  /* 移动端字体大小优化 */
+  /* Mobile font size optimization */
   h1 {
     @apply text-2xl leading-tight;
   }
@@ -309,37 +309,37 @@ a {
     @apply text-lg leading-tight;
   }
 
-  /* 移动端间距优化 */
+  /* Mobile spacing optimization */
   .mobile-spacing {
     @apply px-4 py-3;
   }
 
-  /* 移动端卡片优化 */
+  /* Mobile card optimization */
   .mobile-card {
     @apply p-4 rounded-lg;
   }
 
-  /* 移动端按钮优化 */
+  /* Mobile button optimization */
   .mobile-button {
     @apply px-4 py-3 text-base min-h-[44px] rounded-lg;
   }
 
-  /* 移动端触摸目标优化 */
+  /* Mobile touch target optimization */
   .touch-target {
     @apply min-h-[44px] min-w-[44px];
   }
 
-  /* 移动端文本可读性优化 */
+  /* Mobile text readability optimization */
   .mobile-text {
     @apply text-base leading-relaxed;
   }
 
-  /* 移动端网格优化 */
+  /* Mobile grid optimization */
   .mobile-grid {
     @apply grid-cols-1 gap-4;
   }
 
-  /* 移动端图片优化 */
+  /* Mobile image optimization */
   .mobile-image {
     @apply w-full h-auto rounded-lg;
   }

@@ -117,7 +117,7 @@ export default function TagBadge({
 
       {/* 标签名称 */}
       <span>
-        {tag.nameZh || tag.name}
+        {tag.name || tag.nameZh}
       </span>
 
       {/* 数量显示 */}
@@ -132,7 +132,7 @@ export default function TagBadge({
         <button
           onClick={handleRemove}
           className="ml-1 hover:bg-black dark:hover:bg-white hover:bg-opacity-10 dark:hover:bg-opacity-20 rounded-full p-0.5 transition-colors"
-          aria-label={`移除标签 ${tag.nameZh || tag.name}`}
+          aria-label={`Remove tag ${tag.name || tag.nameZh}`}
         >
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -204,7 +204,7 @@ export function TagGroup({
         ))}
         {remainingCount > 0 && (
           <span className="inline-flex items-center px-3 py-1.5 text-sm text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-700 rounded-full">
-            +{remainingCount} 更多
+            +{remainingCount} more
           </span>
         )}
       </div>

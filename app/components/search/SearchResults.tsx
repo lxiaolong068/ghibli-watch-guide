@@ -45,11 +45,11 @@ interface SearchResultsProps {
 }
 
 const typeLabels = {
-  movie: '电影',
-  character: '角色',
-  review: '评论',
-  guide: '观影指南',
-  media: '媒体内容'
+  movie: 'Movie',
+  character: 'Character',
+  review: 'Review',
+  guide: 'Watch Guide',
+  media: 'Media Content'
 };
 
 const typeColors = {
@@ -87,7 +87,7 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
 
         const response = await fetch(`/api/search?${params.toString()}`);
         if (!response.ok) {
-          throw new Error('搜索失败');
+          throw new Error('Search failed');
         }
 
         const data = await response.json();
@@ -102,7 +102,7 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
           );
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : '搜索出错');
+        setError(err instanceof Error ? err.message : 'Search error');
       } finally {
         setIsLoading(false);
       }
@@ -114,7 +114,7 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <LoadingSpinner size="lg" text="搜索中..." />
+        <LoadingSpinner size="lg" text="Searching..." />
       </div>
     );
   }
@@ -127,7 +127,7 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
           onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
         >
-          重试
+          Retry
         </button>
       </div>
     );
@@ -152,15 +152,15 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
           </svg>
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          没有找到相关结果
+          No relevant results found
         </h3>
         <p className="text-gray-600 mb-6">
-          尝试使用不同的关键词或调整筛选条件
+          Try using different keywords or adjusting filter conditions
         </p>
-        
+
         {searchData?.suggestions && searchData.suggestions.length > 0 && (
           <div>
-            <p className="text-sm text-gray-600 mb-3">您是否要搜索：</p>
+            <p className="text-sm text-gray-600 mb-3">Did you mean to search for:</p>
             <div className="flex flex-wrap justify-center gap-2">
               {searchData.suggestions.map((suggestion) => (
                 <Link

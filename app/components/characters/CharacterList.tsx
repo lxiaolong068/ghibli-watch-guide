@@ -79,13 +79,13 @@ export function CharacterList({ page, search, isMainCharacter, movieId }: Charac
         const response = await fetch(`/api/characters?${params.toString()}`);
         
         if (!response.ok) {
-          throw new Error('获取角色列表失败');
+          throw new Error('Failed to fetch character list');
         }
 
         const result = await response.json();
         setData(result);
       } catch (err) {
-        setError(err instanceof Error ? err.message : '获取角色列表失败');
+        setError(err instanceof Error ? err.message : 'Failed to fetch character list');
       } finally {
         setLoading(false);
       }
@@ -106,7 +106,7 @@ export function CharacterList({ page, search, isMainCharacter, movieId }: Charac
           onClick={() => window.location.reload()}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
-          重试
+          Retry
         </button>
       </div>
     );
@@ -116,14 +116,14 @@ export function CharacterList({ page, search, isMainCharacter, movieId }: Charac
     return (
       <div className="text-center py-12">
         <div className="text-gray-500 mb-4">
-          {search ? '没有找到匹配的角色' : '暂无角色数据'}
+          {search ? 'No matching characters found' : 'No character data available'}
         </div>
         {search && (
           <Link
             href="/characters"
             className="text-blue-600 hover:text-blue-700 underline"
           >
-            查看所有角色
+            View all characters
           </Link>
         )}
       </div>
@@ -143,44 +143,44 @@ export function CharacterList({ page, search, isMainCharacter, movieId }: Charac
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
-              找到 {pagination.total} 个角色
+              Found {pagination.total} characters
             </h2>
             <p className="text-sm text-gray-600">
-              第 {pagination.page} 页，共 {pagination.totalPages} 页
+              Page {pagination.page} of {pagination.totalPages}
             </p>
           </div>
-          
+
           {/* 快速筛选 */}
           <div className="flex gap-2">
             <Link
               href="/characters"
               className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                !isMainCharacter 
-                  ? 'bg-blue-100 text-blue-800' 
+                !isMainCharacter
+                  ? 'bg-blue-100 text-blue-800'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              全部
+              All
             </Link>
             <Link
               href="/characters?isMainCharacter=true"
               className={`px-3 py-1 rounded-full text-sm transition-colors ${
                 isMainCharacter === 'true'
-                  ? 'bg-blue-100 text-blue-800' 
+                  ? 'bg-blue-100 text-blue-800'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              主要角色
+              Main Characters
             </Link>
             <Link
               href="/characters?isMainCharacter=false"
               className={`px-3 py-1 rounded-full text-sm transition-colors ${
                 isMainCharacter === 'false'
-                  ? 'bg-blue-100 text-blue-800' 
+                  ? 'bg-blue-100 text-blue-800'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              次要角色
+              Supporting Characters
             </Link>
           </div>
         </div>
@@ -189,7 +189,7 @@ export function CharacterList({ page, search, isMainCharacter, movieId }: Charac
       {/* 主要角色 */}
       {mainCharacters.length > 0 && (
         <div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">主要角色</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-6">Main Characters</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {mainCharacters.map((character) => (
               <CharacterCard key={character.id} character={character} isMain={true} />
@@ -202,7 +202,7 @@ export function CharacterList({ page, search, isMainCharacter, movieId }: Charac
       {supportingCharacters.length > 0 && (
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-6">
-            {mainCharacters.length > 0 ? '其他角色' : '角色列表'}
+            {mainCharacters.length > 0 ? 'Supporting Characters' : 'Characters'}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {supportingCharacters.map((character) => (

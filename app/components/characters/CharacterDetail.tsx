@@ -69,12 +69,12 @@ export function CharacterDetail({ character }: CharacterDetailProps) {
                 <div className="flex flex-wrap gap-3 mb-3">
                   {character.nameJa && (
                     <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
-                      日文：{character.nameJa}
+                      Japanese: {character.nameJa}
                     </span>
                   )}
                   {character.nameZh && (
                     <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
-                      中文：{character.nameZh}
+                      Chinese: {character.nameZh}
                     </span>
                   )}
                 </div>
@@ -84,12 +84,12 @@ export function CharacterDetail({ character }: CharacterDetailProps) {
                   {character.isMainCharacter && (
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-400 text-yellow-900">
                       <StarIcon className="w-4 h-4 mr-1" />
-                      主要角色
+                      Main Character
                     </span>
                   )}
-                  
+
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white bg-opacity-20 text-white">
-                    出演 {character.movies?.length || 0} 部作品
+                    Appears in {character.movies?.length || 0} movies
                   </span>
                 </div>
               </div>
@@ -103,7 +103,7 @@ export function CharacterDetail({ character }: CharacterDetailProps) {
         {/* 角色描述 */}
         {character.description && (
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">角色介绍</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Character Description</h2>
             <div className="prose prose-lg max-w-none text-gray-700">
               <p>{character.description}</p>
             </div>
@@ -113,7 +113,7 @@ export function CharacterDetail({ character }: CharacterDetailProps) {
         {/* 出演作品 */}
         {character.movies && character.movies.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">出演作品</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Movies</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {character.movies.map((movie) => (
                 <Link
@@ -151,16 +151,16 @@ export function CharacterDetail({ character }: CharacterDetailProps) {
                         <p className="text-sm text-gray-600 mb-2">{movie.titleJa}</p>
                       )}
                       
-                      <p className="text-sm text-gray-500 mb-2">{movie.year}年</p>
+                      <p className="text-sm text-gray-500 mb-2">{movie.year}</p>
 
                       {/* 配音演员信息 */}
                       {(movie.voiceActor || movie.voiceActorJa) && (
                         <div className="text-sm text-gray-600">
                           {movie.voiceActor && (
-                            <p><span className="font-medium">配音：</span>{movie.voiceActor}</p>
+                            <p><span className="font-medium">Voice Actor: </span>{movie.voiceActor}</p>
                           )}
                           {movie.voiceActorJa && (
-                            <p><span className="font-medium">日配：</span>{movie.voiceActorJa}</p>
+                            <p><span className="font-medium">Japanese VA: </span>{movie.voiceActorJa}</p>
                           )}
                         </div>
                       )}
@@ -169,7 +169,7 @@ export function CharacterDetail({ character }: CharacterDetailProps) {
                       {movie.importance && movie.importance > 80 && (
                         <div className="mt-2">
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            重要角色
+                            Important Role
                           </span>
                         </div>
                       )}
@@ -190,7 +190,7 @@ export function CharacterDetail({ character }: CharacterDetailProps) {
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            返回角色列表
+            Back to Characters
           </Link>
         </div>
       </div>

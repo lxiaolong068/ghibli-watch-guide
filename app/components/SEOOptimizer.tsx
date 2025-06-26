@@ -28,8 +28,8 @@ export function SEOOptimizer({
   // 动态生成关键词
   const generateKeywords = () => {
     const baseKeywords = [
-      '吉卜力', 'Studio Ghibli', '宫崎骏', '观影指南', '在线观看',
-      '流媒体', 'Netflix', 'Disney+', '动画电影', '日本动画'
+      'ghibli', 'studio ghibli', 'miyazaki', 'watch guide', 'streaming',
+      'netflix', 'disney+', 'animation movie', 'japanese animation'
     ];
     
     if (movieData) {
@@ -37,9 +37,9 @@ export function SEOOptimizer({
         movieData.titleEn,
         movieData.titleJa,
         movieData.titleZh,
-        `${movieData.titleEn} 在线观看`,
-        `${movieData.titleEn} 流媒体`,
-        `${movieData.year}年动画`
+        `${movieData.titleEn} streaming`,
+        `${movieData.titleEn} watch online`,
+        `${movieData.year} animation`
       );
     }
     
@@ -60,7 +60,7 @@ export function SEOOptimizer({
         "datePublished": `${movieData.year}-01-01`,
         "director": {
           "@type": "Person",
-          "name": movieData.director || "宫崎骏"
+          "name": movieData.director || "Hayao Miyazaki"
         },
         "productionCompany": {
           "@type": "Organization",
@@ -89,9 +89,9 @@ export function SEOOptimizer({
     return {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "吉卜力观影指南",
+      "name": "Studio Ghibli Watch Guide",
       "url": "https://www.whereghibli.cc",
-      "description": "找到观看吉卜力工作室电影的最佳方式",
+      "description": "Find the best ways to watch Studio Ghibli movies",
       "potentialAction": {
         "@type": "SearchAction",
         "target": "https://www.whereghibli.cc/search?q={search_term_string}",
@@ -115,19 +115,19 @@ export function SEOOptimizer({
         <meta property="og:type" content={movieData ? "video.movie" : "website"} />
         {ogImage && <meta property="og:image" content={ogImage} />}
         {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
-        <meta property="og:site_name" content="吉卜力观影指南" />
-        
+        <meta property="og:site_name" content="Studio Ghibli Watch Guide" />
+
         {/* Twitter Card标签 */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         {ogImage && <meta name="twitter:image" content={ogImage} />}
-        
+
         {/* 额外的SEO标签 */}
         <meta name="robots" content="index, follow, max-image-preview:large" />
         <meta name="googlebot" content="index, follow" />
-        <meta name="author" content="吉卜力观影指南" />
-        <meta name="language" content="zh-CN" />
+        <meta name="author" content="Studio Ghibli Watch Guide" />
+        <meta name="language" content="en-US" />
         
         {/* 移动端优化 */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -225,7 +225,7 @@ export function ResponsiveAdSenseAd({
   return (
     <div className="w-full max-w-4xl mx-auto my-8">
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-        <p className="text-xs text-gray-500 text-center mb-2">广告</p>
+        <p className="text-xs text-gray-500 text-center mb-2">Advertisement</p>
         <AdSenseAd
           adSlot={adSlot}
           adFormat={adFormat}
@@ -254,7 +254,7 @@ export function SidebarAdSenseAd({ adSlot }: { adSlot: string }) {
   return (
     <div className="sticky top-4">
       <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-        <p className="text-xs text-gray-500 text-center mb-2">广告</p>
+        <p className="text-xs text-gray-500 text-center mb-2">Advertisement</p>
         <AdSenseAd
           adSlot={adSlot}
           adFormat="auto"
@@ -310,7 +310,7 @@ export class ContentQualityAnalyzer {
     
     // 计算关键词密度
     const keywordCounts: { [key: string]: number } = {};
-    const importantKeywords = ['吉卜力', 'ghibli', '宫崎骏', '观看', '电影', '动画'];
+    const importantKeywords = ['ghibli', 'studio ghibli', 'miyazaki', 'watch', 'movie', 'animation'];
     
     words.forEach(word => {
       if (importantKeywords.includes(word)) {
@@ -327,17 +327,17 @@ export class ContentQualityAnalyzer {
     const suggestions: string[] = [];
     
     if (totalWords < 300) {
-      suggestions.push('内容长度较短，建议增加到至少300字以提高SEO效果');
+      suggestions.push('Content is relatively short, recommend increasing to at least 300 words to improve SEO effectiveness');
     }
-    
+
     if (Object.keys(keywordDensity).length === 0) {
-      suggestions.push('建议在内容中包含相关关键词');
+      suggestions.push('Recommend including relevant keywords in the content');
     }
-    
+
     Object.keys(keywordDensity).forEach(keyword => {
       const density = keywordDensity[keyword];
       if (density > 3) {
-        suggestions.push(`关键词"${keyword}"密度过高(${density.toFixed(1)}%)，建议控制在2-3%以内`);
+        suggestions.push(`Keyword "${keyword}" density is too high (${density.toFixed(1)}%), recommend keeping it within 2-3%`);
       }
     });
     

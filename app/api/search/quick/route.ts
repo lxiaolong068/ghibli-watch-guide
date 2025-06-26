@@ -126,7 +126,7 @@ export async function GET(request: NextRequest) {
           id: character.id,
           type: 'character',
           title: character.name,
-          subtitle: firstMovie ? `角色 • ${firstMovie.titleEn}` : '角色',
+          subtitle: firstMovie ? `Character • ${firstMovie.titleEn}` : 'Character',
           imageUrl: character.imageUrl || firstMovie?.posterUrl || undefined,
           url: `/characters/${character.id}`,
           relevanceScore
@@ -173,7 +173,7 @@ export async function GET(request: NextRequest) {
           id: guide.id,
           type: 'guide',
           title: guide.title,
-          subtitle: `观影指南 • ${guide.guideType}`,
+          subtitle: `Watch Guide • ${guide.guideType}`,
           imageUrl: guide.movies[0]?.movie.posterUrl || undefined,
           url: `/guides/${guide.id}`,
           relevanceScore
