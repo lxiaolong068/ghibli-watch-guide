@@ -2,7 +2,7 @@
 
 import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
-import { Prisma, Availability } from '@prisma/client'; // Import Prisma types
+import { Prisma, Availability } from '../../prisma/generated/client'; // Import Prisma types
 
 // Cached function to get watch availability information for a specific movie in a specific region
 export const getMovieAvailability = cache(async (movieId: string, regionCode?: string) => {
