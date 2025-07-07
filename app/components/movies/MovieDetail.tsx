@@ -3,7 +3,7 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import type { Movie, Availability, Region, Platform } from '@prisma/client';
+import type { Movie, Availability, Region, Platform } from '../../../prisma/generated/client';
 import Image from 'next/image';
 
 interface MovieDetailProps {
