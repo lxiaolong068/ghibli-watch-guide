@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { memo } from 'react';
-import type { Movie } from '@prisma/client';
+import type { Movie } from '../../prisma/generated/client';
 
 // 一个更高效的blurDataURL (WebP格式, 更小尺寸)
 const OPTIMIZED_BLUR_DATA_URL = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoQABAACMCWJQBOgCI4CAD+6Ty2AAA=';
