@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../prisma/generated/client';
 
 // 错误类型定义
 export interface ApiError {

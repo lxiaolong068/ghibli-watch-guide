@@ -1,6 +1,6 @@
 import { getMovieAvailability } from '@/app/actions/availability';
 import Image from 'next/image'; // Import Image component
-import { AvailabilityType, Prisma } from '@prisma/client'; // Import Prisma types
+import { AvailabilityType, Prisma } from '../../../prisma/generated/client'; // Import Prisma types
 
 // Convert enum values to readable text
 const availabilityTypeLabels: Record<AvailabilityType, string> = {
