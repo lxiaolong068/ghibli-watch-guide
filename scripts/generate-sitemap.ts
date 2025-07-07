@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../prisma/generated/client';
 
 // 加载 .env 文件中的环境变量
 dotenv.config({ path: path.resolve(__dirname, '../.env') });

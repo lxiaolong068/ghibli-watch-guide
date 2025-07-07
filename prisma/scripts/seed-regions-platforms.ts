@@ -1,4 +1,4 @@
-import { PrismaClient, PlatformType } from '@prisma/client';
+import { PrismaClient, PlatformType } from '../generated/client';
 import path from 'path';
 import dotenv from 'dotenv';
 

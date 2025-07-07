@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../../prisma/generated/client';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 
 const prisma = new PrismaClient();
