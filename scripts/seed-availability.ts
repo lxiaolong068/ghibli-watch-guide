@@ -4,7 +4,7 @@
  * 为主要吉卜力电影添加流媒体平台可用性数据
  */
 
-import { PrismaClient } from '../prisma/generated/client';
+import { PrismaClient, AvailabilityType } from '../prisma/generated/client';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -167,7 +167,7 @@ async function seedAvailability() {
               movieId: movie.id,
               platformId: platform.id,
               regionId: region.id,
-              type: availability.availabilityType
+              type: availability.availabilityType as AvailabilityType
             }
           });
 
@@ -182,7 +182,7 @@ async function seedAvailability() {
               movieId: movie.id,
               platformId: platform.id,
               regionId: region.id,
-              type: availability.availabilityType,
+              type: availability.availabilityType as AvailabilityType,
               price: availability.price,
               url: null, // 可以后续添加具体的URL
               lastChecked: new Date(),
