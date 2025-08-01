@@ -6,18 +6,48 @@ import FilteredMovieList from '@/app/components/movies/FilteredMovieList';
 // Remove force-dynamic setting to allow page caching
 // export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: 'Studio Ghibli Movie List | Where to Watch Studio Ghibli Movies',
-  description: 'Complete list of all Studio Ghibli movies. Find where to watch each film, including Spirited Away, My Neighbor Totoro, Howl\'s Moving Castle, and more.',
-  openGraph: {
-    title: 'Complete Studio Ghibli Movie List',
-    description: 'Browse all Studio Ghibli films and find out where to stream them.',
-    type: 'website',
-  },
-};
-
 interface MoviesPageProps {
   searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+// Dynamic metadata generation based on page number
+export async function generateMetadata({ searchParams }: MoviesPageProps): Promise<Metadata> {
+  // Get current page from search params, default to 1
+  const page = searchParams?.['page'] ?? '1';
+  const parsedPage = parseInt(Array.isArray(page) ? page[0] : page, 10);
+
+  // Ensure we have a valid page number, default to 1 if invalid
+  const currentPage = isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage;
+
+  // Generate dynamic title based on page number
+  const baseTitle = 'Studio Ghibli Movie List';
+  const siteName = 'Where to Watch Studio Ghibli Movies';
+
+  let title: string;
+  let description: string;
+  let ogTitle: string;
+
+  if (currentPage <= 1) {
+    // First page - use original title
+    title = `${baseTitle} | ${siteName}`;
+    description = 'Complete list of all Studio Ghibli movies. Find where to watch each film, including Spirited Away, My Neighbor Totoro, Howl\'s Moving Castle, and more.';
+    ogTitle = 'Complete Studio Ghibli Movie List';
+  } else {
+    // Subsequent pages - include page number
+    title = `${baseTitle} - Page ${currentPage} | ${siteName}`;
+    description = `Browse Studio Ghibli movies - Page ${currentPage}. Find where to watch each film, including streaming availability on Netflix, Max, and other platforms.`;
+    ogTitle = `Complete Studio Ghibli Movie List - Page ${currentPage}`;
+  }
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: ogTitle,
+      description: 'Browse all Studio Ghibli films and find out where to stream them.',
+      type: 'website',
+    },
+  };
 }
 
 const PAGE_SIZE = 12; // Define page size constant
