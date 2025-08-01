@@ -23,7 +23,7 @@ export default function GuidesPage() {
               Studio Ghibli Watch Guides
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Whether you're new to Studio Ghibli films or want to revisit these classics, we've prepared different types of watch guides
+              Whether you&apos;re new to Studio Ghibli films or want to revisit these classics, we&apos;ve prepared different types of watch guides
               to help you find the perfect viewing order and approach.
             </p>
           </div>
@@ -41,7 +41,7 @@ export default function GuidesPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Timeline Guide</h3>
             <p className="text-sm text-gray-600">
-              Watch in chronological order to experience Studio Ghibli's artistic evolution
+              Watch in chronological order to experience Studio Ghibli&apos;s artistic evolution
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export default function GuidesPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Beginner's Guide</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Beginner&apos;s Guide</h3>
             <p className="text-sm text-gray-600">
               Designed for first-time viewers, providing a gradual introduction to Ghibli films
             </p>
@@ -65,7 +65,7 @@ export default function GuidesPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Thematic Categories</h3>
             <p className="text-sm text-gray-600">
-              Watch by themes to deeply understand Studio Ghibli's creative philosophy
+              Watch by themes to deeply understand Studio Ghibli&apos;s creative philosophy
             </p>
           </div>
 
@@ -94,8 +94,8 @@ export default function GuidesPage() {
               Find Your Perfect Viewing Experience
             </h2>
             <p className="text-blue-700 mb-6 max-w-2xl mx-auto">
-              Everyone has different viewing preferences. Our guides are designed to help you discover the Studio Ghibli movie experience that's perfect for you.
-              Whether you prefer chronological viewing to understand the history or thematic deep dives, you'll find the answer here.
+              Everyone has different viewing preferences. Our guides are designed to help you discover the Studio Ghibli movie experience that&apos;s perfect for you.
+              Whether you prefer chronological viewing to understand the history or thematic deep dives, you&apos;ll find the answer here.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <div className="flex items-center text-blue-700">

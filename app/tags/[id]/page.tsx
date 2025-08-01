@@ -95,7 +95,7 @@ export async function generateMetadata({ params }: TagPageProps): Promise<Metada
     title: `${tagName} - Tag | Studio Ghibli Watch Guide`,
     description: `Browse all Studio Ghibli movies tagged with "${tagName}". ${tag.description || ''} Found ${movieCount} related movies.`,
     keywords: [
-      tagName,
+      tagName || 'unknown tag',
       'studio ghibli',
       'movie tags',
       'movie categories',

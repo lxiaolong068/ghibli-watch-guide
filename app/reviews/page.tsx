@@ -256,7 +256,7 @@ export default async function ReviewsPage() {
             Studio Ghibli Movie Reviews
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            In-depth analysis of Studio Ghibli's classic works, from artistic interpretation to behind-the-scenes insights,
+            In-depth analysis of Studio Ghibli&apos;s classic works, from artistic interpretation to behind-the-scenes insights,
             from cultural significance to modern relevance. Discover the most professional film reviews and analysis.
           </p>
         </div>
@@ -285,7 +285,7 @@ export default async function ReviewsPage() {
                 </svg>
               </div>
               <p className="text-gray-500 mb-4">No reviews available yet</p>
-              <p className="text-sm text-gray-400">We're preparing exciting film review content for you</p>
+              <p className="text-sm text-gray-400">We&apos;re preparing exciting film review content for you</p>
             </div>
           )}
         </Suspense>
