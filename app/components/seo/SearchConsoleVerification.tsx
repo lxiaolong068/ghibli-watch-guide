@@ -48,7 +48,7 @@ export function MovieStructuredData({ movie }: MovieStructuredDataProps) {
     "@context": "https://schema.org",
     "@type": "Movie",
     "name": movie.titleEn,
-    "alternateName": [movie.titleJa, movie.titleZh].filter(Boolean),
+    "alternateName": [movie.titleJa].filter(Boolean),
     "datePublished": movie.year.toString(),
     "director": movie.director ? {
       "@type": "Person",
@@ -95,13 +95,13 @@ export function WebsiteStructuredData() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "吉卜力观影指南",
-    "alternateName": "Ghibli Watch Guide",
+    "name": "Studio Ghibli Watch Guide",
+    "alternateName": "Where to Watch Studio Ghibli Movies",
     "url": "https://www.whereghibli.cc",
-    "description": "最全面的吉卜力工作室电影观影指南，包含电影信息、观看平台、角色介绍和专业评论",
+    "description": "Comprehensive guide to Studio Ghibli movies, including film information, streaming platforms, character introductions, and professional reviews",
     "publisher": {
       "@type": "Organization",
-      "name": "吉卜力观影指南",
+      "name": "Studio Ghibli Watch Guide",
       "url": "https://www.whereghibli.cc"
     },
     "potentialAction": {

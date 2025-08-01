@@ -36,7 +36,7 @@ export function SEOOptimizer({
       baseKeywords.push(
         movieData.titleEn,
         movieData.titleJa,
-        movieData.titleZh,
+        // Note: titleZh removed from SEO keywords for international optimization
         `${movieData.titleEn} streaming`,
         `${movieData.titleEn} watch online`,
         `${movieData.year} animation`
@@ -55,7 +55,7 @@ export function SEOOptimizer({
         "@context": "https://schema.org",
         "@type": "Movie",
         "name": movieData.titleEn,
-        "alternateName": [movieData.titleJa, movieData.titleZh].filter(Boolean),
+        "alternateName": [movieData.titleJa].filter(Boolean),
         "description": movieData.synopsis,
         "datePublished": `${movieData.year}-01-01`,
         "director": {

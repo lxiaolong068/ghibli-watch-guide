@@ -211,7 +211,7 @@ export class SEOContentGenerator {
       "@context": "https://schema.org",
       "@type": "Movie",
       "name": movieData.titleEn,
-      "alternateName": [movieData.titleJa, movieData.titleZh].filter(Boolean),
+      "alternateName": [movieData.titleJa].filter(Boolean),
       "description": movieData.synopsis,
       "datePublished": `${movieData.year}-01-01`,
       "director": {

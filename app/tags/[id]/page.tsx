@@ -138,7 +138,7 @@ export default async function TagPage({ params }: TagPageProps) {
         </div>
 
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          {tag.nameZh || tag.name}
+          {tag.name || tag.nameZh}
         </h1>
 
         {tag.nameJa && (
@@ -205,7 +205,7 @@ export default async function TagPage({ params }: TagPageProps) {
           </li>
           <li>
             <span className="text-gray-700 dark:text-gray-300">
-              {tag.nameZh || tag.name}
+              {tag.name || tag.nameZh}
             </span>
           </li>
         </ol>
