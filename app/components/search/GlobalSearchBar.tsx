@@ -51,7 +51,7 @@ export function GlobalSearchBar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // 快速搜索
+  // Quick search
   useEffect(() => {
     if (!showQuickResults || query.length < 2) {
       setQuickResults([]);
@@ -85,7 +85,7 @@ export function GlobalSearchBar({
       }
     };
 
-    const debounceTimer = setTimeout(searchQuick, 200); // 减少延迟以提高响应性
+    const debounceTimer = setTimeout(searchQuick, 200); // Reduce delay to improve responsiveness
     return () => clearTimeout(debounceTimer);
   }, [query, showQuickResults, maxQuickResults]);
 
@@ -168,7 +168,7 @@ export function GlobalSearchBar({
         </div>
       </form>
 
-      {/* 快速搜索结果下拉框 */}
+      {/* Quick search results dropdown */}
       {isOpen && showQuickResults && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
           {isLoading ? (
@@ -217,7 +217,7 @@ export function GlobalSearchBar({
                 </Link>
               ))}
               
-              {/* 查看所有结果 */}
+              {/* View all results */}
               <div className="border-t border-gray-200 dark:border-slate-700 p-3">
                 <Link
                   href={`/search?q=${encodeURIComponent(query)}`}

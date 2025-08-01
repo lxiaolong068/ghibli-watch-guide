@@ -22,7 +22,7 @@ export function MovieListContainer({
 
   return (
     <div className="space-y-8">
-      {/* 电影统计信息 */}
+      {/* Movie statistics */}
       <div className="flex items-center justify-between">
         <p className="text-gray-600">
           Showing {initialMovies.length} of {totalMovies} movies
@@ -32,10 +32,10 @@ export function MovieListContainer({
         </div>
       </div>
 
-      {/* 电影网格 */}
+      {/* Movie grid */}
       <MovieGrid movies={initialMovies} isLoading={isLoading} />
 
-      {/* 分页控件 */}
+      {/* Pagination controls */}
       <PaginationControls
         totalItems={totalMovies}
         currentPage={currentPage}

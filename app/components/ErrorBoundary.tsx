@@ -27,26 +27,26 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: { componentStack: string }) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     
-    // 调用可选的错误处理回调
+    // Call optional error handling callback
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
 
-    // 在生产环境中，可以将错误发送到错误监控服务
+    // In production environment, errors can be sent to error monitoring services
     if (process.env.NODE_ENV === 'production') {
-      // 例如：发送到 Sentry, LogRocket 等
+      // Example: send to Sentry, LogRocket, etc.
       // errorReportingService.captureException(error, { extra: errorInfo });
     }
   }
 
   render() {
     if (this.state.hasError) {
-      // 如果提供了自定义fallback，使用它
+      // If custom fallback is provided, use it
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
-      // 默认错误UI
+      // Default error UI
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">

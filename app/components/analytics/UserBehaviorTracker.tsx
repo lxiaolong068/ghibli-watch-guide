@@ -6,7 +6,7 @@ interface UserBehaviorTrackerProps {
   movieId?: string;
   characterId?: string;
   pageType: 'home' | 'movie' | 'movie-reviews' | 'reviews' | 'search' | 'about' | 'admin' | 'character' | 'characters';
-  userId?: string; // 为未来用户系统预留
+  userId?: string; // Reserved for future user system
 }
 
 export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: UserBehaviorTrackerProps) {
@@ -15,12 +15,12 @@ export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: 
 
   const trackPageView = useCallback(async () => {
     try {
-      // 更新电影统计（如果是电影页面）
+      // Update movie statistics (if movie page)
       if (movieId && pageType === 'movie') {
         await updateMovieStats(movieId, 'view');
       }
 
-      // 发送到 Google Analytics（如果配置了）
+      // Send to Google Analytics (if configured)
       // @ts-expect-error - Google Analytics global function
       if (typeof gtag !== 'undefined') {
         // @ts-expect-error - Google Analytics global function
@@ -33,7 +33,7 @@ export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: 
         });
       }
 
-      // 记录到本地存储（用于离线分析）
+      // Record to local storage (for offline analysis)
       const viewData = {
         timestamp: Date.now(),
         pageType,
@@ -48,7 +48,7 @@ export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: 
       const existingViews = JSON.parse(localStorage.getItem('user_views') || '[]');
       existingViews.push(viewData);
       
-      // 只保留最近100条记录
+      // Keep only the most recent 100 records
       if (existingViews.length > 100) {
         existingViews.splice(0, existingViews.length - 100);
       }
@@ -97,19 +97,19 @@ export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: 
   }, [characterId, movieId, pageType]);
 
   useEffect(() => {
-    // 记录页面访问
+    // Record page visit
     if (!hasTrackedView.current) {
       trackPageView();
       hasTrackedView.current = true;
     }
 
-    // 记录页面停留时间
+    // Record page dwell time
     const handleBeforeUnload = () => {
       const timeSpent = Date.now() - startTime.current;
       trackTimeSpent(timeSpent);
     };
 
-    // 记录滚动行为
+    // Record scroll behavior
     const handleScroll = () => {
       const scrollPercentage = Math.round(
         (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
@@ -129,10 +129,10 @@ export function UserBehaviorTracker({ movieId, characterId, pageType, userId }: 
     };
   }, [movieId, characterId, pageType, userId, trackPageView, trackScrollDepth, trackTimeSpent]);
 
-  return null; // 这是一个无UI的跟踪组件
+  return null; // This is a UI-less tracking component
 }
 
-// 更新电影统计的辅助函数
+// Helper function to update movie statistics
 async function updateMovieStats(movieId: string, action: 'view' | 'favorite' | 'share') {
   try {
     const response = await fetch('/api/movies/stats', {
@@ -154,7 +154,7 @@ async function updateMovieStats(movieId: string, action: 'view' | 'favorite' | '
   }
 }
 
-// 用户交互跟踪组件
+// User interaction tracking component
 export function InteractionTracker({ children }: { children: React.ReactNode }) {
   const handleClick = (event: React.MouseEvent) => {
     const target = event.target as HTMLElement;
@@ -162,7 +162,7 @@ export function InteractionTracker({ children }: { children: React.ReactNode }) 
     const elementClass = target.className;
     const elementText = target.textContent?.slice(0, 50) || '';
 
-    // 跟踪点击事件
+    // Track click events
     // @ts-expect-error - Google Analytics global function
     if (typeof gtag !== 'undefined') {
       // @ts-expect-error - Google Analytics global function
@@ -182,7 +182,7 @@ export function InteractionTracker({ children }: { children: React.ReactNode }) 
   );
 }
 
-// 搜索行为跟踪
+// Search behavior tracking
 export function trackSearchBehavior(query: string, resultsCount: number) {
   try {
     // @ts-expect-error - Google Analytics global function
@@ -195,7 +195,7 @@ export function trackSearchBehavior(query: string, resultsCount: number) {
       });
     }
 
-    // 记录到本地存储
+    // Record to local storage
     const searchData = {
       timestamp: Date.now(),
       query,
@@ -216,7 +216,7 @@ export function trackSearchBehavior(query: string, resultsCount: number) {
   }
 }
 
-// 错误跟踪
+// Error tracking
 export function trackError(error: Error, context?: string) {
   try {
     // @ts-expect-error - Google Analytics global function
@@ -236,7 +236,7 @@ export function trackError(error: Error, context?: string) {
   }
 }
 
-// 性能跟踪
+// Performance tracking
 export function trackPerformance(metricName: string, value: number, unit: string = 'ms') {
   try {
     // @ts-expect-error - Google Analytics global function
@@ -254,7 +254,7 @@ export function trackPerformance(metricName: string, value: number, unit: string
   }
 }
 
-// 获取用户行为分析数据
+// Get user behavior analytics data
 export function getUserBehaviorAnalytics() {
   try {
     const views = JSON.parse(localStorage.getItem('user_views') || '[]');
@@ -277,7 +277,7 @@ export function getUserBehaviorAnalytics() {
   }
 }
 
-// 辅助函数
+// Helper functions
 function getMostFrequent(arr: string[]): string | null {
   if (arr.length === 0) return null;
   
@@ -300,14 +300,14 @@ function calculateAverageSessionTime(views: any[]): number {
   for (let i = 1; i < views.length; i++) {
     const timeDiff = views[i].timestamp - views[i - 1].timestamp;
     
-    // 如果间隔超过30分钟，认为是新会话
+    // If interval exceeds 30 minutes, consider it a new session
     if (timeDiff > 30 * 60 * 1000) {
       sessions.push(views[i - 1].timestamp - sessionStart);
       sessionStart = views[i].timestamp;
     }
   }
   
-  // 添加最后一个会话
+  // Add the last session
   sessions.push(views[views.length - 1].timestamp - sessionStart);
   
   return sessions.reduce((sum, time) => sum + time, 0) / sessions.length;

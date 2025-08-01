@@ -5,8 +5,8 @@ interface SearchConsoleVerificationProps {
 }
 
 /**
- * Google Search Console 验证组件
- * 用于验证网站所有权和集成Search Console功能
+ * Google Search Console verification component
+ * Used to verify website ownership and integrate Search Console functionality
  */
 export function SearchConsoleVerification({ 
   verificationCode 
@@ -26,7 +26,7 @@ export function SearchConsoleVerification({
 }
 
 /**
- * 结构化数据组件 - 电影信息
+ * Structured data component - Movie information
  */
 interface MovieStructuredDataProps {
   movie: {
@@ -75,7 +75,7 @@ export function MovieStructuredData({ movie }: MovieStructuredDataProps) {
     ]
   };
 
-  // 移除undefined值
+  // Remove undefined values
   const cleanedData = JSON.parse(JSON.stringify(structuredData));
 
   return (
@@ -89,7 +89,7 @@ export function MovieStructuredData({ movie }: MovieStructuredDataProps) {
 }
 
 /**
- * 结构化数据组件 - 网站信息
+ * Structured data component - Website information
  */
 export function WebsiteStructuredData() {
   const structuredData = {
@@ -128,7 +128,7 @@ export function WebsiteStructuredData() {
 }
 
 /**
- * 结构化数据组件 - 面包屑导航
+ * Structured data component - Breadcrumb navigation
  */
 interface BreadcrumbStructuredDataProps {
   items: Array<{
@@ -160,7 +160,7 @@ export function BreadcrumbStructuredData({ items }: BreadcrumbStructuredDataProp
 }
 
 /**
- * 结构化数据组件 - 文章/评论
+ * Structured data component - Article/Review
  */
 interface ArticleStructuredDataProps {
   article: {
@@ -190,7 +190,7 @@ export function ArticleStructuredData({ article }: ArticleStructuredDataProps) {
     "image": article.imageUrl,
     "publisher": {
       "@type": "Organization",
-      "name": "吉卜力观影指南",
+      "name": "Studio Ghibli Watch Guide",
       "url": "https://www.whereghibli.cc"
     },
     "mainEntityOfPage": {
@@ -210,7 +210,7 @@ export function ArticleStructuredData({ article }: ArticleStructuredDataProps) {
 }
 
 /**
- * 结构化数据组件 - 常见问题
+ * Structured data component - FAQ
  */
 interface FAQStructuredDataProps {
   faqs: Array<{

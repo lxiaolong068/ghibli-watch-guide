@@ -14,7 +14,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // 导航链接配置
+  // Navigation links configuration
   const navigationLinks = [
     { href: '/', label: 'Home', icon: '🏠' },
     { href: '/movies', label: 'Movies', icon: '🎬' },
@@ -23,15 +23,15 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
     { href: '/reviews', label: 'Reviews', icon: '⭐' },
   ];
 
-  // 关闭菜单
+  // Close menu
   const closeMenu = () => setIsMenuOpen(false);
 
-  // 处理链接点击
+  // Handle link click
   const handleLinkClick = () => {
     closeMenu();
   };
 
-  // 防止背景滚动
+  // Prevent background scrolling
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -44,7 +44,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
     };
   }, [isMenuOpen]);
 
-  // 检查链接是否激活
+  // Check if link is active
   const isActiveLink = (href: string) => {
     if (href === '/') {
       return pathname === '/';
@@ -54,7 +54,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
 
   return (
     <div className={`lg:hidden ${className}`}>
-      {/* 汉堡菜单按钮 */}
+      {/* Hamburger menu button */}
       <button
         onClick={() => setIsMenuOpen(true)}
         className="p-2 rounded-md text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
@@ -66,20 +66,20 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
         </svg>
       </button>
 
-      {/* 移动端菜单覆盖层 */}
+      {/* Mobile menu overlay */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-50">
-          {/* 背景遮罩 */}
+          {/* Background overlay */}
           <div 
             className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
             onClick={closeMenu}
             aria-hidden="true"
           />
           
-          {/* 菜单面板 */}
+          {/* Menu panel */}
           <div className="fixed inset-y-0 right-0 max-w-sm w-full bg-white dark:bg-slate-800 shadow-xl transform transition-transform">
             <div className="flex flex-col h-full">
-              {/* 菜单头部 */}
+              {/* Menu header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Navigation</h2>
                 <button
@@ -93,7 +93,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
                 </button>
               </div>
 
-              {/* 搜索和地区选择器 */}
+              {/* Search and region selector */}
               <div className="p-4 border-b border-gray-200 dark:border-slate-700 space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Search Content</label>
@@ -105,7 +105,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
                 </div>
               </div>
 
-              {/* 导航链接 */}
+              {/* Navigation links */}
               <nav className="flex-1 overflow-y-auto p-4">
                 <div className="space-y-2">
                   {navigationLinks.map((link) => (
@@ -131,7 +131,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
                 </div>
               </nav>
 
-              {/* 菜单底部 */}
+              {/* Menu footer */}
               <div className="p-4 border-t border-gray-200 dark:border-slate-700">
                 <div className="text-center">
                   <p className="text-sm text-gray-500 dark:text-slate-400">Studio Ghibli Watch Guide</p>

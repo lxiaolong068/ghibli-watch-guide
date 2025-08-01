@@ -7,7 +7,7 @@ import { LoadingSpinner } from './LoadingSpinner';
 import { TagGroup } from '@/app/components/ui/TagBadge';
 import type { Movie, Tag } from '@/app/types';
 
-// 扩展Movie类型以包含标签信息
+// Extended Movie type to include tag information
 interface MovieWithTags extends Movie {
   tags?: Tag[];
   tagsByCategory?: Record<string, Tag[]>;
@@ -63,7 +63,7 @@ export function MovieCard({
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
           
-          {/* 悬停时显示的覆盖层 */}
+          {/* Hover overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-end">
             <div className="w-full p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
               <p className="text-sm font-medium">View Details</p>
@@ -98,7 +98,7 @@ export function MovieCard({
             </div>
           )}
 
-          {/* 标签显示 */}
+          {/* Tags display */}
           {showTags && movie.tags && movie.tags.length > 0 && (
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-slate-700">
               <TagGroup
@@ -111,7 +111,7 @@ export function MovieCard({
               />
               {movie.tags.length > maxTags && (
                 <span className="inline-block mt-1 text-xs text-gray-500 dark:text-slate-400">
-                  +{movie.tags.length - maxTags} 更多
+                  +{movie.tags.length - maxTags} more
                 </span>
               )}
             </div>
@@ -122,7 +122,7 @@ export function MovieCard({
   );
 }
 
-// 电影卡片骨架加载组件
+// Movie card skeleton loading component
 export function MovieCardSkeleton({ className = '' }: { className?: string }) {
   return (
     <div className={`bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden animate-pulse ${className}`}>
@@ -140,7 +140,7 @@ export function MovieCardSkeleton({ className = '' }: { className?: string }) {
   );
 }
 
-// 电影网格组件
+// Movie grid component
 export function MovieGrid({
   movies,
   isLoading = false,
@@ -179,7 +179,7 @@ export function MovieGrid({
         <MovieCard
           key={movie.id}
           movie={movie}
-          priority={index < 4} // 前4个电影优先加载
+          priority={index < 4} // First 4 movies prioritized for loading
           showTags={showTags}
           onTagClick={onTagClick}
         />

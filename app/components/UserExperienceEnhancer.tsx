@@ -15,7 +15,7 @@ export function UserExperienceEnhancer({ children }: UserExperienceEnhancerProps
   const [showOfflineMessage, setShowOfflineMessage] = useState(false);
   const [showSlowConnectionWarning, setShowSlowConnectionWarning] = useState(false);
 
-  // 处理离线状态
+  // Handle offline state
   useEffect(() => {
     if (!isOnline) {
       setShowOfflineMessage(true);
@@ -24,7 +24,7 @@ export function UserExperienceEnhancer({ children }: UserExperienceEnhancerProps
     }
   }, [isOnline]);
 
-  // 处理慢速连接
+  // Handle slow connection
   useEffect(() => {
     if (isSlowConnection && isOnline) {
       setShowSlowConnectionWarning(true);
@@ -35,7 +35,7 @@ export function UserExperienceEnhancer({ children }: UserExperienceEnhancerProps
     }
   }, [isSlowConnection, isOnline]);
 
-  // 根据设备类型调整样式
+  // Adjust styles based on device type
   useEffect(() => {
     const root = document.documentElement;
     
@@ -51,7 +51,7 @@ export function UserExperienceEnhancer({ children }: UserExperienceEnhancerProps
     }
   }, [isMobile, isTablet, isDesktop]);
 
-  // 用户活动状态管理
+  // User activity state management
   useEffect(() => {
     const root = document.documentElement;
     
@@ -66,27 +66,27 @@ export function UserExperienceEnhancer({ children }: UserExperienceEnhancerProps
     <>
       {children}
       
-      {/* 离线提示 */}
+      {/* Offline notification */}
       {showOfflineMessage && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white p-3 text-center">
           <div className="flex items-center justify-center space-x-2">
             <SignalSlashIcon className="w-5 h-5" />
-            <span>您当前处于离线状态，某些功能可能不可用</span>
+            <span>You are currently offline. Some features may not be available.</span>
           </div>
         </div>
       )}
 
-      {/* 慢速连接警告 */}
+      {/* Slow connection warning */}
       {showSlowConnectionWarning && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-600 text-white p-3 text-center">
           <div className="flex items-center justify-center space-x-2">
             <WifiIcon className="w-5 h-5" />
-            <span>检测到网络连接较慢，页面加载可能需要更长时间</span>
+            <span>Slow network connection detected. Page loading may take longer.</span>
           </div>
         </div>
       )}
 
-      {/* 设备类型指示器（仅开发环境） */}
+      {/* Device type indicator (development only) */}
       {process.env.NODE_ENV === 'development' && (
         <div className="fixed bottom-20 left-4 z-40 bg-black/80 text-white px-3 py-2 rounded-lg text-xs">
           <div className="flex items-center space-x-2">
@@ -103,7 +103,7 @@ export function UserExperienceEnhancer({ children }: UserExperienceEnhancerProps
   );
 }
 
-// 智能加载组件
+// Smart loading component
 export function SmartLoader({ 
   isLoading, 
   error, 
@@ -135,7 +135,7 @@ export function SmartLoader({
   if (error) {
     return errorFallback || (
       <div className="text-center py-8">
-        <p className="text-red-600 dark:text-red-400">加载失败，请稍后重试</p>
+        <p className="text-red-600 dark:text-red-400">Loading failed, please try again later</p>
       </div>
     );
   }
@@ -147,7 +147,7 @@ export function SmartLoader({
           <div className="space-y-4">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
             <p className="text-gray-600 dark:text-gray-400">
-              {showSlowLoadingMessage ? '网络较慢，请耐心等待...' : '加载中...'}
+              {showSlowLoadingMessage ? 'Network is slow, please wait...' : 'Loading...'}
             </p>
           </div>
         )}
@@ -158,7 +158,7 @@ export function SmartLoader({
   return <>{children}</>;
 }
 
-// 自适应图片组件
+// Adaptive image component
 export function AdaptiveImage({
   src,
   alt,
@@ -177,10 +177,10 @@ export function AdaptiveImage({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // 根据网络状况和设备类型调整图片质量
+  // Adjust image quality based on network conditions and device type
   const getOptimizedSrc = (originalSrc: string) => {
     if (isSlowConnection || isMobile) {
-      // 对于慢速连接或移动设备，使用较低质量的图片
+      // For slow connections or mobile devices, use lower quality images
       return originalSrc.replace(/\.(jpg|jpeg|png)$/i, '_low.$1');
     }
     return originalSrc;
@@ -194,7 +194,7 @@ export function AdaptiveImage({
       
       {imageError ? (
         <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 rounded">
-          <span className="text-gray-500 dark:text-gray-400 text-sm">图片加载失败</span>
+          <span className="text-gray-500 dark:text-gray-400 text-sm">Image failed to load</span>
         </div>
       ) : (
         <img
@@ -213,7 +213,7 @@ export function AdaptiveImage({
   );
 }
 
-// 响应式容器组件
+// Responsive container component
 export function ResponsiveContainer({
   children,
   className = '',

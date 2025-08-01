@@ -71,14 +71,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <PageSpeedOptimizer>
             <PerformanceOptimizer>
               <UserExperienceEnhancer>
-                {/* 跳转到主内容链接 */}
+                {/* Skip to main content link */}
                 <a href="#main-content" className="skip-link">
                   Skip to main content
                 </a>
 
         <header className="bg-gradient-to-r from-[#4AB1B3] to-[#76E4C4] dark:from-slate-800 dark:to-slate-700 shadow-lg">
           <div className="container mx-auto px-4 py-6 relative">
-            {/* 主题切换按钮 */}
+            {/* Theme toggle button */}
             <div className="absolute top-4 right-4">
               <DarkModeToggle variant="dropdown" size="md" />
             </div>
@@ -94,12 +94,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         
         <nav className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
           <div className="container mx-auto px-4 py-3">
-            {/* 移动端导航 */}
+            {/* Mobile navigation */}
             <MobileNavBar>
               <Breadcrumb />
             </MobileNavBar>
 
-            {/* 桌面端导航 */}
+            {/* Desktop navigation */}
             <DesktopNavBar>
               <Breadcrumb />
             </DesktopNavBar>
@@ -125,7 +125,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </footer>
 
-        {/* 用户体验工具 */}
+        {/* User experience tools */}
         <AccessibilityTools />
         <FeedbackWidget />
         <PerformanceMonitor enableConsoleLogging={process.env.NODE_ENV === 'development'} />

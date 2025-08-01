@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-// 移动端检测Hook
+// Mobile detection Hook
 export function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -20,7 +20,7 @@ export function useIsMobile() {
   return isMobile;
 }
 
-// 移动端优化的容器组件
+// Mobile-optimized container component
 interface MobileContainerProps {
   children: React.ReactNode;
   className?: string;
@@ -34,7 +34,7 @@ export function MobileContainer({ children, className = '' }: MobileContainerPro
   );
 }
 
-// 移动端优化的卡片组件
+// Mobile-optimized card component
 interface MobileCardProps {
   children: React.ReactNode;
   className?: string;
@@ -66,7 +66,7 @@ export function MobileCard({
   );
 }
 
-// 移动端优化的按钮组件
+// Mobile-optimized button component
 interface MobileButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
@@ -117,7 +117,7 @@ export function MobileButton({
   );
 }
 
-// 移动端优化的网格组件
+// Mobile-optimized grid component
 interface MobileGridProps {
   children: React.ReactNode;
   cols?: {
@@ -151,7 +151,7 @@ export function MobileGrid({
   );
 }
 
-// 移动端优化的文本组件
+// Mobile-optimized text component
 interface MobileTextProps {
   children: React.ReactNode;
   size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl';
@@ -195,7 +195,7 @@ export function MobileText({
   );
 }
 
-// 移动端优化的间距组件
+// Mobile-optimized spacing component
 interface MobileSpacingProps {
   children: React.ReactNode;
   y?: number;
@@ -210,7 +210,7 @@ export function MobileSpacing({ children, y = 6, className = '' }: MobileSpacing
   );
 }
 
-// 移动端优化的标题组件
+// Mobile-optimized title component
 interface MobileTitleProps {
   children: React.ReactNode;
   level?: 1 | 2 | 3 | 4;
@@ -234,7 +234,7 @@ export function MobileTitle({ children, level = 1, className = '' }: MobileTitle
   );
 }
 
-// 移动端优化的图片组件
+// Mobile-optimized image component
 interface MobileImageProps {
   src: string;
   alt: string;
@@ -269,7 +269,7 @@ export function MobileImage({
   );
 }
 
-// 移动端优化的加载状态组件
+// Mobile-optimized loading state component
 export function MobileLoadingSpinner({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const sizeClasses = {
     sm: 'w-4 h-4',

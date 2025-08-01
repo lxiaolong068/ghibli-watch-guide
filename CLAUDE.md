@@ -92,10 +92,39 @@ The `.env` file connects to the production database. Exercise extreme caution wi
 - Movie data includes titles in multiple languages (English, Japanese, Chinese)
 - Automated data synchronization through cron jobs
 
-### Internationalization
-- Primary language: English
-- Supports Japanese and Chinese titles
-- Content templates for multiple languages
+### Internationalization & SEO Language Guidelines
+- **Primary language**: English (for international SEO)
+- **Target audience**: English-speaking users globally
+
+#### SEO-Critical Content (MUST be English)
+- Page titles (`<title>` tags)
+- Meta descriptions 
+- Headings (H1, H2, H3, etc.)
+- Navigation menus and labels
+- Button text and UI elements
+- URL slugs and paths
+- Search functionality text
+- Category and genre labels
+- Platform and region names
+- Alt text for images
+- Schema.org structured data
+- OpenGraph and Twitter Card metadata
+
+#### Content That Can Preserve Original Language
+- **Movie titles**: Display both English and original (Japanese) titles
+  - Primary: English title for SEO
+  - Secondary: Original Japanese title in parentheses or subtitle
+- **Character names**: Original Japanese names with English pronunciation guide
+- **Director/Staff names**: Keep original Japanese names
+- **Production company names**: Keep original (Studio Ghibli, etc.)
+- **Theme song titles**: Original Japanese with English translation
+- **Cultural references**: Japanese terms with English explanations
+
+#### Implementation Strategy
+- Use English titles as primary for search indexing
+- Include original titles as secondary metadata
+- Ensure all user-facing interface elements are in English
+- Maintain cultural authenticity while optimizing for discoverability
 
 ### Performance Considerations
 - Optimized images with `OptimizedImage` component

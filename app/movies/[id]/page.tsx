@@ -37,8 +37,8 @@ interface MoviePageData {
   providers: WatchProviderResults;
 }
 
-// 使用较长的重新验证时间，因为电影详情不经常变化
-export const revalidate = 43200; // 12小时重新验证
+// Use longer revalidation time as movie details don't change frequently
+export const revalidate = 43200; // 12 hours revalidation
 
 interface MoviePageProps {
   params: {
@@ -50,56 +50,56 @@ interface MoviePageProps {
 }
 
 /**
- * 获取电影页面数据的缓存函数
- * 使用React.cache确保在一次请求中只执行一次数据获取
+ * Cached function to get movie page data
+ * Uses React.cache to ensure data is fetched only once per request
  */
 const getMoviePageData = cache(async (movieCuid: string): Promise<MoviePageData | null> => {
-  // 仅在开发环境输出详细日志
+  // Only output detailed logs in development environment
   if (process.env.NODE_ENV !== 'production') {
-    console.log(`[MoviePage] 获取电影数据，CUID: ${movieCuid}`);
+    console.log(`[MoviePage] Getting movie data, CUID: ${movieCuid}`);
   }
   
   try {
-    // 1. 从数据库获取电影的TMDB ID
+    // 1. Get movie's TMDB ID from database
     const movieFromDb = await prisma.movie.findUnique({
       where: { id: movieCuid },
       select: movieArgs.select, 
     });
 
-    // 如果数据库中不存在该电影，返回null
+    // If movie doesn't exist in database, return null
     if (!movieFromDb) {
       if (process.env.NODE_ENV !== 'production') {
-        console.log(`[MoviePage] 未在数据库中找到CUID ${movieCuid}的电影`);  
+        console.log(`[MoviePage] Movie with CUID ${movieCuid} not found in database`);  
       }
       return null;
     }
 
-    // 验证TMDB ID是否有效
+    // Validate TMDB ID is valid
     if (typeof movieFromDb.tmdbId !== 'number') {
-      console.error(`[MoviePage] 电影CUID ${movieCuid} (${movieFromDb.titleEn})的tmdbId缺失或无效`);  
+      console.error(`[MoviePage] Movie CUID ${movieCuid} (${movieFromDb.titleEn}) has missing or invalid tmdbId`);  
       return null; 
     }
 
     const tmdbId = movieFromDb.tmdbId;
     
-    // 2. 并行获取电影详情和观看提供商信息，使用不同的缓存策略
-    // 电影详情缓存时间更长，观看提供商信息缓存时间更短
+    // 2. Get movie details and watch providers in parallel with different cache strategies
+    // Movie details cache longer, watch provider info caches shorter
     const [movieDetails, watchProvidersResponse] = await Promise.all([
-      getMovieDetails(tmdbId, { cache: 86400 }), // 电影详情缓存一天
-      getMovieWatchProviders(tmdbId, { cache: 3600 }) // 提供商信息缓存一小时
+      getMovieDetails(tmdbId, { cache: 86400 }), // Movie details cache for one day
+      getMovieWatchProviders(tmdbId, { cache: 3600 }) // Provider info cache for one hour
     ]);
 
-    // 构建页面数据对象
+    // Build page data object
     return {
       details: movieDetails,
       providers: watchProvidersResponse.results || {},
     };
 
   } catch (error) {
-    // 记录错误，但不在生产环境中输出完整错误对象
+    // Log error, but don't output full error object in production
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(`[MoviePage] Error fetching data for CUID ${movieCuid}: ${errorMessage}`);
-    return null; // 错误时返回null
+    return null; // Return null on error
   }
 });
 
@@ -221,7 +221,7 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
   
   return (
     <>
-      {/* SEO优化组件 */}
+      {/* SEO optimization component */}
       <SEOOptimizer
         title={`${movie.title} | Where to Watch Studio Ghibli Movies`}
         description={`Watch ${movie.title} online. Find streaming options for this ${movie.release_date?.substring(0, 4) || 'N/A'} Studio Ghibli film on Netflix, Disney+, and more platforms.`}
@@ -231,10 +231,10 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         movieData={movie}
       />
 
-      {/* 用户行为跟踪 */}
+      {/* User behavior tracking */}
       <UserBehaviorTracker pageType="movie" movieId={id} />
 
-      {/* 页面浏览统计 */}
+      {/* Page view statistics */}
       <MovieStatsTracker movieId={id} />
 
       <div className="max-w-5xl mx-auto pb-12">
@@ -348,9 +348,9 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         <h2 className="text-xl font-bold text-gray-900 mb-6">Where to Watch</h2>
 
         {(() => {
-          // 处理"全球"选项（regionCode为空字符串）
+          // Handle "Global" option (regionCode is empty string)
           if (regionCode === '') {
-            // 显示所有地区的观看选项
+            // Show watch options for all regions
             return (
               <div className="grid gap-6 md:grid-cols-2">
                 {Object.entries(watchProviders).map(([countryCode, countryData]) => {

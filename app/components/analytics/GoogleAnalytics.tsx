@@ -8,7 +8,7 @@ interface GoogleAnalyticsProps {
   measurementId: string;
 }
 
-// Google Analytics 4 事件类型
+// Google Analytics 4 event types
 export interface GAEvent {
   action: string;
   category: string;
@@ -17,7 +17,7 @@ export interface GAEvent {
   custom_parameters?: Record<string, unknown>;
 }
 
-// 声明全局gtag函数
+// Declare global gtag function
 declare global {
   interface Window {
     gtag: (
@@ -30,14 +30,14 @@ declare global {
 }
 
 /**
- * Google Analytics 4 组件
- * 提供页面浏览跟踪和自定义事件跟踪
+ * Google Analytics 4 component
+ * Provides page view tracking and custom event tracking
  */
 export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // 页面浏览跟踪
+  // Page view tracking
   useEffect(() => {
     if (typeof window !== 'undefined' && window.gtag) {
       const url = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '');
@@ -50,7 +50,7 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
         }
       });
 
-      // 发送页面浏览事件
+      // Send page view event
       window.gtag('event', 'page_view', {
         page_title: document.title,
         page_location: window.location.href,
@@ -62,7 +62,7 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
 
   return (
     <>
-      {/* Google Analytics 4 脚本 */}
+      {/* Google Analytics 4 scripts */}
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
         strategy="afterInteractive"
@@ -91,7 +91,7 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
 }
 
 /**
- * 发送自定义事件到Google Analytics
+ * Send custom events to Google Analytics
  */
 export function trackEvent(event: GAEvent): void {
   if (typeof window !== 'undefined' && window.gtag) {
@@ -105,7 +105,7 @@ export function trackEvent(event: GAEvent): void {
 }
 
 /**
- * 跟踪搜索事件
+ * Track search events
  */
 export function trackSearch(searchTerm: string, resultCount: number): void {
   trackEvent({
@@ -121,7 +121,7 @@ export function trackSearch(searchTerm: string, resultCount: number): void {
 }
 
 /**
- * 跟踪内容交互事件
+ * Track content interaction events
  */
 export function trackContentInteraction(
   contentType: 'movie' | 'character' | 'review' | 'guide',
@@ -141,7 +141,7 @@ export function trackContentInteraction(
 }
 
 /**
- * 跟踪推荐点击事件
+ * Track recommendation click events
  */
 export function trackRecommendationClick(
   recommendationId: string,
@@ -162,7 +162,7 @@ export function trackRecommendationClick(
 }
 
 /**
- * 跟踪用户参与度事件
+ * Track user engagement events
  */
 export function trackEngagement(
   engagementType: 'scroll_depth' | 'time_on_page' | 'bounce',
@@ -180,7 +180,7 @@ export function trackEngagement(
 }
 
 /**
- * 跟踪转化事件
+ * Track conversion events
  */
 export function trackConversion(
   conversionType: 'newsletter_signup' | 'social_share' | 'external_link_click',
@@ -198,7 +198,7 @@ export function trackConversion(
 }
 
 /**
- * 设置用户属性
+ * Set user properties
  */
 export function setUserProperties(properties: Record<string, unknown>): void {
   if (typeof window !== 'undefined' && window.gtag) {
@@ -209,7 +209,7 @@ export function setUserProperties(properties: Record<string, unknown>): void {
 }
 
 /**
- * 跟踪异常事件
+ * Track exception events
  */
 export function trackException(description: string, fatal: boolean = false): void {
   if (typeof window !== 'undefined' && window.gtag) {

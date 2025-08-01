@@ -53,7 +53,7 @@ export function OptimizedImage({
     onError?.();
   };
 
-  // 生成默认的模糊占位符
+  // Generate default blur placeholder
   const generateBlurDataURL = (w: number, h: number) => {
     const canvas = document.createElement('canvas');
     canvas.width = w;
@@ -107,7 +107,7 @@ export function OptimizedImage({
   );
 }
 
-// 电影海报专用组件
+// Movie poster specific component
 export function MoviePoster({
   src,
   title,
@@ -156,7 +156,7 @@ export function MoviePoster({
   );
 }
 
-// 背景图片组件
+// Background image component
 export function BackdropImage({
   src,
   title,

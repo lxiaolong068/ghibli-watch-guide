@@ -20,7 +20,7 @@ export function PerformanceOptimizer({
   const { isMobile } = useDeviceInfo();
   const [performanceMode, setPerformanceMode] = useState<'normal' | 'optimized' | 'aggressive'>('normal');
 
-  // 根据网络状况和设备类型调整性能模式
+  // Adjust performance mode based on network conditions and device type
   useEffect(() => {
     if (isSlowConnection || isMobile) {
       setPerformanceMode('optimized');
@@ -29,18 +29,18 @@ export function PerformanceOptimizer({
     }
   }, [isSlowConnection, isMobile]);
 
-  // 预加载关键资源
+  // Preload critical resources
   useEffect(() => {
     if (enableResourceHints && performanceMode !== 'aggressive') {
       const preloadCriticalResources = () => {
-        // 预加载关键CSS
+        // Preload critical CSS
         const criticalCSS = document.createElement('link');
         criticalCSS.rel = 'preload';
         criticalCSS.as = 'style';
         criticalCSS.href = '/styles/critical.css';
         document.head.appendChild(criticalCSS);
 
-        // 预连接到重要域名
+        // Preconnect to important domains
         const preconnectDomains = [
           'https://image.tmdb.org',
           'https://fonts.googleapis.com',
@@ -62,7 +62,7 @@ export function PerformanceOptimizer({
     }
   }, [enableResourceHints, performanceMode]);
 
-  // 懒加载图片优化
+  // Lazy loading image optimization
   useEffect(() => {
     if (enableImageOptimization && 'IntersectionObserver' in window) {
       const imageObserver = new IntersectionObserver((entries) => {
@@ -81,7 +81,7 @@ export function PerformanceOptimizer({
         threshold: 0.01
       });
 
-      // 观察所有带有data-src属性的图片
+      // Observe all images with data-src attribute
       const lazyImages = document.querySelectorAll('img[data-src]');
       lazyImages.forEach(img => imageObserver.observe(img));
 
@@ -89,10 +89,10 @@ export function PerformanceOptimizer({
     }
   }, [enableImageOptimization]);
 
-  // 性能监控和优化
+  // Performance monitoring and optimization
   useEffect(() => {
     const optimizePerformance = () => {
-      // 移除未使用的CSS
+      // Remove unused CSS
       if (performanceMode === 'aggressive') {
         const unusedStyles = document.querySelectorAll('style:empty, link[rel="stylesheet"]:not([href*="critical"])');
         unusedStyles.forEach(style => {
@@ -102,7 +102,7 @@ export function PerformanceOptimizer({
         });
       }
 
-      // 延迟加载非关键JavaScript
+      // Defer loading non-critical JavaScript
       if (performanceMode !== 'normal') {
         const nonCriticalScripts = document.querySelectorAll('script[data-defer]');
         nonCriticalScripts.forEach(script => {
@@ -116,7 +116,7 @@ export function PerformanceOptimizer({
       }
     };
 
-    // 在页面加载完成后执行优化
+    // Execute optimization after page load completion
     if (document.readyState === 'complete') {
       optimizePerformance();
     } else {
@@ -132,7 +132,7 @@ export function PerformanceOptimizer({
   );
 }
 
-// 智能图片组件
+// Smart image component
 export function OptimizedImage({
   src,
   alt,
@@ -157,12 +157,12 @@ export function OptimizedImage({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // 根据网络状况调整图片质量
+  // Adjust image quality based on network conditions
   const getOptimizedSrc = useCallback((originalSrc: string) => {
     const baseQuality = isSlowConnection ? Math.min(quality - 20, 50) : quality;
     const deviceQuality = isMobile ? Math.min(baseQuality - 10, 60) : baseQuality;
     
-    // 如果是TMDB图片，添加质量参数
+    // If TMDB image, add quality parameters
     if (originalSrc.includes('image.tmdb.org')) {
       return originalSrc.replace(/w\d+/, `w${isMobile ? '300' : '500'}`);
     }
@@ -170,7 +170,7 @@ export function OptimizedImage({
     return originalSrc;
   }, [isSlowConnection, isMobile, quality]);
 
-  // 生成响应式图片源
+  // Generate responsive image sources
   const generateSrcSet = useCallback((originalSrc: string) => {
     if (!originalSrc.includes('image.tmdb.org')) return undefined;
     
@@ -185,7 +185,7 @@ export function OptimizedImage({
 
   return (
     <div className={`relative ${className}`}>
-      {/* 加载占位符 */}
+      {/* Loading placeholder */}
       {!imageLoaded && !imageError && (
         <div 
           className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"
@@ -193,17 +193,17 @@ export function OptimizedImage({
         />
       )}
       
-      {/* 错误占位符 */}
+      {/* Error placeholder */}
       {imageError && (
         <div 
           className="flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded"
           style={{ width, height }}
         >
-          <span className="text-gray-500 dark:text-gray-400 text-sm">图片加载失败</span>
+          <span className="text-gray-500 dark:text-gray-400 text-sm">Image failed to load</span>
         </div>
       )}
       
-      {/* 实际图片 */}
+      {/* Actual image */}
       {!imageError && (
         <img
           src={priority ? optimizedSrc : undefined}
@@ -226,11 +226,11 @@ export function OptimizedImage({
   );
 }
 
-// 代码分割组件
+// Code splitting component
 export function LazyComponent({
   loader,
   fallback = <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-32" />,
-  errorFallback = <div className="text-red-500">组件加载失败</div>
+  errorFallback = <div className="text-red-500">Component failed to load</div>
 }: {
   loader: () => Promise<{ default: React.ComponentType<any> }>;
   fallback?: React.ReactNode;
@@ -258,7 +258,7 @@ export function LazyComponent({
   return <Component />;
 }
 
-// 性能监控Hook
+// Performance monitoring Hook
 export function usePerformanceMonitoring() {
   const [metrics, setMetrics] = useState({
     fcp: 0, // First Contentful Paint
@@ -269,7 +269,7 @@ export function usePerformanceMonitoring() {
   });
 
   useEffect(() => {
-    // 监控Core Web Vitals
+    // Monitor Core Web Vitals
     const observer = new PerformanceObserver((list) => {
       list.getEntries().forEach((entry) => {
         switch (entry.entryType) {
@@ -293,10 +293,10 @@ export function usePerformanceMonitoring() {
       });
     });
 
-    // 观察性能指标
+    // Observe performance metrics
     observer.observe({ entryTypes: ['paint', 'largest-contentful-paint', 'first-input', 'layout-shift'] });
 
-    // 计算TTFB
+    // Calculate TTFB
     const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
     if (navigationEntry) {
       setMetrics(prev => ({ 

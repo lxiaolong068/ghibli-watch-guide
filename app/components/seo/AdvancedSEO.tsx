@@ -31,7 +31,7 @@ export function AdvancedSEO({
   breadcrumbs
 }: AdvancedSEOProps) {
   
-  // 生成结构化数据
+  // Generate structured data
   const generateStructuredData = () => {
     const baseStructuredData = {
       "@context": "https://schema.org",
@@ -54,7 +54,7 @@ export function AdvancedSEO({
       }
     };
 
-    // 如果有面包屑，添加面包屑结构化数据
+    // If breadcrumbs exist, add breadcrumb structured data
     if (breadcrumbs && breadcrumbs.length > 0) {
       const breadcrumbStructuredData = {
         "@context": "https://schema.org",
@@ -78,16 +78,16 @@ export function AdvancedSEO({
 
   return (
     <Head>
-      {/* 基础SEO标签 */}
+      {/* Basic SEO tags */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords.join(', ')} />
       <meta name="robots" content={robotsContent} />
       
-      {/* 规范URL */}
+      {/* Canonical URL */}
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
       
-      {/* Open Graph标签 */}
+      {/* Open Graph tags */}
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content={ogType} />
@@ -97,33 +97,33 @@ export function AdvancedSEO({
       <meta property="og:site_name" content="Where to Watch Studio Ghibli Movies" />
       <meta property="og:locale" content="en_US" />
       
-      {/* Twitter Card标签 */}
+      {/* Twitter Card tags */}
       <meta name="twitter:card" content={twitterCard} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
       <meta name="twitter:image:alt" content={title} />
       
-      {/* 多语言支持 */}
+      {/* Multi-language support */}
       {alternateLanguages && Object.entries(alternateLanguages).map(([lang, url]) => (
         <link key={lang} rel="alternate" hrefLang={lang} href={url} />
       ))}
       
-      {/* 移动端优化 */}
+      {/* Mobile optimization */}
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       <meta name="theme-color" content="#059669" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       <meta name="apple-mobile-web-app-title" content="Ghibli Guide" />
       
-      {/* 性能优化 */}
+      {/* Performance optimization */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://image.tmdb.org" />
       <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
       
-      {/* 结构化数据 */}
+      {/* Structured data */}
       {generateStructuredData().map((data, index) => (
         <script
           key={index}
@@ -135,7 +135,7 @@ export function AdvancedSEO({
   );
 }
 
-// 生成页面元数据的辅助函数
+// Helper function to generate page metadata
 export function generatePageMetadata({
   title,
   description,
@@ -196,7 +196,7 @@ export function generatePageMetadata({
   };
 }
 
-// 电影页面专用的结构化数据生成器
+// Movie page specific structured data generator
 export function generateMovieStructuredData(movie: {
   id: string;
   title: string;
@@ -238,7 +238,7 @@ export function generateMovieStructuredData(movie: {
   };
 }
 
-// 文章/评论页面的结构化数据生成器
+// Article/review page structured data generator
 export function generateArticleStructuredData(article: {
   title: string;
   description: string;

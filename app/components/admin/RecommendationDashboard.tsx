@@ -19,7 +19,7 @@ export function RecommendationDashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [timeRange, setTimeRange] = useState(30); // 默认30天
+  const [timeRange, setTimeRange] = useState(30); // Default 30 days
 
   const fetchAnalytics = useCallback(async () => {
     try {
@@ -31,13 +31,13 @@ export function RecommendationDashboard() {
       );
 
       if (!response.ok) {
-        throw new Error('获取推荐分析数据失败');
+        throw new Error('Failed to fetch recommendation analytics data');
       }
 
       const result = await response.json();
       setData(result.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '未知错误');
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,7 @@ export function RecommendationDashboard() {
             onClick={fetchAnalytics}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            重试
+            Retry
           </button>
         </div>
       </div>
@@ -108,41 +108,41 @@ export function RecommendationDashboard() {
   if (!data) {
     return (
       <div className="p-6">
-        <p className="text-gray-500 text-center">暂无数据</p>
+        <p className="text-gray-500 text-center">No data available</p>
       </div>
     );
   }
 
   return (
     <div className="p-6 space-y-6">
-      {/* 标题和时间范围选择 */}
+      {/* Title and time range selection */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">推荐系统分析仪表板</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Recommendation System Analytics Dashboard</h1>
         <div className="flex items-center space-x-4">
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(parseInt(e.target.value))}
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
-            <option value={7}>最近7天</option>
-            <option value={30}>最近30天</option>
-            <option value={90}>最近90天</option>
+            <option value={7}>Last 7 days</option>
+            <option value={30}>Last 30 days</option>
+            <option value={90}>Last 90 days</option>
           </select>
           <button
             onClick={fetchAnalytics}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            刷新
+            Refresh
           </button>
         </div>
       </div>
 
-      {/* 核心指标卡片 */}
+      {/* Core metrics cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">点击率</p>
+              <p className="text-sm font-medium text-gray-600">Click Rate</p>
               <p className="text-2xl font-bold text-gray-900">
                 {(data.metrics.clickThroughRate * 100).toFixed(1)}%
               </p>
@@ -159,7 +159,7 @@ export function RecommendationDashboard() {
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">参与率</p>
+              <p className="text-sm font-medium text-gray-600">Engagement Rate</p>
               <p className="text-2xl font-bold text-gray-900">
                 {(data.metrics.engagementRate * 100).toFixed(1)}%
               </p>
@@ -176,7 +176,7 @@ export function RecommendationDashboard() {
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">用户满意度</p>
+              <p className="text-sm font-medium text-gray-600">User Satisfaction</p>
               <p className="text-2xl font-bold text-gray-900">
                 {(data.metrics.userSatisfaction.diversityScore * 100).toFixed(0)}
               </p>
@@ -191,11 +191,11 @@ export function RecommendationDashboard() {
         </div>
       </div>
 
-      {/* 详细统计 */}
+      {/* Detailed statistics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 算法效果对比 */}
+        {/* Algorithm performance comparison */}
         <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">算法效果对比</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Algorithm Performance Comparison</h3>
           <div className="space-y-3">
             {data.metrics.algorithmPerformance.map((algo) => (
               <div key={algo.algorithm} className="flex items-center justify-between">
@@ -208,7 +208,7 @@ export function RecommendationDashboard() {
                     {(algo.clickThroughRate * 100).toFixed(1)}%
                   </div>
                   <div className="text-xs text-gray-500">
-                    {algo.totalRecommendations} 推荐
+                    {algo.totalRecommendations} recommendations
                   </div>
                 </div>
               </div>
@@ -216,9 +216,9 @@ export function RecommendationDashboard() {
           </div>
         </div>
 
-        {/* 内容类型效果 */}
+        {/* Content type performance */}
         <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">内容类型效果</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Content Type Performance</h3>
           <div className="space-y-3">
             {data.metrics.contentTypeAnalysis.map((content) => (
               <div key={content.contentType} className="flex items-center justify-between">
@@ -231,7 +231,7 @@ export function RecommendationDashboard() {
                     {(content.clickThroughRate * 100).toFixed(1)}%
                   </div>
                   <div className="text-xs text-gray-500">
-                    {content.totalRecommendations} 推荐
+                    {content.totalRecommendations} recommendations
                   </div>
                 </div>
               </div>
@@ -240,10 +240,10 @@ export function RecommendationDashboard() {
         </div>
       </div>
 
-      {/* 优化建议 */}
+      {/* Optimization suggestions */}
       {data.optimizationSuggestions && data.optimizationSuggestions.length > 0 && (
         <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">优化建议</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Optimization Suggestions</h3>
           <div className="space-y-4">
             {data.optimizationSuggestions.map((suggestion, index) => (
               <div key={index} className="border rounded-lg p-4">
@@ -253,13 +253,13 @@ export function RecommendationDashboard() {
                       {suggestion.priority}
                     </span>
                     <span className="ml-3 font-medium text-gray-900">
-                      预期改善: +{suggestion.expectedImprovement}%
+                      Expected improvement: +{suggestion.expectedImprovement}%
                     </span>
                   </div>
                 </div>
                 <p className="text-gray-700 mb-2">{suggestion.description}</p>
                 <p className="text-sm text-gray-600 mb-2">
-                  <strong>实施方案:</strong> {suggestion.implementation}
+                  <strong>Implementation:</strong> {suggestion.implementation}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {suggestion.metrics.map((metric) => (
@@ -277,9 +277,9 @@ export function RecommendationDashboard() {
         </div>
       )}
 
-      {/* 数据更新时间 */}
+      {/* Data update time */}
       <div className="text-center text-sm text-gray-500">
-        数据更新时间: {new Date(data.generatedAt).toLocaleString('zh-CN')}
+        Data updated: {new Date(data.generatedAt).toLocaleString('en-US')}
       </div>
     </div>
   );

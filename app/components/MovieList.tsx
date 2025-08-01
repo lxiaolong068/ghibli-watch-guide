@@ -3,17 +3,17 @@ import Image from 'next/image';
 import { memo } from 'react';
 import type { Movie } from '../../prisma/generated/client';
 
-// 一个更高效的blurDataURL (WebP格式, 更小尺寸)
+// A more efficient blurDataURL (WebP format, smaller size)
 const OPTIMIZED_BLUR_DATA_URL = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoQABAACMCWJQBOgCI4CAD+6Ty2AAA=';
 
-// 定义图片尺寸常量，便于维护
+// Define image size constants for easier maintenance
 const IMAGE_SIZES = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
 
 interface MovieListProps {
   movies: Movie[];
 }
 
-// 使用memo避免不必要的重渲染
+// Use memo to avoid unnecessary re-renders
 export const MovieList = memo(function MovieList({ movies }: MovieListProps) {
   return (
     <section className="bg-white shadow sm:rounded-lg">
@@ -42,9 +42,9 @@ export const MovieList = memo(function MovieList({ movies }: MovieListProps) {
                       loading={index < 3 ? "eager" : "lazy"}
                       placeholder="blur"
                       blurDataURL={OPTIMIZED_BLUR_DATA_URL}
-                      quality={75} /* 略微降低质量以减小文件大小，在视觉上几乎无法察觉 */
-                      fetchPriority={index < 3 ? "high" : "auto"} /* 使用fetchPriority优化加载优先级 */
-                      decoding="async" /* 使用异步解码避免阻塞主线程 */
+                      quality={75} /* Slightly reduce quality to decrease file size, visually imperceptible */
+                      fetchPriority={index < 3 ? "high" : "auto"} /* Use fetchPriority to optimize loading priority */
+                      decoding="async" /* Use async decoding to avoid blocking main thread */
                     />
                   </div>
                 )}

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { trackEvent } from '@/app/components/analytics/GoogleAnalytics';
 
-// Web Vitals 类型定义
+// Web Vitals type definitions
 interface WebVitalMetric {
   name: 'CLS' | 'FCP' | 'LCP' | 'TTFB' | 'INP';
   value: number;
@@ -13,7 +13,7 @@ interface WebVitalMetric {
   navigationType: 'navigate' | 'reload' | 'back-forward' | 'prerender' | 'back-forward-cache' | 'restore';
 }
 
-// 性能阈值配置
+// Performance threshold configuration
 const PERFORMANCE_THRESHOLDS = {
   CLS: { good: 0.1, poor: 0.25 },
   FCP: { good: 1800, poor: 3000 },
@@ -23,7 +23,7 @@ const PERFORMANCE_THRESHOLDS = {
 };
 
 /**
- * 获取性能评级
+ * Get performance rating
  */
 function getPerformanceRating(name: WebVitalMetric['name'], value: number): WebVitalMetric['rating'] {
   const thresholds = PERFORMANCE_THRESHOLDS[name];
@@ -33,12 +33,12 @@ function getPerformanceRating(name: WebVitalMetric['name'], value: number): WebV
 }
 
 /**
- * Web Vitals 跟踪器组件
- * 监控和报告Core Web Vitals指标
+ * Web Vitals tracker component
+ * Monitor and report Core Web Vitals metrics
  */
 export function WebVitalsTracker() {
   useEffect(() => {
-    // 动态导入web-vitals库
+    // Dynamically import web-vitals library
     import('web-vitals').then(({ onCLS, onFCP, onLCP, onTTFB, onINP }) => {
       // Cumulative Layout Shift (CLS)
       onCLS((metric) => {
@@ -94,14 +94,14 @@ export function WebVitalsTracker() {
     });
   }, []);
 
-  return null; // 这是一个无UI的监控组件
+  return null; // This is a UI-less monitoring component
 }
 
 /**
- * 报告Web Vital指标
+ * Report Web Vital metrics
  */
 function reportWebVital(metric: WebVitalMetric) {
-  // 发送到Google Analytics
+  // Send to Google Analytics
   trackEvent({
     action: 'web_vital',
     category: 'performance',
@@ -117,10 +117,10 @@ function reportWebVital(metric: WebVitalMetric) {
     }
   });
 
-  // 发送到内部分析API
+  // Send to internal analytics API
   sendToAnalyticsAPI(metric);
 
-  // 在开发环境中记录到控制台
+  // Log to console in development environment
   if (process.env.NODE_ENV === 'development') {
     console.log(`[Web Vitals] ${metric.name}:`, {
       value: metric.value,
@@ -131,7 +131,7 @@ function reportWebVital(metric: WebVitalMetric) {
 }
 
 /**
- * 发送指标到内部分析API
+ * Send metrics to internal analytics API
  */
 async function sendToAnalyticsAPI(metric: WebVitalMetric) {
   try {
@@ -158,17 +158,17 @@ async function sendToAnalyticsAPI(metric: WebVitalMetric) {
 }
 
 /**
- * 自定义性能监控Hook
+ * Custom performance monitoring Hook
  */
 export function usePerformanceMonitoring() {
   useEffect(() => {
-    // 监控资源加载性能
+    // Monitor resource loading performance
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.entryType === 'navigation') {
           const navEntry = entry as PerformanceNavigationTiming;
           
-          // 计算关键时间指标
+          // Calculate key timing metrics
           const metrics = {
             dns: navEntry.domainLookupEnd - navEntry.domainLookupStart,
             tcp: navEntry.connectEnd - navEntry.connectStart,
@@ -178,7 +178,7 @@ export function usePerformanceMonitoring() {
             load: navEntry.loadEventEnd - navEntry.loadEventStart
           };
 
-          // 发送导航时间指标
+          // Send navigation timing metrics
           trackEvent({
             action: 'navigation_timing',
             category: 'performance',
@@ -189,7 +189,7 @@ export function usePerformanceMonitoring() {
         if (entry.entryType === 'resource') {
           const resourceEntry = entry as PerformanceResourceTiming;
           
-          // 监控慢资源
+          // Monitor slow resources
           if (resourceEntry.duration > 1000) {
             trackEvent({
               action: 'slow_resource',
@@ -208,7 +208,7 @@ export function usePerformanceMonitoring() {
       }
     });
 
-    // 观察导航和资源时间
+    // Observe navigation and resource timing
     observer.observe({ entryTypes: ['navigation', 'resource'] });
 
     return () => {
@@ -216,13 +216,13 @@ export function usePerformanceMonitoring() {
     };
   }, []);
 
-  // 监控内存使用情况
+  // Monitor memory usage
   useEffect(() => {
     const checkMemoryUsage = () => {
       if ('memory' in performance) {
         const memory = (performance as any).memory;
         
-        // 如果内存使用超过阈值，发送警告
+        // If memory usage exceeds threshold, send warning
         const memoryUsageRatio = memory.usedJSHeapSize / memory.jsHeapSizeLimit;
         if (memoryUsageRatio > 0.8) {
           trackEvent({
@@ -240,7 +240,7 @@ export function usePerformanceMonitoring() {
       }
     };
 
-    // 每30秒检查一次内存使用情况
+    // Check memory usage every 30 seconds
     const interval = setInterval(checkMemoryUsage, 30000);
 
     return () => {
@@ -250,7 +250,7 @@ export function usePerformanceMonitoring() {
 }
 
 /**
- * 页面性能评分计算
+ * Page performance score calculation
  */
 export function calculatePerformanceScore(metrics: Record<string, number>): number {
   const weights = {

@@ -14,7 +14,7 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-8">
-      {/* 用户行为跟踪 */}
+      {/* User behavior tracking */}
       <UserBehaviorTracker pageType="home" />
       {/* Welcome section */}
       <section className="text-center space-y-4">
@@ -66,7 +66,7 @@ export default async function HomePage() {
         </Link>
       </section>
 
-      {/* 广告位 */}
+      {/* Advertisement section */}
       <section className="flex justify-center">
         <ResponsiveAdSenseAd
           adSlot="1234567890"
@@ -84,7 +84,7 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* 个性化推荐区域 */}
+      {/* Personalized recommendations section */}
       <section>
         <HomeRecommendations />
       </section>
