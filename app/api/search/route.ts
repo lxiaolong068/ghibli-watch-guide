@@ -562,7 +562,7 @@ async function searchGuides(
     .slice(0, limit);
 }
 
-// 搜索媒体内容
+// Search media content
 async function searchMedia(
   query: string,
   filters: { language?: string },
@@ -575,7 +575,7 @@ async function searchMedia(
         OR: [
           { title: { contains: query, mode: 'insensitive' } },
           { description: { contains: query, mode: 'insensitive' } },
-          // 搜索关联电影标题
+          // Search associated movie titles
           { movie: { titleEn: { contains: query, mode: 'insensitive' } } },
           { movie: { titleJa: { contains: query, mode: 'insensitive' } } },
           { movie: { titleZh: { contains: query, mode: 'insensitive' } } }

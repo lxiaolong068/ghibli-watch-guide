@@ -25,13 +25,13 @@ export function SEOOptimizer({
   breadcrumbData,
   movieData
 }: SEOOptimizerProps) {
-  // 动态生成关键词
+  // Dynamically generate keywords
   const generateKeywords = () => {
     const baseKeywords = [
       'ghibli', 'studio ghibli', 'miyazaki', 'watch guide', 'streaming',
       'netflix', 'disney+', 'animation movie', 'japanese animation'
     ];
-    
+
     if (movieData) {
       baseKeywords.push(
         movieData.titleEn,
@@ -42,11 +42,11 @@ export function SEOOptimizer({
         `${movieData.year} animation`
       );
     }
-    
+
     return [...baseKeywords, ...keywords].filter(Boolean).join(', ');
   };
 
-  // 生成结构化数据
+  // Generate structured data
   const generateStructuredData = () => {
     if (structuredData) return structuredData;
     
@@ -102,14 +102,14 @@ export function SEOOptimizer({
 
   return (
     <>
-      {/* 基础SEO标签 */}
+      {/* Basic SEO tags */}
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="keywords" content={generateKeywords()} />
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-        
-        {/* Open Graph标签 */}
+
+        {/* Open Graph tags */}
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content={movieData ? "video.movie" : "website"} />
@@ -117,24 +117,24 @@ export function SEOOptimizer({
         {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
         <meta property="og:site_name" content="Studio Ghibli Watch Guide" />
 
-        {/* Twitter Card标签 */}
+        {/* Twitter Card tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         {ogImage && <meta name="twitter:image" content={ogImage} />}
 
-        {/* 额外的SEO标签 */}
+        {/* Additional SEO tags */}
         <meta name="robots" content="index, follow, max-image-preview:large" />
         <meta name="googlebot" content="index, follow" />
         <meta name="author" content="Studio Ghibli Watch Guide" />
         <meta name="language" content="en-US" />
-        
-        {/* 移动端优化 */}
+
+        {/* Mobile optimization */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="format-detection" content="telephone=no" />
       </Head>
 
-      {/* 结构化数据 */}
+      {/* Structured data */}
       <Script
         id="structured-data"
         type="application/ld+json"
@@ -143,7 +143,7 @@ export function SEOOptimizer({
         }}
       />
 
-      {/* 面包屑结构化数据 */}
+      {/* Breadcrumb structured data */}
       {breadcrumbData && (
         <Script
           id="breadcrumb-data"
@@ -162,7 +162,7 @@ export function SEOOptimizer({
         strategy="afterInteractive"
       />
 
-      {/* Google Analytics (如果需要) */}
+      {/* Google Analytics (if needed) */}
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
         strategy="afterInteractive"
@@ -179,7 +179,7 @@ export function SEOOptimizer({
   );
 }
 
-// AdSense广告组件
+// AdSense ad component
 export function AdSenseAd({
   adSlot,
   adFormat = 'auto',
@@ -214,7 +214,7 @@ export function AdSenseAd({
   );
 }
 
-// 响应式AdSense广告组件
+// Responsive AdSense ad component
 export function ResponsiveAdSenseAd({
   adSlot,
   adFormat = "auto"
@@ -236,7 +236,7 @@ export function ResponsiveAdSenseAd({
   );
 }
 
-// 文章内AdSense广告组件
+// In-article AdSense ad component
 export function InArticleAdSenseAd({ adSlot }: { adSlot: string }) {
   return (
     <div className="my-6">
@@ -249,7 +249,7 @@ export function InArticleAdSenseAd({ adSlot }: { adSlot: string }) {
   );
 }
 
-// 侧边栏AdSense广告组件
+// Sidebar AdSense ad component
 export function SidebarAdSenseAd({ adSlot }: { adSlot: string }) {
   return (
     <div className="sticky top-4">
@@ -265,17 +265,17 @@ export function SidebarAdSenseAd({ adSlot }: { adSlot: string }) {
   );
 }
 
-// SEO性能监控组件
+// SEO performance monitoring component
 export function SEOPerformanceMonitor() {
   useEffect(() => {
-    // 监控页面加载性能
+    // Monitor page loading performance
     if (typeof window !== 'undefined' && 'performance' in window) {
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'navigation') {
             const navigationEntry = entry as PerformanceNavigationTiming;
-            
-            // 发送性能数据到分析服务
+
+            // Send performance data to analytics service
             // @ts-expect-error - Google Analytics global function
             if (typeof gtag !== 'undefined') {
               // @ts-expect-error - Google Analytics global function
@@ -288,9 +288,9 @@ export function SEOPerformanceMonitor() {
           }
         }
       });
-      
+
       observer.observe({ entryTypes: ['navigation'] });
-      
+
       return () => observer.disconnect();
     }
   }, []);
@@ -298,7 +298,7 @@ export function SEOPerformanceMonitor() {
   return null;
 }
 
-// 内容质量分析器
+// Content quality analyzer
 export class ContentQualityAnalyzer {
   static analyzeContent(content: string): {
     readabilityScore: number;
@@ -307,25 +307,25 @@ export class ContentQualityAnalyzer {
   } {
     const words = content.toLowerCase().split(/\s+/);
     const totalWords = words.length;
-    
-    // 计算关键词密度
+
+    // Calculate keyword density
     const keywordCounts: { [key: string]: number } = {};
     const importantKeywords = ['ghibli', 'studio ghibli', 'miyazaki', 'watch', 'movie', 'animation'];
-    
+
     words.forEach(word => {
       if (importantKeywords.includes(word)) {
         keywordCounts[word] = (keywordCounts[word] || 0) + 1;
       }
     });
-    
+
     const keywordDensity: { [key: string]: number } = {};
     Object.keys(keywordCounts).forEach(keyword => {
       keywordDensity[keyword] = (keywordCounts[keyword] / totalWords) * 100;
     });
-    
-    // 生成建议
+
+    // Generate suggestions
     const suggestions: string[] = [];
-    
+
     if (totalWords < 300) {
       suggestions.push('Content is relatively short, recommend increasing to at least 300 words to improve SEO effectiveness');
     }
@@ -340,11 +340,11 @@ export class ContentQualityAnalyzer {
         suggestions.push(`Keyword "${keyword}" density is too high (${density.toFixed(1)}%), recommend keeping it within 2-3%`);
       }
     });
-    
-    // 简单的可读性评分
+
+    // Simple readability score
     const avgWordsPerSentence = totalWords / (content.split(/[.!?]+/).length - 1);
     const readabilityScore = Math.max(0, Math.min(100, 100 - (avgWordsPerSentence - 15) * 2));
-    
+
     return {
       readabilityScore,
       keywordDensity,

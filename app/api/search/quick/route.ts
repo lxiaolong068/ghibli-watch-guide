@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { handleApiError } from '@/app/lib/error-handler';
 import { quickSearchCache } from '@/app/utils/searchCache';
 
-// 将此路由标记为动态路由，防止在构建时静态生成
+// Mark this route as dynamic to prevent static generation at build time
 export const dynamic = 'force-dynamic';
 
 interface QuickSearchResult {
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 检查缓存
+    // Check cache
     const cacheFilters = { limit };
     const cachedResult = quickSearchCache.get(query, cacheFilters);
     if (cachedResult) {
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
 
     const results: QuickSearchResult[] = [];
 
-    // 1. 搜索电影（优先级最高）
+    // 1. Search movies (highest priority)
     const movies = await prisma.movie.findMany({
       where: {
         OR: [
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
         director: true,
         posterUrl: true
       },
-      take: Math.ceil(limit * 0.6), // 60% 给电影
+      take: Math.ceil(limit * 0.6), // 60% for movies
     });
 
     movies.forEach(movie => {
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
       });
     });
 
-    // 2. 搜索角色（如果还有空间）
+    // 2. Search characters (if there's still space)
     if (results.length < limit) {
       const characters = await prisma.character.findMany({
         where: {
@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
             take: 1
           }
         },
-        take: Math.ceil(limit * 0.25), // 25% 给角色
+        take: Math.ceil(limit * 0.25), // 25% for characters
       });
 
       characters.forEach(character => {
@@ -134,7 +134,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 3. 搜索观影指南（如果还有空间）
+    // 3. Search watch guides (if there's still space)
     if (results.length < limit) {
       const guides = await prisma.watchGuide.findMany({
         where: {
@@ -160,7 +160,7 @@ export async function GET(request: NextRequest) {
             take: 1
           }
         },
-        take: Math.ceil(limit * 0.15), // 15% 给指南
+        take: Math.ceil(limit * 0.15), // 15% for guides
       });
 
       guides.forEach(guide => {
@@ -181,10 +181,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 按相关性排序
+    // Sort by relevance
     results.sort((a, b) => b.relevanceScore - a.relevanceScore);
 
-    // 生成搜索建议
+    // Generate search suggestions
     const suggestions = await generateQuickSearchSuggestions(query, limit);
 
     const response: QuickSearchResponse = {
@@ -194,7 +194,7 @@ export async function GET(request: NextRequest) {
       query
     };
 
-    // 缓存快速搜索结果
+    // Cache quick search results
     if (response.results.length > 0) {
       quickSearchCache.set(query, response, cacheFilters);
     }
@@ -205,7 +205,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// 快速搜索相关性评分（简化版）
+// Quick search relevance scoring (simplified version)
 function calculateQuickRelevanceScore(query: string, texts: string[]): number {
   const queryLower = query.toLowerCase();
   let score = 0;
@@ -213,27 +213,27 @@ function calculateQuickRelevanceScore(query: string, texts: string[]): number {
   texts.forEach(text => {
     if (!text) return;
     const textLower = text.toLowerCase();
-    
-    // 完全匹配
+
+    // Exact match
     if (textLower === queryLower) {
       score += 100;
     }
-    // 开头匹配
+    // Starts with match
     else if (textLower.startsWith(queryLower)) {
       score += 80;
     }
-    // 包含匹配
+    // Contains match
     else if (textLower.includes(queryLower)) {
       score += 60;
-      // 位置加分
+      // Position bonus
       const index = textLower.indexOf(queryLower);
       score += Math.max(0, (textLower.length - index) / textLower.length * 20);
     }
-    // 单词匹配
+    // Word match
     else {
       const queryWords = queryLower.split(/\s+/);
       const textWords = textLower.split(/\s+/);
-      const matches = queryWords.filter(qw => 
+      const matches = queryWords.filter(qw =>
         textWords.some(tw => tw.includes(qw) || qw.includes(tw))
       );
       score += (matches.length / queryWords.length) * 40;
@@ -243,13 +243,13 @@ function calculateQuickRelevanceScore(query: string, texts: string[]): number {
   return score;
 }
 
-// 生成快速搜索建议
+// Generate quick search suggestions
 async function generateQuickSearchSuggestions(query: string, limit: number): Promise<string[]> {
   const suggestions: Set<string> = new Set();
   const queryLower = query.toLowerCase();
 
   try {
-    // 电影标题建议
+    // Movie title suggestions
     const movies = await prisma.movie.findMany({
       where: {
         OR: [
@@ -270,7 +270,7 @@ async function generateQuickSearchSuggestions(query: string, limit: number): Pro
       });
     });
 
-    // 导演建议
+    // Director suggestions
     const directors = await prisma.movie.findMany({
       where: {
         director: { startsWith: query, mode: 'insensitive' }
@@ -286,7 +286,7 @@ async function generateQuickSearchSuggestions(query: string, limit: number): Pro
       }
     });
 
-    // 角色名称建议
+    // Character name suggestions
     const characters = await prisma.character.findMany({
       where: {
         OR: [

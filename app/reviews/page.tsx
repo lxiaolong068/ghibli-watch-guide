@@ -8,12 +8,12 @@ import { UserBehaviorTracker } from '@/app/components/analytics/UserBehaviorTrac
 import { ResponsiveAdSenseAd } from '@/app/components/SEOOptimizer';
 
 export const metadata: Metadata = {
-  title: '吉卜力电影评论大全 | 专业影评与深度分析',
-  description: '阅读关于吉卜力工作室电影的专业影评和深度分析，包含艺术解读、制作幕后、文化内涵等多个维度的评论文章。',
-  keywords: '吉卜力电影评论, 宫崎骏影评, 专业影评, 深度分析, 电影评论',
+  title: 'Studio Ghibli Reviews | Professional Film Analysis',
+  description: 'Read expert reviews and in-depth analysis of Studio Ghibli movies. Discover artistic insights, behind-the-scenes stories, cultural significance, and professional critiques.',
+  keywords: 'studio ghibli reviews, miyazaki film reviews, professional movie reviews, film analysis, movie critiques',
   openGraph: {
-    title: '吉卜力电影评论大全 | 专业影评与深度分析',
-    description: '阅读关于吉卜力工作室电影的专业影评和深度分析，包含艺术解读、制作幕后、文化内涵等多个维度的评论文章。',
+    title: 'Studio Ghibli Reviews | Professional Film Analysis',
+    description: 'Read expert reviews and in-depth analysis of Studio Ghibli movies. Discover artistic insights, behind-the-scenes stories, cultural significance, and professional critiques.',
     type: 'website',
     url: 'https://www.whereghibli.cc/reviews',
     images: [
@@ -21,14 +21,14 @@ export const metadata: Metadata = {
         url: 'https://www.whereghibli.cc/images/reviews-og.jpg',
         width: 1200,
         height: 630,
-        alt: '吉卜力电影评论大全'
+        alt: 'Studio Ghibli Movie Reviews'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: '吉卜力电影评论大全 | 专业影评与深度分析',
-    description: '阅读关于吉卜力工作室电影的专业影评和深度分析，包含艺术解读、制作幕后、文化内涵等多个维度的评论文章。',
+    title: 'Studio Ghibli Reviews | Professional Film Analysis',
+    description: 'Read expert reviews and in-depth analysis of Studio Ghibli movies. Discover artistic insights, behind-the-scenes stories, cultural significance, and professional critiques.',
     images: ['https://www.whereghibli.cc/images/reviews-og.jpg']
   }
 };
@@ -120,13 +120,13 @@ async function getAllReviews(): Promise<ReviewWithMovie[]> {
 function ReviewCard({ review }: { review: ReviewWithMovie }) {
   const getReviewTypeLabel = (type: string) => {
     const labels = {
-      PROFESSIONAL: '专业影评',
-      EDITORIAL: '编辑评论',
-      ANALYSIS: '深度分析',
-      BEHIND_SCENES: '幕后故事',
-      TRIVIA: '趣闻轶事'
+      PROFESSIONAL: 'Professional Review',
+      EDITORIAL: 'Editorial Review',
+      ANALYSIS: 'In-Depth Analysis',
+      BEHIND_SCENES: 'Behind the Scenes',
+      TRIVIA: 'Trivia & Facts'
     };
-    return labels[type as keyof typeof labels] || '评论';
+    return labels[type as keyof typeof labels] || 'Review';
   };
 
   const getReviewTypeColor = (type: string) => {
@@ -230,9 +230,9 @@ function ReviewCard({ review }: { review: ReviewWithMovie }) {
           </p>
 
           <div className="flex items-center justify-between text-sm text-gray-500">
-            <span>作者：{review.author}</span>
+            <span>By: {review.author}</span>
             {review.publishedAt && (
-              <span>{new Date(review.publishedAt).toLocaleDateString('zh-CN')}</span>
+              <span>{new Date(review.publishedAt).toLocaleDateString('en-US')}</span>
             )}
           </div>
         </div>
@@ -253,11 +253,11 @@ export default async function ReviewsPage() {
         {/* 页面标题 */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            吉卜力电影评论大全
+            Studio Ghibli Movie Reviews
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            深入解读吉卜力工作室的经典作品，从艺术分析到制作幕后，
-            从文化内涵到现代意义，为您呈现最专业的影评和分析。
+            In-depth analysis of Studio Ghibli's classic works, from artistic interpretation to behind-the-scenes insights,
+            from cultural significance to modern relevance. Discover the most professional film reviews and analysis.
           </p>
         </div>
 
@@ -284,8 +284,8 @@ export default async function ReviewsPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <p className="text-gray-500 mb-4">暂无评论内容</p>
-              <p className="text-sm text-gray-400">我们正在为您准备精彩的影评内容</p>
+              <p className="text-gray-500 mb-4">No reviews available yet</p>
+              <p className="text-sm text-gray-400">We're preparing exciting film review content for you</p>
             </div>
           )}
         </Suspense>
@@ -301,22 +301,22 @@ export default async function ReviewsPage() {
         {/* SEO内容 */}
         <div className="mt-16 bg-white rounded-lg shadow-sm p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            关于吉卜力电影评论
+            About Studio Ghibli Movie Reviews
           </h2>
           <div className="prose prose-lg max-w-none text-gray-700">
             <p>
-              我们的评论团队由专业影评人、文化学者和资深动画爱好者组成，
-              致力于为您提供最深入、最专业的吉卜力电影分析。
+              Our review team consists of professional film critics, cultural scholars, and seasoned animation enthusiasts,
+              dedicated to providing you with the most in-depth and professional Studio Ghibli film analysis.
             </p>
             <p>
-              每篇评论都经过精心撰写和严格审核，确保内容的准确性和深度。
-              我们从多个角度解读每部作品：
+              Each review is carefully written and rigorously reviewed to ensure content accuracy and depth.
+              We interpret each work from multiple perspectives:
             </p>
             <ul>
-              <li><strong>艺术分析</strong>：画面构图、色彩运用、动画技法等视觉艺术层面</li>
-              <li><strong>主题探讨</strong>：环保理念、人文关怀、成长主题等深层内涵</li>
-              <li><strong>制作幕后</strong>：创作过程、技术创新、团队合作等制作细节</li>
-              <li><strong>文化解读</strong>：日本文化、传统元素、现代意义等文化层面</li>
+              <li><strong>Artistic Analysis</strong>: Visual art aspects including composition, color usage, and animation techniques</li>
+              <li><strong>Thematic Exploration</strong>: Deep themes such as environmental concepts, humanistic care, and coming-of-age stories</li>
+              <li><strong>Behind the Scenes</strong>: Production details including creative process, technical innovation, and team collaboration</li>
+              <li><strong>Cultural Interpretation</strong>: Cultural aspects including Japanese culture, traditional elements, and modern significance</li>
             </ul>
           </div>
         </div>

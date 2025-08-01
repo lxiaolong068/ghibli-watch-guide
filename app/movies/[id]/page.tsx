@@ -223,9 +223,9 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
     <>
       {/* SEO优化组件 */}
       <SEOOptimizer
-        title={`${movie.title} | 吉卜力观影指南`}
-        description={`观看《${movie.title}》的完整指南。了解在哪里可以在线观看这部${movie.release_date?.substring(0, 4) || 'N/A'}年的吉卜力经典动画，包括流媒体平台、租赁和购买选项。`}
-        keywords={[movie.title, movie.original_title, '在线观看', '流媒体']}
+        title={`${movie.title} | Where to Watch Studio Ghibli Movies`}
+        description={`Watch ${movie.title} online. Find streaming options for this ${movie.release_date?.substring(0, 4) || 'N/A'} Studio Ghibli film on Netflix, Disney+, and more platforms.`}
+        keywords={[movie.title, movie.original_title, 'watch online', 'streaming', 'studio ghibli']}
         canonicalUrl={`https://www.whereghibli.cc/movies/${id}`}
         ogImage={posterUrl || undefined}
         movieData={movie}

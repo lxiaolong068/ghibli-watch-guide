@@ -81,19 +81,19 @@ export interface BehindScenesTemplate {
 
 // 内容生成器类
 export class ContentGenerator {
-  // 生成电影评论模板
+  // Generate movie review template
   static generateMovieReview(movieData: any): MovieReviewTemplate {
     return {
-      title: `深度解析：${movieData.titleZh || movieData.titleEn}`,
+      title: `In-Depth Analysis: ${movieData.titleEn || movieData.title}`,
       content: '',
       sections: {
-        plot_summary: `《${movieData.titleZh || movieData.titleEn}》讲述了...`,
-        visual_style: '宫崎骏一贯的细腻画风在本片中...',
-        themes: '本片探讨了成长、环保、人性等深刻主题...',
-        characters: '主人公的成长历程体现了...',
-        music: '久石让的配乐为影片增添了...',
-        cultural_impact: '本片对日本动画产业的影响...',
-        recommendation: '推荐给喜欢深度思考的观众...'
+        plot_summary: `${movieData.titleEn || movieData.title} tells the story of...`,
+        visual_style: 'Miyazaki\'s signature delicate art style in this film...',
+        themes: 'This film explores profound themes of growth, environmental protection, and humanity...',
+        characters: 'The protagonist\'s growth journey reflects...',
+        music: 'Joe Hisaishi\'s soundtrack adds to the film...',
+        cultural_impact: 'This film\'s impact on the Japanese animation industry...',
+        recommendation: 'Recommended for audiences who enjoy deep thinking...'
       },
       rating: 0,
       pros: [],
@@ -199,11 +199,11 @@ export class ContentValidator {
 // SEO优化内容生成器
 export class SEOContentGenerator {
   static generateMetaDescription(movieData: any): string {
-    const title = movieData.titleZh || movieData.titleEn;
+    const title = movieData.titleEn || movieData.title;
     const year = movieData.year;
-    const director = movieData.director || '宫崎骏';
-    
-    return `观看《${title}》(${year}) - ${director}执导的吉卜力经典动画。获取最新流媒体平台信息，包括Netflix、Disney+等观看方式。`;
+    const director = movieData.director || 'Hayao Miyazaki';
+
+    return `Watch ${title} (${year}) - Studio Ghibli classic animation directed by ${director}. Get the latest streaming platform information, including Netflix, Disney+ and other viewing options.`;
   }
 
   static generateStructuredData(movieData: any) {
@@ -216,7 +216,7 @@ export class SEOContentGenerator {
       "datePublished": `${movieData.year}-01-01`,
       "director": {
         "@type": "Person",
-        "name": movieData.director || "宫崎骏"
+        "name": movieData.director || "Hayao Miyazaki"
       },
       "productionCompany": {
         "@type": "Organization",
@@ -242,19 +242,19 @@ export class SEOContentGenerator {
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "首页",
+          "name": "Home",
           "item": "/"
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "电影列表",
+          "name": "Movies",
           "item": "/movies"
         },
         {
           "@type": "ListItem",
           "position": 3,
-          "name": movieData.titleZh || movieData.titleEn,
+          "name": movieData.titleEn || movieData.title,
           "item": `/movies/${movieData.id}`
         }
       ]

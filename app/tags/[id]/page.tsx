@@ -88,23 +88,22 @@ export async function generateMetadata({ params }: TagPageProps): Promise<Metada
   }
 
   const { tag, movieCount } = data;
-  const tagName = tag.nameZh || tag.name;
+  const tagName = tag.name || tag.nameZh;
   const categoryConfig = getTagCategoryConfig(tag.category as TagCategory);
-  
+
   return {
-    title: `${tagName} - 标签 | 吉卜力观影指南`,
-    description: `浏览所有带有"${tagName}"标签的吉卜力工作室电影。${tag.description || ''}共找到 ${movieCount} 部相关电影。`,
+    title: `${tagName} - Tag | Studio Ghibli Watch Guide`,
+    description: `Browse all Studio Ghibli movies tagged with "${tagName}". ${tag.description || ''} Found ${movieCount} related movies.`,
     keywords: [
       tagName,
-      '吉卜力',
-      'Studio Ghibli',
-      '电影标签',
-      '电影分类',
-      categoryConfig?.nameZh || '电影'
+      'studio ghibli',
+      'movie tags',
+      'movie categories',
+      categoryConfig?.name || 'movies'
     ],
     openGraph: {
-      title: `${tagName} - 吉卜力电影标签`,
-      description: `探索所有带有"${tagName}"标签的吉卜力工作室电影作品`,
+      title: `${tagName} - Studio Ghibli Movie Tag`,
+      description: `Explore all Studio Ghibli movies tagged with "${tagName}"`,
       type: 'website',
     },
   };
