@@ -6,8 +6,11 @@ const TMDB_API_TIMEOUT = 5000; // 请求超时时间（毫秒）
 const TMDB_API_RETRY_COUNT = 2; // 失败后重试次数
 const TMDB_API_RETRY_DELAY = 300; // 重试延迟（毫秒）
 
-if (!TMDB_API_KEY) {
-  throw new Error('Missing TMDB_API_KEY environment variable');
+// Only throw error at runtime, not during build
+function checkApiKey() {
+  if (!TMDB_API_KEY) {
+    throw new Error('Missing TMDB_API_KEY environment variable');
+  }
 }
 
 interface TmdbErrorResponse {
@@ -40,12 +43,10 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
  */
 async function fetchTmdbApi<T>(endpoint: string, params: Record<string, string | number> = {}, revalidateSeconds: number | false = 3600, retryCount: number = 0): Promise<T> {
   // 确认API Key存在
-  if (!TMDB_API_KEY) {
-    throw new Error('TMDB_API_KEY is not defined. This should not happen if the initial check passed.');
-  }
+  checkApiKey();
 
   const url = new URL(`${TMDB_API_BASE_URL}${endpoint}`);
-  url.searchParams.append('api_key', TMDB_API_KEY);
+  url.searchParams.append('api_key', TMDB_API_KEY!);
   url.searchParams.append('language', 'en-US'); // 默认使用英文
 
   Object.entries(params).forEach(([key, value]) => {
